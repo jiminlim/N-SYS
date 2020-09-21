@@ -16,6 +16,11 @@ export default new Router({
       path: '/users',
       name: 'users',
       component: () => import(/* webpackChunkName: "users" */ './views/Users.vue')
-    }
+    },
+    {
+      path: '/games',
+      name: 'games',
+      component: () => import(/* webpackChunkName: "games" */ './views/Games.vue')
+    },
   ]
 })
