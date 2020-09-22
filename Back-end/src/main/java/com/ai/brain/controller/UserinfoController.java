@@ -82,6 +82,19 @@ public class UserinfoController {
 
     }
 
-    // 회원 삭제
+    @DeleteMapping("/deleteaccount")
+    @ApiOperation(value = "회원 탈퇴")
+    public ResponseEntity<HashMap<String, Object>> deleteAccount(@RequestBody Userinfo userinfo) {
+        System.out.println("deleteAccount Controller");
+        try {
+            HashMap<String, Object> map = new HashMap<>();
+            userinfoService.deleteAccount(userinfo);
+            map.put("Userinfo", "deleted!");
+
+            return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+    }
 
 }

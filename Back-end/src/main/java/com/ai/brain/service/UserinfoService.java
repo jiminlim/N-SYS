@@ -45,6 +45,13 @@ public class UserinfoService {
         return userinfoRepository.save(userinfo);
     }
 
+    // 회원 탈퇴
+    public void deleteAccount(Userinfo userinfo){
+        System.out.println("deleteAccount Service");
+
+        userinfoRepository.deleteById(userinfo.getUPk());
+    }
+
 //    public List<Userinfo> findAll() {
 //        List<Userinfo> list = userinfoRepository.findAll();
 //        return list;
