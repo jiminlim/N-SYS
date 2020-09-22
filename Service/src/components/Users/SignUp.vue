@@ -1,28 +1,12 @@
 <template>
   <div>
-    <h1>SignUp</h1>
+    <h1>MyPage</h1>
     <v-text-field
-      label="아이디"
-      v-model="userId"
+        label="userID123"
+        v-model="userId"
     ></v-text-field>
-    <v-text-field
-      label="비밀번호"
-      type="password"
-      v-model="password"
-    ></v-text-field>
-    <v-text-field
-      label="이름"
-      v-model="name"
-    ></v-text-field>
-    <v-text-field
-      label="주소"
-      v-model="address"
-    ></v-text-field>
-    <v-text-field
-      label="이미지"
-      v-model="src"
-    ></v-text-field>
-    <v-btn @click="signUp">회원가입</v-btn>
+    <v-btn @click="signUp">회원정보수정</v-btn>
+    <h1>History</h1>
   </div>
 </template>
 
