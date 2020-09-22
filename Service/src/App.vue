@@ -1,49 +1,58 @@
 <template>
   <v-app id="inspire">
     <v-navigation-drawer
-      v-model="drawer"
-      fixed
-      app
+        v-model="drawer"
+        app
+        clipped
     >
       <v-list dense>
-        <v-list-tile router :to="{name: 'home'}" exact>
-          <v-list-tile-action>
-            <v-icon>home</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title>Home</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
-        <v-list-tile router :to="{name: 'users'}" exact>
-          <v-list-tile-action>
-            <v-icon>person</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title>Users</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
+        <v-list-item router :to="{name: 'users'}">
+          <v-list-item-action>
+            <v-icon>mdi-view-dashboard</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>User</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item router :to="{name: 'games'}">
+          <v-list-item-action>
+            <v-icon>mdi-cog</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Games</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
       </v-list>
     </v-navigation-drawer>
-    <v-toolbar color="indigo" dark fixed app>
-      <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
-      <v-toolbar-title>Application</v-toolbar-title>
-    </v-toolbar>
-    <v-content>
-      <router-view/>
-    </v-content>
-    <v-footer color="indigo" app>
-      <span class="white--text">&copy; 2017</span>
+
+    <v-app-bar
+        app
+        clipped-left
+    >
+      <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+      <v-toolbar-title @click="$router.push('/')">Application</v-toolbar-title>
+    </v-app-bar>
+
+    <v-main>
+      <router-view></router-view>
+    </v-main>
+
+    <v-footer app>
+      <span>&copy; {{ new Date().getFullYear() }}</span>
     </v-footer>
   </v-app>
 </template>
 
 <script>
-  export default {
-    data: () => ({
-      drawer: null
-    }),
-    props: {
-      source: String
-    }
-  }
+export default {
+  props: {
+    source: String,
+  },
+  data: () => ({
+    drawer: true,
+  }),
+  created () {
+    this.$vuetify.theme.dark = true
+  },
+}
 </script>

@@ -11,7 +11,6 @@
 </template>
 
 <script>
-import { EventBus } from '@/main.js'
 import { mapActions } from 'vuex'
 //import {mapMutations }from 'vuex'
 
@@ -30,7 +29,6 @@ import { mapActions } from 'vuex'
       //...mapMutations(['addUsers']), //mapmutation s
       ...mapActions(['addUsers']) , //mapActions
       signUp() {
-        console.log('here')
         let userObj = {
           userId: this.userId,
           password: this.password,
