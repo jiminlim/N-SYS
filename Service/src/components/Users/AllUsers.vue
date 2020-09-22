@@ -1,9 +1,9 @@
 <template>
   <div>
-    <h1>All Users({{count}})</h1> 
+    <h1>All Users({{count}})</h1>
     <h1>countOfSeoul({{seouls}})</h1>
     <h1>percentOferSeoul({{percent}} %)</h1>
-    
+
     <v-list two-line>
       <v-list-tile 
         v-for="(user, index) in allUsers"
@@ -42,10 +42,5 @@ import { mapState, mapGetters } from 'vuex'
       ),
       ...mapState(['allUsers'])
    },
-    mounted() {
-      EventBus.$on('signUp', users => {
-        this.$store.state.allUsers.push(users)
-      })
-    }
   }
 </script>
