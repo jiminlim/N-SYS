@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("Userinfo")
@@ -18,7 +19,6 @@ public class UserinfoController {
     @Autowired
     private UserinfoService userinfoService;
 
-    // 회원 가입
     @PostMapping("/join")
     @ApiOperation(value = "회원 가입")
     public ResponseEntity<HashMap<String, Object>> join(@RequestBody UserIdPw userIdPw) {
@@ -33,31 +33,20 @@ public class UserinfoController {
         }
     }
 
-//
-//    @GetMapping(value = "/{upk}")
-//    public ResponseEntity<Userinfo> getUserinfo(@PathVariable("upk") int upk) {
-////        List<Userinfo> userinfo = userinfoService.findAllByUpk(1);
-//        System.out.println("ss");
-//
-//        Userinfo userinfo = userinfoService.findByUpk(upk);
-//        System.out.println(userinfo);
-//        System.out.println(userinfo);
-//        System.out.println("ss");
-//        return new ResponseEntity<>(null, HttpStatus.OK);
-//    }
-//
-//    // 전체 회원 정보 출력
-//    @GetMapping("all")
-//    public ResponseEntity<List<Userinfo>> selectAll() {
-//        List<Userinfo> list = userinfoService.findAll();
-//
-//        return new ResponseEntity<List<Userinfo>>(list, HttpStatus.OK);
-//    }
+    @GetMapping(value = "/{upk}")
+    @ApiOperation(value = "회원 pk 로 회원 정보 가져오기")
+    public ResponseEntity<HashMap<String, Object>> getUserinfo(@PathVariable("upk") int upk) {
+        System.out.println("getUserinfo Controller");
+        try {
+            HashMap<String, Object> map = new HashMap<>();
+            Optional<Userinfo> userinfo = userinfoService.getUserinfo(upk);
+            map.put("Userinfo", userinfo.get().toString());
+            return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
 
-
-    // PK로 회원 불러오기
-//    @GetMapping("/{upk}")
-
+    }
 
     // 회원 id 수정
 

@@ -16,15 +16,6 @@ public class UserinfoService {
     @Autowired
     private UserinfoRepository userinfoRepository;
 
-    public Userinfo findByUpk(int uPk) {
-        Optional<Userinfo> userinfo = userinfoRepository.findById(uPk);
-        return userinfo.get();
-    }
-
-    public List<Userinfo> findAll() {
-        List<Userinfo> list = userinfoRepository.findAll();
-        return list;
-    }
 
     // 회원 가입
     public Userinfo join(UserIdPw userIdPw) {
@@ -34,5 +25,20 @@ public class UserinfoService {
         userinfo.setUPw(userIdPw.getUPw());
 
         return  userinfoRepository.save(userinfo);
+    }
+
+    // pk 로 회원 정보 가져오기
+    public Optional<Userinfo> getUserinfo(int uPk) {
+        System.out.println("getUserinfo Service");
+        Userinfo userinfo = new Userinfo();
+        userinfo.setUPk(uPk);
+        userinfoRepository.findById(uPk);
+
+        return userinfoRepository.findById(uPk);
+    }
+
+    public List<Userinfo> findAll() {
+        List<Userinfo> list = userinfoRepository.findAll();
+        return list;
     }
 }
