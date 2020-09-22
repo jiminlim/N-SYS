@@ -27,6 +27,7 @@ public class UserinfoController {
             HashMap<String, Object> map = new HashMap<>();
             Userinfo userinfo = userinfoService.join(userIdPw);
             map.put("Userinfo", userinfo.toString());
+
             return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
@@ -41,6 +42,7 @@ public class UserinfoController {
             HashMap<String, Object> map = new HashMap<>();
             Optional<Userinfo> userinfo = userinfoService.getUserinfo(upk);
             map.put("Userinfo", userinfo.get().toString());
+
             return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
@@ -48,8 +50,37 @@ public class UserinfoController {
 
     }
 
-    // 회원 id 수정
+    @PutMapping(value = "/updateid/{Userinfo}/{newId}")
+    @ApiOperation(value = "id 변경하기")
+    public ResponseEntity<HashMap<String, Object>> updateId(@PathVariable("Userinfo") Userinfo userinfo, @PathVariable("newId") String newId) {
+        System.out.println("updateId Controller");
+        try {
+            HashMap<String, Object> map = new HashMap<>();
+            userinfoService.updateId(userinfo, newId);
+            map.put("Userinfo", userinfo);
 
+            return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+
+    }
+
+    @PutMapping(value = "/updatepw/{Userinfo}/{newPw}")
+    @ApiOperation(value = "pw 변경하기")
+    public ResponseEntity<HashMap<String, Object>> updatePw(@PathVariable("Userinfo") Userinfo userinfo, @PathVariable("newPw") String newPw) {
+        System.out.println("updatePw Controller");
+        try {
+            HashMap<String, Object> map = new HashMap<>();
+            userinfoService.updatePw(userinfo, newPw);
+            map.put("Userinfo", userinfo);
+
+            return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+
+    }
 
     // 회원 삭제
 
