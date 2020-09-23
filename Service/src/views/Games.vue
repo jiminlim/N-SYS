@@ -1,5 +1,6 @@
 <template>
   <v-container>
+    <brain-wall></brain-wall>
     <h1>Games</h1>
 
     <!-- 게임 모든 리스트  v-for 돌려서 출력 && axios-->
@@ -15,6 +16,7 @@
 
 <script>
 import GameContainer from '@/components/Game/GameContainer'
+import BrainWall from "@/components/BrainWall/BrainWall";
 import axios from 'axios'
 
 
@@ -39,6 +41,7 @@ export default {
   },
   components : {
     GameContainer,
+    BrainWall,
   },
   actions:{
 

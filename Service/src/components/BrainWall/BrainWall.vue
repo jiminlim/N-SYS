@@ -1,6 +1,8 @@
 <template>
   <div>
     <h1>두뇌의 벽</h1>
+    <button @click="generateRandomNumber()">포즈 바꾸기</button>
+    <random-pose :random-number="rannum"></random-pose>
     <button @click="clickStart()" class="btn2 m-3">START</button>
     <a v-if="startBtn" @click="clickStart()" class="btn2 m-3">START</a>
     <div style="border-style:solid"><canvas id="canvas"></canvas></div>
@@ -13,22 +15,30 @@
 
 <script>
 import '@tensorflow/tfjs'
+import RandomPose from "@/components/BrainWall/RandomPose";
 import * as tmPose from "@teachablemachine/pose"
 let model, webcam, ctx, labelContainer, maxPredictions;
 
 export default {
-  name : 'brainwall',
+  name : 'BrainWall',
   data(){
     return {
       startBtn:true,
       requestId: undefined,
-
+      rannum: 1,
     }
+  },
+  components:{
+    RandomPose,
   },
   methods:{clickStart() {
       // this.startDateTime = new Date();
       // this.$cookies.set('startDateTime', this.startDateTime)
       this.init()
+    },
+    generateRandomNumber(){
+    this.rannum = Math.floor(Math.random()*3+1) // 숫자 바꾸면 됨
+      console.log(this.rannum)
     },
     async init() {
       this.startBtn = false;
@@ -64,7 +74,8 @@ export default {
         labelContainer.appendChild(document.createElement("div"));
       }
     },
-    async loop(timestamp) {
+    async loop() {
+    //timestamp
       webcam.update(); // update the webcam frame
       await this.predict(); //this.predict();
       if(this.requestId){
@@ -107,11 +118,11 @@ export default {
     // console.log("drawPose method");
     ctx.drawImage(webcam.canvas, 0, 0);
     // draw the keypoints and skeleton
-    // if (pose) {
-    //   const minPartConfidence = 0.5;
-    //   tmPose.drawKeypoints(pose.keypoints, minPartConfidence, ctx);
-    //   tmPose.drawSkeleton(pose.keypoints, minPartConfidence, ctx);
-    // }
+    if (pose) {
+      const minPartConfidence = 0.5;
+      tmPose.drawKeypoints(pose.keypoints, minPartConfidence, ctx);
+      tmPose.drawSkeleton(pose.keypoints, minPartConfidence, ctx);
+    }
   }
 }
   }

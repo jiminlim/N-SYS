@@ -2,6 +2,7 @@
 <div>
   <div>image:{{this.game.gid}}</div>
   <div>title:{{this.game.gtitle}}</div>
+  game
 </div>
 </template>
 
