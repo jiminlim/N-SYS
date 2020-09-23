@@ -14,6 +14,10 @@
           <span>Join</span>
           <v-icon>mdi-heart</v-icon>
         </v-btn>
+        <v-btn @click="clickfindpw">
+          <span>FindPassword</span>
+          <v-icon>mdi-heart</v-icon>
+        </v-btn>
       </v-bottom-navigation>
       <v-container :class="loginview">
         <v-row justify="center">
@@ -94,6 +98,9 @@
         </v-card-actions>
         </v-row>
       </v-container>
+      <v-container :class="findview">
+        <p>비밀번호 찾기 </p>
+      </v-container>
     </v-card>
   </v-container>
 
@@ -113,6 +120,7 @@ export default {
       activeBtn: 0,
       loginview: "d-flex",
       joinview:"d-none",
+      findview:"d-none",
       email:'',
       password : '',
       repeatPassword:''
@@ -123,11 +131,19 @@ export default {
       this.clear();
       this.loginview="d-flex";
       this.joinview="d-none";
+      this.findview="d-none";
     },
     clickjoin(){
       this.clear();
       this.loginview="d-none";
       this.joinview="d-flex";
+      this.findview="d-none";
+    },
+    clickfindpw(){
+      this.clear();
+      this.loginview="d-none";
+      this.joinview="d-none";
+      this.findview="d-flex";
     },
     ...mapActions(['login', 'join']),
     submitlogin(){
