@@ -129,33 +129,29 @@ export default {
       this.loginview="d-none";
       this.joinview="d-flex";
     },
-    ...mapActions(['login']),
+    ...mapActions(['login', 'join']),
     submitlogin(){
+      this.repeatPassword=this.password;
       this.$v.$touch()
       if(this.$v.$invalid){
         alert('모든 값을 입력해 주세요!')
-      } else
-        {
+      } else {
         let loginData = {
-          u_email: this.email,
-          u_pw: this.password
+          uid: this.email,
+          upw: this.password
         }
-        console.log(loginData+" "+loginData.u_email);
         this.$store.dispatch('login', loginData);
       }
     },
-    ...mapActions(['join']),
     submitjoin() {
       this.$v.$touch()
       if(this.$v.$invalid){
         alert('모든 값을 입력해 주세요!')
-      } else
-      {
+      } else {
         let joinData = {
-          u_email: this.email,
-          u_pw: this.password
+          uid: this.email,
+          upw: this.password
         }
-        console.log(joinData+"  "+joinData.u_email);
         this.$store.dispatch('join', joinData);
       }
     },
