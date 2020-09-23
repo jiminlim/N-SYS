@@ -77,6 +77,9 @@ public class UserinfoService {
     }
 
     // 로그아웃
+    public void logout() {
+
+    }
 
 //    public List<Userinfo> findAll() {
 //        List<Userinfo> list = userinfoRepository.findAll();

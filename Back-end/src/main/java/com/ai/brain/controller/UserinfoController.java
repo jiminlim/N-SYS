@@ -117,5 +117,19 @@ public class UserinfoController {
         }
     }
 
+    @PostMapping("/logout")
+    @ApiOperation(value = "로그아웃")
+    public ResponseEntity<HashMap<String, Object>> logout() {
+        System.out.println("logout Controller");
+        try {
+            HashMap<String, Object> map = new HashMap<>();
+
+            map.put("logout", "1");
+
+            return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+    }
 
 }
