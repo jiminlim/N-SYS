@@ -2,7 +2,7 @@
   <v-container fill-height fluid>
     <v-row align="center" justify="center" >
       <v-col cols="12">
-        <v-container class="fill-height" :class="sheet1" @click="toggleSheet">
+        <v-container class="fill-height" :class=sheet1 @click="toggleSheet">
           <v-hover v-slot:default="{ hover }" >
             <v-card
                 :elevation="hover ? 24 : 2"
