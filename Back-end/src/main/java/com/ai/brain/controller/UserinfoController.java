@@ -97,4 +97,25 @@ public class UserinfoController {
         }
     }
 
+    @PostMapping("/login")
+    @ApiOperation(value = "로그인")
+    public ResponseEntity<HashMap<String, Object>> login(@RequestParam String loginId, @RequestParam String loginPw) {
+        System.out.println("login Controller");
+        try {
+            HashMap<String, Object> map = new HashMap<>();
+            boolean flag = userinfoService.login(loginId, loginPw);
+
+            if (flag) {
+                map.put("Userinfo", "succ");
+            } else {
+                map.put("Userinfo", "fail");
+            }
+
+            return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+    }
+
+
 }
