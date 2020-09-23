@@ -1,145 +1,194 @@
 <template>
-  <div class="wrap">
-    <div class="form-wrap">
-      <div class="button-wrap">
-        <div id="btn"></div>
-        <button type="button" class="togglebtn" onclick="login()">LOG IN</button>
-        <button type="button" class="togglebtn" onclick="register()">REGISTER</button>
-      </div>
-      <div class="social-icons">
-        <img src="../../assets/img/fb.png" alt="facebook">
-        <img src="../../assets/img/tw.png" alt="twitter">
-        <img src="../../assets/img/gl.png" alt="google">
-      </div>
-      <form id="login" action="" class="input-group">
-        <input type="text" class="input-field" placeholder="User name or Email" required>
-        <input type="password" class="input-field" placeholder="Enter Password" required>
-        <input type="checkbox" class="checkbox"><span>Remember Password</span>
-        <button class="submit">Login</button>
-      </form>
-      <form id="register" action="" class="input-group">
-        <input type="text" class="input-field" placeholder="User name or Email" required>
-        <input type="email" class="input-field" placeholder="Your Email" required>
-        <input type="password" class="input-field" placeholder="Enter Password" required>
-        <input type="checkbox" class="checkbox"><span>Terms and conditions</span>
-        <button class="submit">REGISTER</button>
-      </form>
-    </div>
-  </div>
+  <v-container>
+    <v-card class="elevation-12">
+      <v-bottom-navigation
+          :value="activeBtn"
+          color="yellow accent-2"
+          horizontal
+      >
+        <v-btn @click="clicklogin">
+          <span>Login</span>
+          <v-icon>mdi-heart</v-icon>
+        </v-btn>
+        <v-btn @click="clickjoin">
+          <span>Join</span>
+          <v-icon>mdi-heart</v-icon>
+        </v-btn>
+      </v-bottom-navigation>
+      <v-container :class="loginview">
+        <v-row justify="center">
+        <v-card-text >
+          <v-form>
+            <v-text-field
+                label="Email"
+                v-model="email"
+                name="email"
+                prepend-icon="mdi-account"
+                type="text"
+                :error-messages="emailErrors"
+                @input="$v.email.$touch()"
+                @blur="$v.email.$touch()"
+                required
+            ></v-text-field>
+            <v-text-field
+                v-model="password"
+                label="Password"
+                name="password"
+                prepend-icon="mdi-lock"
+                type="password"
+                :error-messages="passwordErrors"
+                @input="$v.password.$touch()"
+                @blur="$v.password.$touch()"
+                required
+            ></v-text-field>
+          </v-form>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="yellow accent-4" @click="submitlogin">Login</v-btn>
+        </v-card-actions>
+        </v-row>
+      </v-container>
+
+      <v-container :class="joinview">
+        <v-row justify="center">
+        <v-card-text>
+          <v-form>
+            <v-text-field
+                label="Email"
+                v-model="email"
+                name="email"
+                prepend-icon="mdi-account"
+                type="text"
+                :error-messages="emailErrors"
+                @input="$v.email.$touch()"
+                @blur="$v.email.$touch()"
+                required
+            ></v-text-field>
+            <v-text-field
+                v-model="password"
+                label="Password"
+                name="password"
+                prepend-icon="mdi-lock"
+                type="password"
+                :error-messages="passwordErrors"
+                @input="$v.password.$touch()"
+                @blur="$v.password.$touch()"
+                required
+            ></v-text-field>
+            <v-text-field
+                v-model="repeatPassword"
+                label="repeatPassword"
+                name="repeatPassword"
+                prepend-icon="mdi-lock"
+                type="password"
+                :error-messages="repeatPasswordErrors"
+                @input="$v.repeatPassword.$touch()"
+                @blur="$v.repeatPassword.$touch()"
+            ></v-text-field>
+          </v-form>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="yellow accent-4" @click="submitjoin">Join</v-btn>
+        </v-card-actions>
+        </v-row>
+      </v-container>
+    </v-card>
+  </v-container>
+
 </template>
 <script>
-// var x = document.getElementById("login");
-// var y = document.getElementById("register");
-// var z = document.getElementById("btn");
-//
-//
-// function login(){
-//   x.style.left = "50px";
-//   y.style.left = "450px";
-//   z.style.left = "0";
-// }
-//
-// function register(){
-//   x.style.left = "-400px";
-//   y.style.left = "50px";
-//   z.style.left = "110px";
-// }
+import { mapActions } from 'vuex'
+import { required, sameAs, email, minLength } from 'vuelidate/lib/validators'
+export default {
+  validations: {
+    email: { required, email },
+    password: { required, minLength: minLength(4)},
+    repeatPassword: { sameAsPassword : sameAs('password')}
+  },
+
+  data () {
+    return {
+      activeBtn: 0,
+      loginview: "d-flex",
+      joinview:"d-none",
+      email:'',
+      password : '',
+      repeatPassword:''
+    }
+  },
+  methods:{
+    clicklogin(){
+      this.clear();
+      this.loginview="d-flex";
+      this.joinview="d-none";
+    },
+    clickjoin(){
+      this.clear();
+      this.loginview="d-none";
+      this.joinview="d-flex";
+    },
+    ...mapActions(['login']),
+    submitlogin(){
+      this.$v.$touch()
+      if(this.$v.$invalid){
+        alert('모든 값을 입력해 주세요!')
+      } else
+        {
+        let loginData = {
+          u_email: this.email,
+          u_pw: this.password
+        }
+        console.log(loginData+" "+loginData.u_email);
+        this.$store.dispatch('login', loginData);
+      }
+    },
+    ...mapActions(['join']),
+    submitjoin() {
+      this.$v.$touch()
+      if(this.$v.$invalid){
+        alert('모든 값을 입력해 주세요!')
+      } else
+      {
+        let joinData = {
+          u_email: this.email,
+          u_pw: this.password
+        }
+        console.log(joinData+"  "+joinData.u_email);
+        this.$store.dispatch('join', joinData);
+      }
+    },
+    clear() {
+      this.$v.$reset()
+      this.email = ''
+      this.password = ''
+      this.repeatPassword= ''
+    }
+
+  },
+  computed: {
+    emailErrors() {
+      const errors = []
+      if (!this.$v.email.$dirty) return errors
+      !this.$v.email.email && errors.push('이메일 형식을 바르게 입력해주세요.')
+      !this.$v.email.required && errors.push('이메일을 입력해주세요.')
+      return errors
+    },
+    passwordErrors() {
+      const errors = []
+      if (!this.$v.password.$dirty) return errors
+      !this.$v.password.minLength && errors.push(`비밀번호는 최소 4자 이상 입력해야 합니다.`)
+      !this.$v.password.required && errors.push('비밀번호를 입력해주세요.')
+      return errors
+    },
+    repeatPasswordErrors() {
+      const errors = []
+      if (!this.$v.repeatPassword.$dirty) return errors
+      !this.$v.repeatPassword.sameAsPassword && errors.push('비밀번호가 다릅니다')
+      return errors
+    }
+  }
+
+}
 </script>
-<style>
-* {
-  margin: 0;
-  padding: 0;
-  font-family: sans-serif;
-}
-.wrap {
-  height: 100%;
-  width: 100%;
-  background-image: url(src/assets/img/background.jpg);
-  background-position: center;
-  background-size: cover;
-  position: absolute;
-}
-.form-wrap {
-  width: 380px;
-  height: 480px;
-  position: relative;
-  margin: 6% auto;
-  background: #fff;
-  padding: 5px;
-  overflow: hidden;
-}
-.button-wrap {
-  width: 230px;
-  margin: 35px auto;
-  position: relative;
-  box-shadow: 0 0 600px 9px #fcae8f;
-  border-radius: 30px;
-}
-.togglebtn {
-  padding: 10px 30px;
-  cursor: pointer;
-  background: transparent;
-  border: 0;
-  outline: none;
-  position: relative;
-}
-#btn {
-  top: 0;
-  left: 0;
-  position: absolute;
-  width: 110px;
-  height: 100%;
-  background: linear-gradient(to right, #ff105f, #ffad06);
-  border-radius: 30px;
-  transition: .5s;
-}
-.social-icons {
-  margin: 30px auto;
-  text-align: center;
-}
-.social-icons img {
-  width: 30px ;
-  cursor: pointer;
-}
-.input-group {
-  top: 180px;
-  position: absolute;
-  width: 280px;
-  transition: .5s;
-}
-.input-field {
-  width: 100%;
-  padding: 10px 0;
-  margin: 5px 0;
-  border: none;
-  border-bottom: 1px solid #999;
-  outline: none;
-  background: transparent;
-}
-.submit {
-  width: 85%;
-  padding: 10px 30px;
-  cursor: pointer;
-  display: block;
-  margin: auto;
-  background: linear-gradient(to right, #ff105f, #ffad06);
-  border: 0;
-  outline: none;
-  border-radius: 30px;
-}
-.checkbox {
-  margin: 30px 10px 30px 0;
-}
-span {
-  color: #777;
-  font-size: 12px;
-  bottom: 68px;
-  position: absolute;
-}
-#login {
-  left: 50px;
-}
-#register {
-  left: 450px;
-}
-</style>
