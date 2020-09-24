@@ -1,61 +1,136 @@
 package com.ai.brain.controller;
 
-
 import com.ai.brain.service.UserinfoService;
 import com.ai.brain.vo.UserIdPw;
 import com.ai.brain.vo.Userinfo;
-import org.apache.catalina.User;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.HashMap;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin(origins = { "*" }, maxAge = 6000)
 @RequestMapping("Userinfo")
 public class UserinfoController {
 
     @Autowired
     private UserinfoService userinfoService;
 
-    @GetMapping(value = "/{upk}")
-    public ResponseEntity<Userinfo> getUserinfo(@PathVariable("upk") int upk) {
-//        List<Userinfo> userinfo = userinfoService.findAllByUpk(1);
-        System.out.println("ss");
-
-        Userinfo userinfo = userinfoService.findByUpk(upk);
-        System.out.println(userinfo);
-        System.out.println(userinfo);
-        System.out.println("ss");
-        return new ResponseEntity<>(null, HttpStatus.OK);
-    }
-
-    // 전체 회원 정보 출력
-    @GetMapping("all")
-    public ResponseEntity<List<Userinfo>> selectAll() {
-        List<Userinfo> list = userinfoService.findAll();
-
-        return new ResponseEntity<List<Userinfo>>(list, HttpStatus.OK);
-    }
-
-    // 회원 가입
-    @GetMapping("/join")
-    public ResponseEntity<Userinfo> join(@RequestBody UserIdPw userIdPw) {
+    @PostMapping("/join")
+    @ApiOperation(value = "회원 가입")
+    public ResponseEntity<HashMap<String, Object>> join(@RequestBody UserIdPw userIdPw) {
         System.out.println("join Controller");
-        userinfoService.join(userIdPw);
+        try {
+            HashMap<String, Object> map = new HashMap<>();
+            Userinfo userinfo = userinfoService.join(userIdPw);
+            map.put("Userinfo", userinfo);
 
-        return new ResponseEntity<>(null, HttpStatus.OK);
+            return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
     }
 
-    // PK로 회원 불러오기
-//    @GetMapping("/{upk}")
+    @GetMapping(value = "/userinfo/{upk}")
+    @ApiOperation(value = "회원 pk 로 회원 정보 가져오기")
+    public ResponseEntity<HashMap<String, Object>> getUserinfo(@PathVariable("upk") int upk) {
+        System.out.println("getUserinfo Controller");
+        try {
+            HashMap<String, Object> map = new HashMap<>();
+            Optional<Userinfo> userinfo = userinfoService.getUserinfo(upk);
+            map.put("Userinfo", userinfo.get());
 
+            return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
 
-    // 회원 id 수정
+    }
 
+    @PutMapping(value = "/updateid/{Userinfo}/{newName}")
+    @ApiOperation(value = "닉네임 변경하기")
+    public ResponseEntity<HashMap<String, Object>> updateId(@PathVariable("Userinfo") Userinfo userinfo, @PathVariable("newName") String newName) {
+        System.out.println("updateId Controller");
+        try {
+            HashMap<String, Object> map = new HashMap<>();
+            userinfoService.updateId(userinfo, newName);
+            map.put("Userinfo", userinfo);
 
-    // 회원 삭제
+            return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+
+    }
+
+    @PutMapping(value = "/updatepw/{Userinfo}/{newPw}")
+    @ApiOperation(value = "pw 변경하기")
+    public ResponseEntity<HashMap<String, Object>> updatePw(@PathVariable("Userinfo") Userinfo userinfo, @PathVariable("newPw") String newPw) {
+        System.out.println("updatePw Controller");
+        try {
+            HashMap<String, Object> map = new HashMap<>();
+            userinfoService.updatePw(userinfo, newPw);
+            map.put("Userinfo", userinfo);
+
+            return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+
+    }
+
+    @DeleteMapping("/deleteaccount")
+    @ApiOperation(value = "회원 탈퇴")
+    public ResponseEntity<HashMap<String, Object>> deleteAccount(@RequestBody Userinfo userinfo) {
+        System.out.println("deleteAccount Controller");
+        try {
+            HashMap<String, Object> map = new HashMap<>();
+            userinfoService.deleteAccount(userinfo);
+            map.put("Userinfo", "deleted!");
+
+            return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/login")
+    @ApiOperation(value = "로그인")
+    public ResponseEntity<HashMap<String, Object>> login(@RequestParam String loginId, @RequestParam String loginPw) {
+        System.out.println("login Controller");
+        try {
+            HashMap<String, Object> map = new HashMap<>();
+            boolean flag = userinfoService.login(loginId, loginPw);
+
+            if (flag) {
+                map.put("Userinfo", "succ");
+            } else {
+                map.put("Userinfo", "fail");
+            }
+
+            return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/logout")
+    @ApiOperation(value = "로그아웃")
+    public ResponseEntity<HashMap<String, Object>> logout() {
+        System.out.println("logout Controller");
+        try {
+            HashMap<String, Object> map = new HashMap<>();
+
+            map.put("logout", "1");
+
+            return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+    }
 
 }

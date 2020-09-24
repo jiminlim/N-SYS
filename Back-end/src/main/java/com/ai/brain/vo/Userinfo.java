@@ -1,6 +1,7 @@
 package com.ai.brain.vo;
 
 import lombok.*;
+
 import javax.persistence.*;
 
 @Getter
@@ -16,7 +17,7 @@ public class Userinfo {
     private int uPk;
 
     private String uId;
-
     private String uPw;
+    private String uName;
 
 }

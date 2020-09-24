@@ -1,19 +1,22 @@
 <template>
-  <v-container grid-list-xl>
-    <v-layout row wrap>
-      <v-flex xs6>
-        <AllUsers></AllUsers>
-      </v-flex>
-      <v-flex xs6>
-        <SignUp></SignUp>
-      </v-flex>
-    </v-layout>
+  <v-container>
+    <v-row
+        align="center"
+        justify="center"
+    >
+      <v-col
+          cols="12"
+          sm="8"
+          md="4"
+      >
+      <userLoginAJoin></userLoginAJoin>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
 <script>
-import AllUsers from "@/components/Users/AllUsers";
-import SignUp from "@/components/Users/SignUp";
+import userLoginAJoin from '@/components/Users/newlog'
 import axios from "axios";
 import {mapGetters} from "vuex";
 export default {
@@ -32,8 +35,7 @@ export default {
     };
   },
   components: {
-    AllUsers,
-    SignUp,
+    userLoginAJoin
   },
   computed: {
     ...mapGetters(["token"]),
