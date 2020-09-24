@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin(origins = { "*" }, maxAge = 6000)
 @RequestMapping("Userinfo")
 public class UserinfoController {
 
@@ -26,7 +27,7 @@ public class UserinfoController {
         try {
             HashMap<String, Object> map = new HashMap<>();
             Userinfo userinfo = userinfoService.join(userIdPw);
-            map.put("Userinfo", userinfo.toString());
+            map.put("Userinfo", userinfo);
 
             return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
         } catch (Exception e) {
