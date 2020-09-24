@@ -3,8 +3,9 @@ package com.ai.brain.controller;
 import com.ai.brain.service.UserinfoService;
 import com.ai.brain.vo.UserIdPw;
 import com.ai.brain.vo.Userinfo;
-//import com.ai.brain.util.JwtTokenProvider;
+import com.ai.brain.util.JwtTokenProvider;
 import io.swagger.annotations.ApiOperation;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -22,8 +24,8 @@ public class UserinfoController {
     @Autowired
     private UserinfoService userinfoService;
 
-//    @Autowired
-//    private JwtTokenProvider jwtTokenProvider;
+    //    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
 
     @PostMapping("/join")
     @ApiOperation(value = "회원 가입")
@@ -117,29 +119,27 @@ public class UserinfoController {
         }
     }
 
-//    @PostMapping("/login")
-//    @ApiOperation(value = "로그인")
-//    public ResponseEntity<HashMap<String, Object>> login(@RequestBody Userinfo userinfo, HttpServletRequest request) {
-//        System.out.println("login Controller");
-//        try {
-////            String accessToken = jwtTokenProvider.getAccessToken();
-////            Userinfo dto = adminService.adminLogin(user);
-//
-//            String token = userinfoService.createToken(userinfo);
-//
-//            HashMap<String, Object> map = new HashMap<>();
-//
-//            if (token != null) {
-//                map.put("Userinfo", token);
-//            } else {
-//                map.put("Userinfo", "fail");
-//            }
-//
-//            return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
-//        } catch (Exception e) {
-//            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-//        }
-//    }
+    @PostMapping("/login")
+    @ApiOperation(value = "로그인")
+    public ResponseEntity<HashMap<String, Object>> login(@RequestParam String loginId, @RequestParam String loginPw, HttpServletRequest request) {
+        System.out.println("login Controller");
+        try {
+            HashMap<String, Object> map = new HashMap<>();
+
+            Userinfo userinfo = userinfoService.getUserinfo(loginId, loginPw);
+
+            if (userinfo != null) {
+                String token = userinfoService.createToken(userinfo);
+                map.put("Userinfo", token);
+            } else {
+                map.put("Userinfo", "fail");
+            }
+
+            return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+    }
 
     @PostMapping("/logout")
     @ApiOperation(value = "로그아웃")

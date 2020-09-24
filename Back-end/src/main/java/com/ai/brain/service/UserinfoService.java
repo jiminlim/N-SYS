@@ -1,7 +1,7 @@
 package com.ai.brain.service;
 
 import com.ai.brain.repository.UserinfoRepository;
-//import com.ai.brain.util.JwtTokenProvider;
+import com.ai.brain.util.JwtTokenProvider;
 import com.ai.brain.vo.UserIdPw;
 import com.ai.brain.vo.Userinfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +17,8 @@ public class UserinfoService {
     @Autowired
     private UserinfoRepository userinfoRepository;
 
-//    @Autowired
-//    private JwtTokenProvider jwtTokenProvider;
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
 
     // 회원 가입
     public Userinfo join(UserIdPw userIdPw) {
@@ -119,22 +119,65 @@ public class UserinfoService {
         return flag;
     }
 
-//    public String createToken(Userinfo userinfo) {
-//        System.out.println("createToken Service");
-//        Optional<Userinfo> member = Optional.empty();
-//        try {
-//            member = userinfoRepository.findById(userinfo.getUPk());
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//
-//        String token = "";
-//        if (!userinfo.getUPw().equals(member.get().getUPw())) {
-//        } else {
-//            token = jwtTokenProvider.createToken(userinfo);
-//        }
-//        return token;
-//    }
+    public Userinfo getUserinfo(String loginId, String loginPw){
+        List<Userinfo> list = userinfoRepository.findAll();
+        Userinfo userinfo = new Userinfo();
+        boolean flag = false;
+        for (int i = 0; i < list.size(); i++) {
+            // id, pw db 검사
+            if (list.get(i).getUId().equals(loginId)) {
+                if (list.get(i).getUPw().equals(loginPw)) {
+                    flag = true;
+                    userinfo.setUPk(list.get(i).getUPk());
+                    userinfo.setUName(list.get(i).getUName());
+                    userinfo.setUId(list.get(i).getUId());
+                    userinfo.setUPw(list.get(i).getUPw());
+                    break;
+                }
+            }
+        }
+
+        if (flag){
+            return userinfo;
+        }else {
+            return null;
+        }
+    }
+
+    // id, pw db 검사
+    public boolean checkedIdPw(UserIdPw userIdPw) {
+        List<Userinfo> list = userinfoRepository.findAll();
+
+        boolean flag = false;
+        for (int i = 0; i < list.size(); i++) {
+            // id, pw db 검사
+            if (list.get(i).getUId().equals(userIdPw.getUId())) {
+                if (list.get(i).getUPw().equals(userIdPw.getUPw())) {
+                    flag = true;
+                    break;
+                }
+            }
+        }
+
+        return flag;
+    }
+
+    public String createToken(Userinfo userinfo) {
+        System.out.println("createToken Service");
+        Optional<Userinfo> member = Optional.empty();
+        try {
+            member = userinfoRepository.findById(userinfo.getUPk());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        String token = "";
+        if (!userinfo.getUPw().equals(member.get().getUPw())) {
+        } else {
+            token = jwtTokenProvider.createToken(userinfo);
+        }
+        return token;
+    }
 
     // 로그아웃
     public void logout() {
