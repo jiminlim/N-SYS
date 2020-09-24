@@ -6,6 +6,7 @@ import com.ai.brain.vo.Userinfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -22,7 +23,7 @@ public class UserinfoService {
         userinfo.setUId(userIdPw.getUId());
         userinfo.setUPw(userIdPw.getUPw());
 
-        return  userinfoRepository.save(userinfo);
+        return userinfoRepository.save(userinfo);
     }
 
     // pk 로 회원 정보 가져오기
@@ -32,24 +33,52 @@ public class UserinfoService {
     }
 
     // id 변경하기
-    public Userinfo updateId(Userinfo userinfo, String newId){
+    public Userinfo updateId(Userinfo userinfo, String newId) {
         System.out.println("updateId Service");
         userinfo.setUId(newId);
         return userinfoRepository.save(userinfo);
     }
 
     // pw 변경하기
-    public Userinfo updatePw(Userinfo userinfo, String newPw){
+    public Userinfo updatePw(Userinfo userinfo, String newPw) {
         System.out.println("updatePw Service");
         userinfo.setUPw(newPw);
         return userinfoRepository.save(userinfo);
     }
 
     // 회원 탈퇴
-    public void deleteAccount(Userinfo userinfo){
+    public void deleteAccount(Userinfo userinfo) {
         System.out.println("deleteAccount Service");
 
         userinfoRepository.deleteById(userinfo.getUPk());
+    }
+
+    // 로그인
+    public boolean login(String loginId, String loginPw) {
+        System.out.println("login Service");
+
+        List<Userinfo> list = userinfoRepository.findAll();
+
+        // id 확인
+        boolean flag = false;
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getUId().equals(loginId)) {
+                // pw 확인
+                if (list.get(i).getUPw().equals(loginPw)) {
+                    flag = true;
+                } else {
+                    flag = false;
+                }
+                break;
+            }
+        }
+
+        return flag;
+    }
+
+    // 로그아웃
+    public void logout() {
+
     }
 
 //    public List<Userinfo> findAll() {
