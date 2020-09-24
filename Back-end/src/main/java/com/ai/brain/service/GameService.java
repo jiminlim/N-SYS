@@ -19,7 +19,6 @@ public class GameService {
     }
 
     public Game selectGame(int gId){
-
         return gameRepository.findById(gId).get();
     }
 }
