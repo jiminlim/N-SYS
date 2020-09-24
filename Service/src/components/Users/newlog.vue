@@ -14,6 +14,10 @@
           <span>Join</span>
           <v-icon>mdi-heart</v-icon>
         </v-btn>
+        <v-btn @click="clickfindpw">
+          <span>FindPassword</span>
+          <v-icon>mdi-heart</v-icon>
+        </v-btn>
       </v-bottom-navigation>
       <v-container :class="loginview">
         <v-row justify="center">
@@ -94,6 +98,9 @@
         </v-card-actions>
         </v-row>
       </v-container>
+      <v-container :class="findview">
+        <p>비밀번호 찾기 </p>
+      </v-container>
     </v-card>
   </v-container>
 
@@ -113,6 +120,7 @@ export default {
       activeBtn: 0,
       loginview: "d-flex",
       joinview:"d-none",
+      findview:"d-none",
       email:'',
       password : '',
       repeatPassword:''
@@ -123,39 +131,43 @@ export default {
       this.clear();
       this.loginview="d-flex";
       this.joinview="d-none";
+      this.findview="d-none";
     },
     clickjoin(){
       this.clear();
       this.loginview="d-none";
       this.joinview="d-flex";
+      this.findview="d-none";
     },
-    ...mapActions(['login']),
+    clickfindpw(){
+      this.clear();
+      this.loginview="d-none";
+      this.joinview="d-none";
+      this.findview="d-flex";
+    },
+    ...mapActions(['login', 'join']),
     submitlogin(){
+      this.repeatPassword=this.password;
       this.$v.$touch()
       if(this.$v.$invalid){
         alert('모든 값을 입력해 주세요!')
-      } else
-        {
+      } else {
         let loginData = {
-          u_email: this.email,
-          u_pw: this.password
+          uid: this.email,
+          upw: this.password
         }
-        console.log(loginData+" "+loginData.u_email);
         this.$store.dispatch('login', loginData);
       }
     },
-    ...mapActions(['join']),
     submitjoin() {
       this.$v.$touch()
       if(this.$v.$invalid){
         alert('모든 값을 입력해 주세요!')
-      } else
-      {
+      } else {
         let joinData = {
-          u_email: this.email,
-          u_pw: this.password
+          uid: this.email,
+          upw: this.password
         }
-        console.log(joinData+"  "+joinData.u_email);
         this.$store.dispatch('join', joinData);
       }
     },
