@@ -22,6 +22,7 @@ public class UserinfoService {
         Userinfo userinfo = new Userinfo();
         userinfo.setUId(userIdPw.getUId());
         userinfo.setUPw(userIdPw.getUPw());
+        userinfo.setUName((userIdPw.getUName()));
 
         return userinfoRepository.save(userinfo);
     }
@@ -32,10 +33,10 @@ public class UserinfoService {
         return userinfoRepository.findById(uPk);
     }
 
-    // id 변경하기
-    public Userinfo updateId(Userinfo userinfo, String newId) {
+    // 닉네임 변경하기
+    public Userinfo updateId(Userinfo userinfo, String newName) {
         System.out.println("updateId Service");
-        userinfo.setUId(newId);
+        userinfo.setUName(newName);
         return userinfoRepository.save(userinfo);
     }
 

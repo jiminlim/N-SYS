@@ -35,14 +35,14 @@ public class UserinfoController {
         }
     }
 
-    @GetMapping(value = "/{upk}")
+    @GetMapping(value = "/userinfo/{upk}")
     @ApiOperation(value = "회원 pk 로 회원 정보 가져오기")
     public ResponseEntity<HashMap<String, Object>> getUserinfo(@PathVariable("upk") int upk) {
         System.out.println("getUserinfo Controller");
         try {
             HashMap<String, Object> map = new HashMap<>();
             Optional<Userinfo> userinfo = userinfoService.getUserinfo(upk);
-            map.put("Userinfo", userinfo.get().toString());
+            map.put("Userinfo", userinfo.get());
 
             return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
         } catch (Exception e) {
@@ -51,13 +51,13 @@ public class UserinfoController {
 
     }
 
-    @PutMapping(value = "/updateid/{Userinfo}/{newId}")
-    @ApiOperation(value = "id 변경하기")
-    public ResponseEntity<HashMap<String, Object>> updateId(@PathVariable("Userinfo") Userinfo userinfo, @PathVariable("newId") String newId) {
+    @PutMapping(value = "/updateid/{Userinfo}/{newName}")
+    @ApiOperation(value = "닉네임 변경하기")
+    public ResponseEntity<HashMap<String, Object>> updateId(@PathVariable("Userinfo") Userinfo userinfo, @PathVariable("newName") String newName) {
         System.out.println("updateId Controller");
         try {
             HashMap<String, Object> map = new HashMap<>();
-            userinfoService.updateId(userinfo, newId);
+            userinfoService.updateId(userinfo, newName);
             map.put("Userinfo", userinfo);
 
             return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);

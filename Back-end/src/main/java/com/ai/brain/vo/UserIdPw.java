@@ -8,7 +8,7 @@ import lombok.*;
 public class UserIdPw {
 
     private String uId;
-
     private String uPw;
+    private String uName;
 
 }
