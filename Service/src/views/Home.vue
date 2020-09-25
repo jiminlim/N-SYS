@@ -1,17 +1,14 @@
 <template>
-  <v-container>
-    <h1>Home</h1>
-  </v-container>
+  <div class="home">
+    <img alt="Vue logo" src="src/assets/images/logo.png">
+  </div>
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
+// @ is an alias to /src
 
-  export default {
-    data() {
-      return {
-        
-      }
-    }
-  }
+
+export default {
+  name: 'Home'
+}
 </script>
