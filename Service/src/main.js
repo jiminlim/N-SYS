@@ -1,16 +1,16 @@
 import Vue from 'vue'
-import './plugins/vuetify'
 import App from './App.vue'
-import router from './router'
-import store from './store'
-import * as tf from '@tensorflow/tfjs';
-import * as tmPose from '@teachablemachine/pose';
-Vue.config.productionTip = false
+import router from './router/index'
+import store from './store/index'
+import vuetify from './plugins/vuetify'
+import Vuelidate from 'vuelidate'
 
-export const EventBus = new Vue()
+Vue.config.productionTip = false
+Vue.use(Vuelidate)
 
 new Vue({
   router,
   store,
+  vuetify,
   render: h => h(App)
 }).$mount('#app')
