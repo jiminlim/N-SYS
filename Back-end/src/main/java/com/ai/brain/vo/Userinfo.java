@@ -14,13 +14,10 @@ public class Userinfo {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int uPk;
 
-    @Column(name="u_id")
-    private String uiId;
+    private String uId;
     
-    @Column(name="u_pw")
-    private String uiPw;
+    private String uPw;
     
-    @Column(name="u_name")
-    private String uiName;
+    private String uName;
 
 }

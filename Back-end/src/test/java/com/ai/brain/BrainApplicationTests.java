@@ -21,7 +21,7 @@ class BrainApplicationTests {
     @Test
     public void create(){
     	String str = "email";
-    	Optional<Userinfo> user = userRepository.findByUiId(str);
+    	Optional<Userinfo> user = userRepository.findByUId(str);
 //        Userinfo user = new Userinfo();
 //        user.setUId("email");
 //        user.setUName("jimin");

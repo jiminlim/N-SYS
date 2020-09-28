@@ -10,7 +10,7 @@ import java.util.Optional;
 @Repository
 public interface UserinfoRepository extends JpaRepository<Userinfo, Integer> {
 
-	Optional<Userinfo> findByUiId(String email); // 쿼리메소드 사용
+	Optional<Userinfo> findByUId(String email); // 쿼리메소드 사용
 //    public Userinfo findByUPk(int uPk);
 //    public List<Userinfo> findByUpk(int num);
 //    public Userinfo findByUpk(int num);
