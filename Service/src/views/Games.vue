@@ -1,54 +1,65 @@
 <template>
   <v-container>
-    <brain-wall></brain-wall>
+    <brain-wall v-if="tempvar == true"></brain-wall>
+    <snake-game v-if="tempvar == false"></snake-game>
     <h1>Games</h1>
 
     <!-- 게임 모든 리스트  v-for 돌려서 출력 && axios-->
-<!--    <game-container v-for="game in gameList" :key="game.gid">-->
+    <!--    <game-container v-for="game in gameList" :key="game.gid">-->
+    <button
+      @click="
+        () => {
+          tempvar = !tempvar;
+        }
+      "
+    >
+      !!!!게임 바꾸기(임시버튼)!!!!
+    </button>
+    <br />
     <div v-for="game in gameList" :key="game.gid">
-      <game-container :game="game"/>
-<!--    {{game.gtitle}}-->
-
+      <game-container :game="game" />
+      <!--    {{game.gtitle}}-->
     </div>
     <button @click="getGames">hhhhhhhhhhhhhh</button>
   </v-container>
 </template>
 
 <script>
-import GameContainer from '@/components/Game/GameContainer'
+import GameContainer from "@/components/Game/GameContainer";
 import BrainWall from "@/components/BrainWall/BrainWall";
-import axios from 'axios'
-
+import SnakeGame from "@/components/SnakeGame/SnakeGame";
+import axios from "axios";
 
 export default {
   name: "Games",
   data() {
     return {
-      gameList : [],
-    }
+      tempvar: false,
+      // tempvar는 임시로 만든 변수입니다. 차후 삭제요망
+      gameList: [],
+    };
   },
-  methods : {
-    getGames(){
-      axios.get(this.$store.state.SERVER_URL+'/game/list')
-          .then((res)=>{
-            this.gameList = res.data
-            console.log(res)
-          })
-          .catch((err)=>{
-            console.log(err)
-          })
-    }
+  methods: {
+    getGames() {
+      axios
+        .get(this.$store.state.SERVER_URL + "/game/list")
+        .then((res) => {
+          this.gameList = res.data;
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
   },
-  components : {
+  components: {
     GameContainer,
     BrainWall,
+    SnakeGame,
   },
-  actions:{
-
-  }
-}
+  actions: {},
+};
 </script>
 
 <style scoped>
-
 </style>
