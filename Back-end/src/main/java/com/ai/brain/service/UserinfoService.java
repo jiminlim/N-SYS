@@ -31,9 +31,9 @@ public class UserinfoService {
             return null;
         } else {
             Userinfo userinfo = new Userinfo();
-            userinfo.setUId(userIdPw.getUId());
-            userinfo.setUPw(userIdPw.getUPw());
-            userinfo.setUName((userIdPw.getUName()));
+            userinfo.setUiId(userIdPw.getUId());
+            userinfo.setUiPw(userIdPw.getUPw());
+            userinfo.setUiName((userIdPw.getUName()));
 
             return userinfoRepository.save(userinfo);
         }
@@ -57,7 +57,7 @@ public class UserinfoService {
         if (flag) {
             return null;
         } else {
-            userinfo.setUName(newName);
+            userinfo.setUiName(newName);
             return userinfoRepository.save(userinfo);
         }
     }
@@ -65,7 +65,7 @@ public class UserinfoService {
     // pw 변경하기
     public Userinfo updatePw(Userinfo userinfo, String newPw) {
         System.out.println("updatePw Service");
-        userinfo.setUPw(newPw);
+        userinfo.setUiPw(newPw);
         return userinfoRepository.save(userinfo);
     }
 
@@ -104,13 +104,13 @@ public class UserinfoService {
         boolean flag = false;
         for (int i = 0; i < list.size(); i++) {
             // id 중복 검사
-            if (list.get(i).getUId().equals(userIdPw.getUId())) {
+            if (list.get(i).getUiId().equals(userIdPw.getUId())) {
                 flag = true;
                 break;
             }
 
             // 닉네임 중복 검사
-            if (list.get(i).getUName().equals(userIdPw.getUName())) {
+            if (list.get(i).getUiName().equals(userIdPw.getUName())) {
                 flag = true;
                 break;
             }
@@ -119,27 +119,27 @@ public class UserinfoService {
         return flag;
     }
 
-    public Userinfo getUserinfo(String loginId, String loginPw){
+    public Userinfo getUserinfo(String loginId, String loginPw) {
         List<Userinfo> list = userinfoRepository.findAll();
         Userinfo userinfo = new Userinfo();
         boolean flag = false;
         for (int i = 0; i < list.size(); i++) {
             // id, pw db 검사
-            if (list.get(i).getUId().equals(loginId)) {
-                if (list.get(i).getUPw().equals(loginPw)) {
+            if (list.get(i).getUiId().equals(loginId)) {
+                if (list.get(i).getUiPw().equals(loginPw)) {
                     flag = true;
                     userinfo.setUPk(list.get(i).getUPk());
-                    userinfo.setUName(list.get(i).getUName());
-                    userinfo.setUId(list.get(i).getUId());
-                    userinfo.setUPw(list.get(i).getUPw());
+                    userinfo.setUiName(list.get(i).getUiName());
+                    userinfo.setUiId(list.get(i).getUiId());
+                    userinfo.setUiPw(list.get(i).getUiPw());
                     break;
                 }
             }
         }
 
-        if (flag){
+        if (flag) {
             return userinfo;
-        }else {
+        } else {
             return null;
         }
     }
@@ -151,8 +151,8 @@ public class UserinfoService {
         boolean flag = false;
         for (int i = 0; i < list.size(); i++) {
             // id, pw db 검사
-            if (list.get(i).getUId().equals(userIdPw.getUId())) {
-                if (list.get(i).getUPw().equals(userIdPw.getUPw())) {
+            if (list.get(i).getUiId().equals(userIdPw.getUId())) {
+                if (list.get(i).getUiPw().equals(userIdPw.getUPw())) {
                     flag = true;
                     break;
                 }
@@ -172,7 +172,7 @@ public class UserinfoService {
         }
 
         String token = "";
-        if (!userinfo.getUPw().equals(member.get().getUPw())) {
+        if (!userinfo.getUiPw().equals(member.get().getUiPw())) {
         } else {
             token = jwtTokenProvider.createToken(userinfo);
         }
