@@ -39,23 +39,30 @@
     </v-app-bar>
 
     <v-main>
+      <div style="background-color: brown">
+      <chatting></chatting>
+      </div>
       <router-view></router-view>
     </v-main>
 
     <v-footer app>
       <span>&copy; {{ new Date().getFullYear() }}</span>
+
     </v-footer>
   </v-app>
 </template>
 
 <script>
 import mypageCard from '@/components/Users/mypage'
+import chatting from '@/components/Main/socketChat'
+// import chatting from '@/components/Main/step4'
 export default {
   props: {
     source: String,
   },
   components:{
-    mypageCard
+    mypageCard,
+    chatting
   },
   data: () => ({
     drawer: null,
