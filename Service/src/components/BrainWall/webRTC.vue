@@ -138,6 +138,13 @@ export default {
       console.log.apply(console, array);
     });
 
+    this.$socket.on('changepose',function(tempRandomNumber, round){
+      console.log('changepose ',tempRandomNumber,' round :  ',round);
+
+      this.changeCurrentPoseM(tempRandomNumber); // 바꿔줌 .
+
+    })
+
     this.$socket.on('message', function (message) {
       console.log('Client received message:', message);
       if (message === 'got user media') {
@@ -173,6 +180,7 @@ export default {
     window.onbeforeunload = function () {
       this.sendMessage('bye');
     }
+
 
 
   },
@@ -333,8 +341,11 @@ export default {
     },
     generateRandomNumber() {
       let tempRandomNumber = Math.floor(Math.random() * 3 + 1) // 숫자 바꾸면 됨
-      this.changeCurrentPoseM(tempRandomNumber)
+      // this.changeCurrentPoseM(tempRandomNumber)
       this.round++
+
+      this.$socket.emit('changepose', tempRandomNumber, this.round);
+
       this.countDown = 10
       this.countDownTimer()
       if (this.round == 5) {
