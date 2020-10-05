@@ -38,10 +38,10 @@ io.sockets.on('connection', function(socket) {
         socket.emit('log', array);
     }
 
-    socket.on('changepose', function (tempRandomNumber,round){
-        log('changepose: ', tempRandomNumber,'  round : ',round);
-        console.log('changepose: ', tempRandomNumber,'  round : ',round);
-        socket.emit('changepose', tempRandomNumber,round);
+    socket.on('changepose', function (data){
+        console.log('changepose: ', data.tempRandomNumber,'  round : ',data.round);
+        var res = {tempRandomNumber : data.tempRandomNumber, round : data.round};
+        socket.broadcast.emit('changepose', res);
     });
 
     socket.on('message', function(message) {

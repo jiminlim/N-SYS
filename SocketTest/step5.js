@@ -29,8 +29,8 @@ const PORT = 3001;   // HTTPS 는 443 포트를 사용합니다
 // var ca = fs.readFileSync('../ssl/rootCA.pem').toString();
 
 const options = {
-    key: fs.readFileSync('../ssl/j3b201.key'),
-    cert: fs.readFileSync('../ssl/j3b201.crt')
+    key: fs.readFileSync('./private.pem'),
+    cert: fs.readFileSync('./public.pem')
 };
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"

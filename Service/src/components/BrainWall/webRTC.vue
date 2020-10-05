@@ -138,13 +138,6 @@ export default {
       console.log.apply(console, array);
     });
 
-    this.$socket.on('changepose',function(tempRandomNumber, res_round){
-      console.log('changepose ',tempRandomNumber,' round :  ',res_round);
-      this.round = res_round;
-      this.changeCurrentPoseM(tempRandomNumber); // 바꿔줌 .
-
-    }.bind(this));
-
     this.$socket.on('message', function (message) {
       console.log('Client received message:', message);
       if (message === 'got user media') {
@@ -173,6 +166,13 @@ export default {
         .catch(function (e) {
           alert('getUserMedia() error: ' + e.name);
         });
+
+    this.$socket.on('changepose',(data) => {
+      console.log(data.tempRandomNumber, data.round);
+      this.changeCurrentPoseM(data.tempRandomNumber);
+      this.round = data.round;
+      console.log(data.tempRandomNumber, this.round);
+    }).bind(this);
 
     if (location.hostname !== "localhost") {
       this.requestTurn('https://computeengineondemand.appspot.com/turn?username=41784574&key=4080218913');
@@ -340,10 +340,11 @@ export default {
     },
     generateRandomNumber() {
       let tempRandomNumber = Math.floor(Math.random() * 3 + 1) // 숫자 바꾸면 됨
-      // this.changeCurrentPoseM(tempRandomNumber)
+      this.changeCurrentPoseM(tempRandomNumber)
       this.round++
 
-      this.$socket.emit('changepose', tempRandomNumber, this.round);
+      this.$socket.emit('changepose',
+          {tempRandomNumber : tempRandomNumber, round : this.round} );
 
       this.countDown = 10
       this.countDownTimer()
@@ -356,6 +357,7 @@ export default {
 
       // console.log(tempRandomNumber)
     },
+
     changeCurrentPoseM: function (x) {
       this.$store.commit("changeCurrentPose", x)
     },
