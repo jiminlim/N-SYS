@@ -2,7 +2,7 @@
   <div>
     <h1>두뇌의 벽</h1>
     <div v-if="gameStartFlag">
-      <div>{{countDown}}</div>
+      <div>카운트 다운 : <h1>{{countDown}}</h1></div>
       <div v-if="!roundFinishFlag">
         round - {{round}}/5
         <div>score - {{score}}</div>
@@ -10,8 +10,6 @@
         <div>현재 포즈 이름 - {{getCurrentPose}}</div>
         <random-pose></random-pose>
       </div>
-<!--      <div v-else-if="roundFinishFlag">-->
-<!--      </div>-->
     </div>
     <button @click="clickStart()" class="btn2 m-3">START</button>
 
@@ -167,6 +165,11 @@ export default {
       for (let i = 0; i < maxPredictions; i++) {
         console.log(this.$store.state.currentPose)
         // console.log(prediction[i].className)
+
+        if(this.$store.state.currentPose == prediction[i].className){
+          labelContainer.childNodes[0].innerHTML = prediction[i].className + ": " + prediction[i].probability.toFixed(2);
+        }
+
         if(this.$store.state.currentPose == prediction[i].className && !this.scoreFlag && prediction[i].probability.toFixed(2)>=0.9){
           if(this.countDown>0){
           this.score++
@@ -175,9 +178,9 @@ export default {
 
         }
 
-        const classPrediction =
-            prediction[i].className + ": " + prediction[i].probability.toFixed(2);
-        labelContainer.childNodes[i].innerHTML = classPrediction;
+        // const classPrediction =
+        //     prediction[i].className + ": " + prediction[i].probability.toFixed(2);
+        // labelContainer.childNodes[i].innerHTML = classPrediction;
       }
 
       // finally draw the poses
