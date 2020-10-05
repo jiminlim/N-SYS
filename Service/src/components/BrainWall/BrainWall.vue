@@ -6,12 +6,12 @@
       <div v-if="!roundFinishFlag">
         round - {{round}}/5
         <div>score - {{score}}</div>
-        <button @click="generateRandomNumber()">포즈 바꾸기 버튼</button>
+        <button :disabled="countFlag" @click="generateRandomNumber()">포즈 바꾸기 버튼</button>
         <div>현재 포즈 이름 - {{getCurrentPose}}</div>
         <random-pose></random-pose>
       </div>
-      <div v-else-if="roundFinishFlag">
-      </div>
+<!--      <div v-else-if="roundFinishFlag">-->
+<!--      </div>-->
     </div>
     <button @click="clickStart()" class="btn2 m-3">START</button>
 
@@ -42,7 +42,8 @@ export default {
       roundFinishFlag: false,
       scoreFlag:false,
       gameStartFlag:false,
-      countDown:10,
+      countDown:5,
+      countFlag:false, //카운트 다운 버튼 비활성화
 
     }
   },
@@ -66,19 +67,28 @@ export default {
           this.countDown -= 1
           this.countDownTimer()
         }, 1000)
+      } else if(this.countDown==0){
+        this.countFlag=false
+        if(this.round==5){
+          alert('게임이 종료되었습니다.')
+          this.roundFinishFlag = true
+          this.round = 0
+          this.score=0
+        }
       }
     },
     generateRandomNumber(){
     let tempRandomNumber = Math.floor(Math.random()*3+1) // 숫자 바꾸면 됨
       this.changeCurrentPoseM(tempRandomNumber)
       this.round++
-      this.countDown=10
+      this.countDown=5
+      this.countFlag=true
       this.countDownTimer()
-      if(this.round==5){
-        this.roundFinishFlag = true
-        this.round = 0
-        this.score=0
-      }
+      // if(this.round==5){
+      //   this.roundFinishFlag = true
+      //   this.round = 0
+      //   this.score=0
+      // }
       this.scoreFlag = false
 
       console.log(tempRandomNumber)
