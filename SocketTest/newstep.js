@@ -1,32 +1,12 @@
-// var os = require('os');
-// var nodeStatic = require('node-static');
-// var fileServer = new(nodeStatic.Server)();
-// var socketIO = require('socket.io');
-//
-// const https = require('https');
-// const fs = require('fs');
-//
-// const options = {
-//     key: fs.readFileSync('./private.pem'),
-//     cert: fs.readFileSync('./public.pem')
-// };
-// console.log("kkkkcreateServer")
-// let app = https.createServer(options,
-//     (req,res)=>{
-//     console.log(res+" ################### ");
-//     fileServer.serve(req, res);
-// }).listen(3001);
-// var io = socketIO.listen(app);
-
 const os = require('os');
 const app = require('express')();
 const https = require('https');
 const fs = require('fs');
 const PORT = 3001;   // HTTPS 는 443 포트를 사용합니다
 
-//var privateKey = fs.readFileSync('../ssl/private.key').toString();
-//var certificate = fs.readFileSync('../ssl/private.crt').toString();
-// var ca = fs.readFileSync('../ssl/rootCA.pem').toString();
+// var privateKey = fs.readFileSync('./pem/private.key').toString();
+// var certificate = fs.readFileSync('./pem/private.crt').toString();
+// var ca = fs.readFileSync('./pem/rootCA.pem').toString();
 
 const options = {
     key: fs.readFileSync('../ssl/j3b201.key'),
@@ -34,10 +14,11 @@ const options = {
 };
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"
+
 // https 서버를 만들고 실행시킵니다
+// var server = https.createServer(options, app).listen(PORT);
+
 var server = https.createServer(options, app).listen(PORT);
-
-
 var io = require('socket.io')(server); //setting cors
 
 app.all('/*', function (req, res, next) {
@@ -48,7 +29,6 @@ app.all('/*', function (req, res, next) {
 
 console.log('Started chating server...');
 
-
 io.sockets.on('connection', function(socket) {
 
     // convenience function to log server messages on the client
@@ -57,6 +37,12 @@ io.sockets.on('connection', function(socket) {
         array.push.apply(array, arguments);
         socket.emit('log', array);
     }
+
+    socket.on('changepose', function (tempRandomNumber,round){
+        log('changepose: ', tempRandomNumber,'  round : ',round);
+        console.log('changepose: ', tempRandomNumber,'  round : ',round);
+        socket.emit('changepose', tempRandomNumber,round);
+    });
 
     socket.on('message', function(message) {
         log('Client said: ', message);

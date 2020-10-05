@@ -355,7 +355,7 @@ export default {
       }
       this.scoreFlag = false
 
-      console.log(tempRandomNumber)
+      // console.log(tempRandomNumber)
     },
     changeCurrentPoseM: function (x) {
       this.$store.commit("changeCurrentPose", x)
@@ -399,12 +399,12 @@ export default {
       const {posenetOutput} = await model.estimatePose(this.$refs.localVideo);
       const prediction = await model.predict(posenetOutput);
       if (prediction[0].probability.toFixed(1) == 1) {
-        console.log(prediction[0].probability.toFixed(1));
+        // console.log(prediction[0].probability.toFixed(1));
       }
 
       let i = 0;
       for (i = 0; i < maxPredictions; i++) {
-        console.log(this.$store.state.currentPose)
+        // console.log(this.$store.state.currentPose)
         // console.log(prediction[i].className)
         if (this.$store.state.currentPose == prediction[i].className && !this.scoreFlag && prediction[i].probability.toFixed(2) >= 0.9) {
           if (this.countDown > 0) {
