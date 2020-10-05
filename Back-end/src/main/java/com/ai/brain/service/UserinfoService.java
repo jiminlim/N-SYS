@@ -37,6 +37,7 @@ public class UserinfoService {
             userinfo.setUiImage((userIdPw.getUImage()));
             userinfo.setUiImgtype((userIdPw.getUImgtype()));
 
+
             return userinfoRepository.save(userinfo);
         }
     }
@@ -136,6 +137,7 @@ public class UserinfoService {
                     userinfo.setUiPw(list.get(i).getUiPw());
                     userinfo.setUiImage(list.get(i).getUiImage());
                     userinfo.setUiImgtype(list.get(i).getUiImgtype());
+
                     break;
                 }
             }

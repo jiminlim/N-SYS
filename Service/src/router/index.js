@@ -8,6 +8,7 @@ const routes = [
     path: '/',
     name: 'Home',
     component: () => import('../components/Main/MainPage')
+    // component:()=> import('@/components/Main/new')
   },
   {
     path: '/users',
@@ -17,7 +18,18 @@ const routes = [
   {
     path: '/games',
     name: 'games',
-    component: () => import(/* webpackChunkName: "games" */ '../views/Games.vue')
+    component: () => import(/* webpackChunkName: "games" */ '../components/BrainWall/webRTC.vue')
+    // component: () => import(/* webpackChunkName: "games" */ '../views/Games.vue')
+  },
+  {
+    path: '/webcam',
+    name:'webcam',
+    component : ()=>import('../views/WebCam.vue')
+  },
+  {
+    path:'/step5',
+    name:'step5',
+    component : ()=>import('@/components/Main/step5.vue')
   }
 ]
 

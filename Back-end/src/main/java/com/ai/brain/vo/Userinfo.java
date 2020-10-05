@@ -8,12 +8,15 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+
 @Table(name = "userinfo")
+
 public class Userinfo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int uPk;
+
 
     @Column(name="u_id")
     private String uiId;
@@ -29,5 +32,6 @@ public class Userinfo {
 
     @Column(name="u_imgtype")
     private String uiImgtype;
+
 
 }
