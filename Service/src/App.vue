@@ -23,6 +23,7 @@
           right
           offset-y
       >
+        
         <template v-slot:activator="{ on, attrs }">
           <v-btn
               dark
@@ -35,12 +36,12 @@
         </template>
         <mypageCard></mypageCard>
       </v-menu>
-      <v-toolbar-title @click="$router.push('/')">Application</v-toolbar-title>
+      <v-toolbar-title @click="$router.push('/')">{{getBar}} </v-toolbar-title>
     </v-app-bar>
 
     <v-main>
-      <div style="background-color: brown">
-      <chatting></chatting>
+      <div style="background-color: #a52a2a">
+<!--      <chatting></chatting>-->
       </div>
       <router-view></router-view>
     </v-main>
@@ -54,23 +55,27 @@
 
 <script>
 import mypageCard from '@/components/Users/mypage'
-import chatting from '@/components/Main/socketChat'
+// import chatting from '@/components/Main/socketChat'
 // import chatting from '@/components/Main/step4'
+import {mapGetters} from "vuex";
+
 export default {
   props: {
     source: String,
   },
   components:{
     mypageCard,
-    chatting
+    // chatting
   },
+
   data: () => ({
     drawer: null,
   }),
   created () {
     this.$vuetify.theme.dark = true
   },
-  methods:{
+  computed: {
+    ...mapGetters(['getBar'])
   }
 }
 </script>
