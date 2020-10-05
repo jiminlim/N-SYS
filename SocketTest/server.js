@@ -7,7 +7,7 @@ const options = {
     cert: fs.readFileSync('./public.pem')
 };
 
-var server = require('https').createServer(options,app);
+var server = require('https').createServer(options, app);
 var io = require('socket.io')(server); //setting cors
 app.all('/*', function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");

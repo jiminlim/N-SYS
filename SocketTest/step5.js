@@ -1,34 +1,24 @@
-// var os = require('os');
-// var nodeStatic = require('node-static');
-// var fileServer = new(nodeStatic.Server)();
-// var socketIO = require('socket.io');
-//
-// const https = require('https');
-// const fs = require('fs');
-//
-// const options = {
-//     key: fs.readFileSync('./private.pem'),
-//     cert: fs.readFileSync('./public.pem')
-// };
-// console.log("kkkkcreateServer")
-// let app = https.createServer(options,
-//     (req,res)=>{
-//     console.log(res+" ################### ");
-//     fileServer.serve(req, res);
-// }).listen(3001);
-// var io = socketIO.listen(app);
-
 const os = require('os');
 const app = require('express')();
 const https = require('https');
 const fs = require('fs');
 const PORT = 3001;   // HTTPS 는 443 포트를 사용합니다
+
+// var privateKey = fs.readFileSync('./pem/private.key').toString();
+// var certificate = fs.readFileSync('./pem/private.crt').toString();
+// var ca = fs.readFileSync('./pem/rootCA.pem').toString();
+
 const options = {
     key: fs.readFileSync('./private.pem'),
     cert: fs.readFileSync('./public.pem')
 };
+
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"
 // https 서버를 만들고 실행시킵니다
+// var server = https.createServer(options, app).listen(PORT);
 var server = https.createServer(options, app).listen(PORT);
+
+
 var io = require('socket.io')(server); //setting cors
 
 app.all('/*', function (req, res, next) {
@@ -71,7 +61,6 @@ io.sockets.on('connection', function(socket) {
 
     socket.on('create or join', function(room) {
         log('Received request to create or join room ' + room);
-
         var clientsInRoom = io.sockets.adapter.rooms[room];
         var numClients = clientsInRoom ? Object.keys(clientsInRoom.sockets).length : 0;
         log('Room ' + room + ' now has ' + numClients + ' client(s)');
