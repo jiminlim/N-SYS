@@ -14,11 +14,11 @@ const options = {
 };
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"
+
 // https 서버를 만들고 실행시킵니다
 // var server = https.createServer(options, app).listen(PORT);
+
 var server = https.createServer(options, app).listen(PORT);
-
-
 var io = require('socket.io')(server); //setting cors
 
 app.all('/*', function (req, res, next) {
@@ -28,7 +28,6 @@ app.all('/*', function (req, res, next) {
 });
 
 console.log('Started chating server...');
-
 
 io.sockets.on('connection', function(socket) {
 
