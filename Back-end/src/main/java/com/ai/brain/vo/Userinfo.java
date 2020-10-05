@@ -24,4 +24,10 @@ public class Userinfo {
     @Column(name="u_name")
     private String uiName;
 
+    @Column(name="u_image")
+    private String uiImage;
+
+    @Column(name="u_imgtype")
+    private String uiImgtype;
+
 }
