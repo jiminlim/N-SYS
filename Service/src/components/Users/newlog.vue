@@ -49,7 +49,7 @@
             <v-btn color="green darken-3" @click="submitlogin">Login</v-btn>
             <!--            <v-btn color="yellow accent-4" @click="clickfindpw">FindPassword</v-btn>-->
             <v-btn
-                color="lime "
+                color="lime"
                 dark
                 @click.stop="dialog = true"
             >

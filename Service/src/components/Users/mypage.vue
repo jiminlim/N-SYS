@@ -30,7 +30,7 @@
 <!--      ></v-list-item-avatar>-->
     </v-list-item>
     <v-list dense>
-      <v-list-item router :to="{name: 'users'}">
+      <v-list-item router :to="{name: 'games'}">
         <v-list-item-action>
           <v-icon>mdi-view-dashboard</v-icon>
         </v-list-item-action>

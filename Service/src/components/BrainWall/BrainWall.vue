@@ -1,6 +1,9 @@
 <template>
   <div>
     <h1>두뇌의 벽</h1>
+    <v-container >
+
+    </v-container>
     <div v-if="gameStartFlag">
       <div>{{countDown}}</div>
       <div v-if="!roundFinishFlag">
@@ -13,7 +16,8 @@
       <div v-else-if="roundFinishFlag">
       </div>
     </div>
-    <button @click="clickStart()" class="btn2 m-3">START</button>
+    <button @click="clickStart()" >START</button>
+    <v-btn color="green darken-3" @click="clickStart">Login</v-btn>
 
     <div style="border-style:solid"><canvas id="canvas"></canvas></div>
     <div style="border-style:solid" id="label-container" >

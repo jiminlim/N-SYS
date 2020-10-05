@@ -10,7 +10,7 @@
 
 <script>
 const mediaOption = {
-  audio: true,
+  // audio: true,
   video: {
     mandatory: {
       maxWidth: 160,
@@ -41,7 +41,7 @@ export default {
       },
       sdpConstraints: {
         'mandatory': {
-          'OfferToReceiveAudio': true,
+          // 'OfferToReceiveAudio': true,
           'OfferToReceiveVideo': true
         }
       },
