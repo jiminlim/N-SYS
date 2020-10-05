@@ -49,7 +49,6 @@
         </v-container>
       </v-col>
     </v-row>
-
   </v-container>
 </template>
 <script>
@@ -59,6 +58,9 @@ export default {
     sheet1: "d-flex",
     sheet2 : "d-none"
   }),
+  created() {
+    this.$store.commit("changebar","내가 승리한 것이지 인간이 승리한 것이 아니야");
+  },
   methods:{
     toggleSheet(){
       this.sheet1 = "d-none"

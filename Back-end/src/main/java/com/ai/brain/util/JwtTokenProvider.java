@@ -21,12 +21,12 @@ public class JwtTokenProvider {
     private long tokenValidTime;
 
     public String createToken(Userinfo userinfo) {
-        Claims claims = Jwts.claims().setSubject(userinfo.getUId());
+        Claims claims = Jwts.claims().setSubject(userinfo.getUiId());
 
         Date now = new Date();
         Date validity = new Date(now.getTime() + tokenValidTime);
 
-        return Jwts.builder().setClaims(claims).claim("u_name", userinfo.getUName())
+        return Jwts.builder().setClaims(claims).claim("u_name", userinfo.getUiName())
                 .setIssuedAt(now)
                 .setExpiration(validity)
                 .signWith(SignatureAlgorithm.HS256, secretKey).compact();
@@ -62,10 +62,10 @@ public class JwtTokenProvider {
         if (validateToken(token)) {
             Claims cl = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
 
-            userinfo.setUId(Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject());
-            userinfo.setUName(cl.get("u_name").toString());
+            userinfo.setUiId(Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject());
+            userinfo.setUiName(cl.get("u_name").toString());
         } else {
-            userinfo.setUName("F");
+            userinfo.setUiName("F");
         }
 
         return userinfo;
