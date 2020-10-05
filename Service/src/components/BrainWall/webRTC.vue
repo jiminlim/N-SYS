@@ -341,7 +341,7 @@ export default {
     },
     generateRandomNumber() {
       let tempRandomNumber = Math.floor(Math.random() * 3 + 1) // 숫자 바꾸면 됨
-      // this.changeCurrentPoseM(tempRandomNumber)
+      this.changeCurrentPoseM(tempRandomNumber)
       this.round++
 
       this.$socket.emit('changepose', tempRandomNumber, this.round);
