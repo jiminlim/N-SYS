@@ -1,11 +1,20 @@
 <template>
   <div>
     <h1>두뇌의 벽</h1>
-    <button @click="generateRandomNumber()">포즈 바꾸기</button>
-    <random-pose></random-pose>
-    <div>{{getCurrentPose}}</div>
+    <div v-if="gameStartFlag">
+      <div>{{countDown}}</div>
+      <div v-if="!roundFinishFlag">
+        round - {{round}}/5
+        <div>score - {{score}}</div>
+        <button @click="generateRandomNumber()">포즈 바꾸기 버튼</button>
+        <div>현재 포즈 이름 - {{getCurrentPose}}</div>
+        <random-pose></random-pose>
+      </div>
+      <div v-else-if="roundFinishFlag">
+      </div>
+    </div>
     <button @click="clickStart()" class="btn2 m-3">START</button>
-<!--    <a v-if="startBtn" @click="clickStart()" class="btn2 m-3">START</a>-->
+
     <div style="border-style:solid"><canvas id="canvas"></canvas></div>
     <div style="border-style:solid" id="label-container" >
       <h2>good</h2>
@@ -28,7 +37,13 @@ export default {
     return {
       startBtn:true,
       requestId: undefined,
-      // rannum: 0,
+      score:0,
+      round:0,
+      roundFinishFlag: false,
+      scoreFlag:false,
+      gameStartFlag:false,
+      countDown:10,
+
     }
   },
   components:{
@@ -42,10 +57,30 @@ export default {
       // this.startDateTime = new Date();
       // this.$cookies.set('startDateTime', this.startDateTime)
       this.init()
+      this.roundFinishFlag=false
+      this.gameStartFlag=true
+    },
+    countDownTimer() {
+      if(this.countDown > 0) {
+        setTimeout(() => {
+          this.countDown -= 1
+          this.countDownTimer()
+        }, 1000)
+      }
     },
     generateRandomNumber(){
     let tempRandomNumber = Math.floor(Math.random()*3+1) // 숫자 바꾸면 됨
       this.changeCurrentPoseM(tempRandomNumber)
+      this.round++
+      this.countDown=10
+      this.countDownTimer()
+      if(this.round==5){
+        this.roundFinishFlag = true
+        this.round = 0
+        this.score=0
+      }
+      this.scoreFlag = false
+
       console.log(tempRandomNumber)
     },
     changeCurrentPoseM: function(x){
@@ -115,14 +150,24 @@ export default {
       //   }
       //   status = "bent"
       // }
+
+
+
+
       for (let i = 0; i < maxPredictions; i++) {
         console.log(this.$store.state.currentPose)
         // console.log(prediction[i].className)
-        if(this.$store.state.currentPose == prediction[i].className)
+        if(this.$store.state.currentPose == prediction[i].className && !this.scoreFlag && prediction[i].probability.toFixed(2)>=0.9){
+          if(this.countDown>0){
+          this.score++
+          this.scoreFlag = true
+        }
 
-        {const classPrediction =
+        }
+
+        const classPrediction =
             prediction[i].className + ": " + prediction[i].probability.toFixed(2);
-        labelContainer.childNodes[i].innerHTML = classPrediction;}
+        labelContainer.childNodes[i].innerHTML = classPrediction;
       }
 
       // finally draw the poses
