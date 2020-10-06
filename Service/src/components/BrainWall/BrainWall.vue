@@ -6,8 +6,8 @@
     <div>{{ getCurrentPose }}</div>
     <button @click="clickStart()" class="btn2 m-3">START</button>
     <!--    <a v-if="startBtn" @click="clickStart()" class="btn2 m-3">START</a>-->
-    <div style="border-style:solid"><canvas id="canvas"></canvas></div>
-    <div style="border-style:solid" id="label-container">
+    <div style="border-style: solid"><canvas id="canvas"></canvas></div>
+    <div style="border-style: solid" id="label-container">
       <h2>good</h2>
       <h2>bad</h2>
     </div>
@@ -48,7 +48,15 @@ export default {
       this.changeCurrentPoseM(tempRandomNumber);
       console.log(tempRandomNumber);
     },
-    changeCurrentPoseM: function(x) {
+    changeCurrentPoseM: function (x) {
+      this.$store.commit("changeCurrentPose", x);
+    },
+    generateRandomNumber() {
+      let tempRandomNumber = Math.floor(Math.random() * 3 + 1); // 숫자 바꾸면 됨
+      this.changeCurrentPoseM(tempRandomNumber);
+      console.log(tempRandomNumber);
+    },
+    changeCurrentPoseM: function (x) {
       this.$store.commit("changeCurrentPose", x);
     },
     async init() {

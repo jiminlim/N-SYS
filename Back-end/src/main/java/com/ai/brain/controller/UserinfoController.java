@@ -6,8 +6,8 @@ import com.ai.brain.vo.Userinfo;
 import com.ai.brain.util.JwtTokenProvider;
 import io.swagger.annotations.ApiOperation;
 import org.apache.catalina.User;
-
 import org.apache.commons.io.IOUtils;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -25,6 +26,11 @@ import java.util.*;
 import java.util.Base64.Encoder;
 import java.util.Base64;
 import java.util.HashMap;
+
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
 
 
 @RestController
@@ -87,7 +93,15 @@ public class UserinfoController {
         System.out.println("updateId Controller");
         try {
             HashMap<String, Object> map = new HashMap<>();
+
             Userinfo user = userinfoService.updateId(userinfo);
+
+            // 닉네임 중복 체크
+            if (user == null) {
+                map.put("Userinfo", "fail");
+            } else {
+                map.put("Userinfo", userinfo);
+            }
 
             // 닉네임 중복 체크
             if (user == null) {
@@ -135,7 +149,9 @@ public class UserinfoController {
 
     @PostMapping("/login")
     @ApiOperation(value = "로그인")
+
     public ResponseEntity<HashMap<String, Object>> login(@RequestBody UserIdPw userIdPw, HttpServletRequest request) {
+
         System.out.println("login Controller");
         System.out.println(userIdPw.getUId()); // 로그인 하는 유저의 아이디 확인
         System.out.println(userIdPw.getUPw()); // 로그인 하는 유저의 비밀번호 확인
@@ -145,6 +161,7 @@ public class UserinfoController {
             HashMap<String, Object> map = new HashMap<>();
 
             Userinfo userinfo = userinfoService.getUserinfo(loginId, loginPw);
+
 
             if (userinfo != null) { // 로그인 성공시
                 String token = userinfoService.createToken(userinfo); // 토큰을 생성해서

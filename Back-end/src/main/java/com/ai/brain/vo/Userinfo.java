@@ -8,7 +8,9 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+
 @Table(name = "userinfo")
+
 public class Userinfo {
 
     @Id
@@ -17,10 +19,10 @@ public class Userinfo {
 
     @Column(name="u_id")
     private String uiId;
-
+    
     @Column(name="u_pw")
     private String uiPw;
-
+    
     @Column(name="u_name")
     private String uiName;
 
