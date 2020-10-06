@@ -39,7 +39,7 @@ io.sockets.on('connection', function(socket) {
     }
 
     socket.on('changepose', function (data){
-        console.log('changepose: ', data.tempRandomNumber,'  round : ',data.round);
+        //console.log('changepose: ', data.tempRandomNumber,'  round : ',data.round);
         var res = {tempRandomNumber : data.tempRandomNumber, round : data.round};
         socket.broadcast.emit('changepose', res);
     });

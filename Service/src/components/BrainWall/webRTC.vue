@@ -1,38 +1,52 @@
 <template>
   <div>
-    <div>
-      <div v-if="gameStartFlag">
-        <div>{{ countDown }}</div>
-        <div v-if="!roundFinishFlag">
-          round - {{ round }}/5
-          <div>score - {{ score }}</div>
-          <button @click="generateRandomNumber()">포즈 바꾸기 버튼</button>
-          <div>현재 포즈 이름 - {{ getCurrentPose }}</div>
-          <random-pose></random-pose>
+    <div style=" border-style:solid">
+      <div class="horizon chileframe" style="background-color: brown">
+        <div style="margin:10px; background-color: #441674">
+          <h1>두뇌의 벽 방제목 입니다잇!! ㅇㅅㅇ// </h1>
+          <div v-if="!gameStartFlag">
+          <v-btn @click="clickStart" > {{startbtnvalue }} </v-btn>
+          </div>
+          <div v-if="gameStartFlag">
+          <v-btn @click="generateRandomNumber()">포즈 바꾸기 버튼</v-btn>
+          </div>
+          <div>
+            <div v-if="gameStartFlag">
+              <div>{{ countDown }}</div>
+              <div v-if="!roundFinishFlag">
+                round - {{ round }}/5
+                <div>score - {{ score }}</div>
+                <div>현재 포즈 이름 - {{ getCurrentPose }}</div>
+                <div style="border-style:solid" id="label-container">
+                </div>
+              </div>
+              <div v-else-if="roundFinishFlag">
+                <h1>끝났소</h1>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="horizon chileframe" >
+              <random-pose></random-pose>
+            </div>
+            <div class="horizon chileframe">
+              <video style="width:100%; height: 500px; background-color: blue" id='remoteVideo' ref="remoteVideo" autoplay></video>
+            </div>
+          </div>
         </div>
-        <div v-else-if="roundFinishFlag">
-        </div>
       </div>
-      <button @click="clickStart()" class="btn2 m-3">START</button>
+      <div class=" horizon chileframe" style="background-color: darkcyan">
+        <div class="container">
+          <div id='videos' style="margin: 30px;">
+            <video style="width:100%; height: 600px; background-color: blue" id='localVideo' ref="localVideo" autoplay
+                   muted></video>
 
-      <div style="border-style:solid">
-        <canvas id="canvas"></canvas>
-      </div>
-
-      <div style="border-style:solid" id="label-container">
-        <h2>good</h2>
-        <h2>bad</h2>
-      </div>
-
-      <div class="container">
-        <h1>local webRTC </h1>
-        <div id='videos'>
-          <video id='localVideo' ref="localVideo" autoplay muted></video>
-          <video id='remoteVideo' ref="remoteVideo" autoplay></video>
+          </div>
         </div>
       </div>
     </div>
   </div>
+
 </template>
 
 <script>
@@ -48,7 +62,7 @@ const mediaOption = {
   video: {
     mandatory: {
       maxWidth: 300,
-      maxHeight: 300,
+      maxHeight: 500,
       maxFrameRate: 5,
     },
     optional: [
@@ -69,8 +83,8 @@ export default {
       scoreFlag: false,
       gameStartFlag: false,
       countDown: 10,
-
-      room: 'foo',
+      startbtnvalue:'START',
+      room: '',
       isInitiator: false,
       isStarted: false,
       isChannelReady: false,
@@ -100,17 +114,39 @@ export default {
   },
   computed: {
     ...mapGetters(['getCurrentPose']),
-  }
-  ,
+  },
   created() {
     let _this = this;
-    this.$store.commit("changebar","두뇌의벽");
+    this.$store.commit("changebar", "두뇌의벽");
+    //
+    // if (this.room !== '') {
+    //   console.log('Create or join room', this.room);
+    //   this.$socket.emit('create or join', this.room);
+    // }
+    // this.$socket.on('roommk', function(room){
+    //   console.log('room',room);
+    //   this.room=room;
+    // }.bind(this));
+
+    navigator.mediaDevices.getUserMedia(mediaOption)
+        .then(this.gotStream)
+        .catch(function (e) {
+          alert('getUserMedia() error: ' + e.name);
+        });
 
     if (this.room !== '') {
-
-      console.log('Create or join room', this.room);
+      console.log('Message from client: Asking to join room ' + this.room);
       this.$socket.emit('create or join', this.room);
     }
+    // else{
+    //   window.room = prompt("방이름을 적어주세용:");
+    //   this.room = window.room;
+    //   this.$socket.emit('roommk', this.room);
+    //   console.log('roomname',this.room);
+    // }
+
+
+
     this.$socket.on('created', function (room) {
       console.log('Created room ' + room);
       this.isInitiator = true;
@@ -161,13 +197,9 @@ export default {
       }
     }.bind(this));
 
-    navigator.mediaDevices.getUserMedia(mediaOption)
-        .then(this.gotStream)
-        .catch(function (e) {
-          alert('getUserMedia() error: ' + e.name);
-        });
 
-    this.$socket.on('changepose',(data) => {
+
+    this.$socket.on('changepose', (data) => {
       console.log(data.tempRandomNumber, data.round);
       this.changeCurrentPoseM(data.tempRandomNumber);
       this.round = data.round;
@@ -180,8 +212,6 @@ export default {
     window.onbeforeunload = function () {
       this.sendMessage('bye');
     }
-
-
   },
 
   methods: {
@@ -344,14 +374,16 @@ export default {
       this.round++
 
       this.$socket.emit('changepose',
-          {tempRandomNumber : tempRandomNumber, round : this.round} );
+          {tempRandomNumber: tempRandomNumber, round: this.round});
 
       this.countDown = 10
       this.countDownTimer()
       if (this.round == 5) {
         this.roundFinishFlag = true
+        this.gameStartFlag = false;
         this.round = 0
         this.score = 0
+
       }
       this.scoreFlag = false
 
@@ -372,16 +404,13 @@ export default {
       model = await tmPose.load(modelURL, metadataURL);
       maxPredictions = model.getTotalClasses();
 
-      const size = 400;
+
       this.requestId = window.requestAnimationFrame(this.loop);
-
+      // const size = 400;
       // append/get elements to the DOM
-      const canvas = document.getElementById("canvas");
-
-      canvas.width = size;
-      canvas.height = size;
-
-
+      // const canvas = document.getElementById("canvas");
+      // canvas.width = size;
+      // canvas.height = size;
       // ctx = canvas.getContext("2d");
       labelContainer = document.getElementById("label-container");
       for (let i = 0; i < maxPredictions; i++) { // and class labels
@@ -434,3 +463,14 @@ export default {
   }
 }
 </script>
+<style>
+.horizon {
+  display: inline-block;
+
+}
+
+.chileframe {
+  width: 50%;
+  height: 100%;
+}
+</style>

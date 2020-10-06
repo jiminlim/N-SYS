@@ -19,6 +19,7 @@
     <button @click="clickStart()" >START</button>
     <v-btn color="green darken-3" @click="clickStart">Login</v-btn>
 
+
     <div style="border-style:solid"><canvas id="canvas"></canvas></div>
     <div style="border-style:solid" id="label-container" >
       <h2>good</h2>
