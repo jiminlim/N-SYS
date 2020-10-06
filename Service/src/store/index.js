@@ -6,7 +6,8 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    SERVER_URL: "http://localhost:8080", // 차후 aws로 바꿔야함
+    SERVER_URL: "https://j3b201.p.ssafy.io:8443", // 차후 aws로 바꿔야함
+    // SERVER_URL: "https://localhost:8443/", // 차후 aws로 바꿔야함
     poses: ["1", "2"], // poseList - 디비에 넣을지 고민중
     currentPose: "ready", // default pose,
     bar: "내가 승리한 것이지 인간이 승리한 것이 아니야",
@@ -22,10 +23,11 @@ export default new Vuex.Store({
     },
   },
   actions: {
-    login: (context, loginData) => {
+    login: (state, loginData) => {
       console.log("store login " + loginData.uid + " " + loginData.upw);
+      console.log(this.$store.state.SERVER_URL)
       axios
-        .post("http://localhost:8080/Userinfo/login", loginData)
+        .post(this.$store.state.SERVER_URL+"/Userinfo/login", loginData)
         .then(({ data }) => {
           console.log(data);
           if (data.Userinfo != null) {
@@ -43,10 +45,10 @@ export default new Vuex.Store({
           window.location.href = "/";
         });
     },
-    join: (context, joinData) => {
+    join: (state, joinData) => {
       console.log("store join : " + joinData.uid);
       axios
-        .post("http://localhost:8080/Userinfo/join", joinData)
+        .post(state.SERVER_URL+"/Userinfo/join", joinData)
         .then(({ data }) => {
           console.log(data);
           console.log(data.Userinfo);
@@ -58,7 +60,7 @@ export default new Vuex.Store({
           window.location.href = "/";
         });
     },
-    findpw: (context, findpwData) => {
+    findpw: (state, findpwData) => {
       console.log("store findpw [email] : " + findpwData.target_email);
       // axios를 통해서 백엔드와 통신. [사용자가 입력한 이메일을 인자로 넘기고, 그걸 받은 백엔드에서 DB와 비교. 가입된 이메일인지 체크.]
       // 가입된 이메일이라면 true, 아니라면 false 값 반환. 숫자 0 또는 1로 반환해도 가능.
@@ -67,7 +69,8 @@ export default new Vuex.Store({
       // 가입된 이메일이 아니라면 가입한 이메일을 입력하라는 경고창 팝업.
 
       axios
-        .post("http://localhost:8080/Userinfo/findpw", {
+        // .post("http://localhost:8080/Userinfo/findpw", {
+        .post(state.SERVER_URL+"/Userinfo/findpw", {
           uid: findpwData.target_email,
         })
         .then(({ data }) => {

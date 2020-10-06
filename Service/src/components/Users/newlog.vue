@@ -100,8 +100,8 @@
                 :error-messages="nicknameErrors"
                 @input="$v.nickname.$touch()"
                 @blur="$v.nickname.$touch()"
-                required
               ></v-text-field>
+<!--                required-->
               <v-text-field
                 label="Email"
                 v-model="email"
