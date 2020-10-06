@@ -6,6 +6,7 @@ import com.ai.brain.vo.Userinfo;
 import com.ai.brain.util.JwtTokenProvider;
 import io.swagger.annotations.ApiOperation;
 import org.apache.catalina.User;
+
 import org.apache.commons.io.IOUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -26,11 +26,6 @@ import java.util.*;
 import java.util.Base64.Encoder;
 import java.util.Base64;
 import java.util.HashMap;
-
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
 
 
 @RestController
@@ -149,9 +144,7 @@ public class UserinfoController {
 
     @PostMapping("/login")
     @ApiOperation(value = "로그인")
-
     public ResponseEntity<HashMap<String, Object>> login(@RequestBody UserIdPw userIdPw, HttpServletRequest request) {
-
         System.out.println("login Controller");
         System.out.println(userIdPw.getUId()); // 로그인 하는 유저의 아이디 확인
         System.out.println(userIdPw.getUPw()); // 로그인 하는 유저의 비밀번호 확인
@@ -161,7 +154,6 @@ public class UserinfoController {
             HashMap<String, Object> map = new HashMap<>();
 
             Userinfo userinfo = userinfoService.getUserinfo(loginId, loginPw);
-
 
             if (userinfo != null) { // 로그인 성공시
                 String token = userinfoService.createToken(userinfo); // 토큰을 생성해서
@@ -269,6 +261,7 @@ public class UserinfoController {
         SimpleDateFormat format1 = new SimpleDateFormat("yyyyMMddHHmmss");
         Date time = new Date();
         String time1 = format1.format(time);
+
 //		System.out.println(time1);
         if (image != null && !image.isEmpty()) {
 //            File dest1 = new File("/home/ubuntu/vue/dist/img/fileupload/");
@@ -310,6 +303,7 @@ public class UserinfoController {
         Base64.Encoder encoder = Base64.getEncoder();
         // 위에서  ByteArray형태로 변환된 이미지를 Base64형태로 인코딩.
         byte[] baseIncodingBytes = encoder.encode(imageByteArray);
+
 //		System.out.println(new String(baseIncodingBytes)); // 잘 인코딩 됐는지 확인.
         // Base64형태로 인코딩된 이미지 파일을 String으로 바꿈.
         String base64 = new String(baseIncodingBytes);
@@ -317,6 +311,7 @@ public class UserinfoController {
         String imgsrc = "data:" + image.getContentType() + ";base64," + base64;
         // 이미지 파일의 src를 반환하면 끝.
 //		System.out.println(imgsrc);
+
 
         //그러나 이 단계에선 img파일의 전체src는 상당히 길다. DB저장 axios를 보내기 위해 지금은 이미지 저장 경로만 보낸다.
         return (dest3);

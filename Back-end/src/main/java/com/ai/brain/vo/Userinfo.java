@@ -17,6 +17,7 @@ public class Userinfo {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int uPk;
 
+
     @Column(name="u_id")
     private String uiId;
     

@@ -31,7 +31,6 @@ public class UserinfoService {
             return null;
         } else {
             Userinfo userinfo = new Userinfo();
-
             userinfo.setUiId(userIdPw.getUId());
             userinfo.setUiPw(userIdPw.getUPw());
             userinfo.setUiName((userIdPw.getUName()));
@@ -61,7 +60,6 @@ public class UserinfoService {
         if (flag) {
             return null;
         } else {
-
             change_userinfo_name.setUiName(userinfo.getUiName());
             return userinfoRepository.save(change_userinfo_name);
         }
@@ -111,17 +109,13 @@ public class UserinfoService {
         boolean flag = false;
         for (int i = 0; i < list.size(); i++) {
             // id 중복 검사
-
             if (list.get(i).getUiId().equals(userIdPw.getUId())) {
-
                 flag = true;
                 break;
             }
 
             // 닉네임 중복 검사
-
             if (list.get(i).getUiName().equals(userIdPw.getUName())) {
-
                 flag = true;
                 break;
             }
@@ -136,7 +130,6 @@ public class UserinfoService {
         boolean flag = false;
         for (int i = 0; i < list.size(); i++) {
             // id, pw db 검사
-
             if (list.get(i).getUiId().equals(loginId)) {
                 if (list.get(i).getUiPw().equals(loginPw)) {
                     flag = true;
@@ -165,10 +158,8 @@ public class UserinfoService {
         boolean flag = false;
         for (int i = 0; i < list.size(); i++) {
             // id, pw db 검사
-
             if (list.get(i).getUiId().equals(userIdPw.getUId())) {
                 if (list.get(i).getUiPw().equals(userIdPw.getUPw())) {
-
                     flag = true;
                     break;
                 }
@@ -188,9 +179,7 @@ public class UserinfoService {
         }
 
         String token = "";
-
         if (!userinfo.getUiPw().equals(member.get().getUiPw())) {
-
         } else {
             token = jwtTokenProvider.createToken(userinfo);
         }

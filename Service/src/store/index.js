@@ -8,12 +8,17 @@ export default new Vuex.Store({
   state: {
     SERVER_URL: "http://localhost:8080", // 차후 aws로 바꿔야함
     poses: ["ready", "left", "stand", "right"], // poseList - 디비에 넣을지 고민중
-    currentPose: "ready", // default pose
+    currentPose: "ready", // default pose,
+    bar: "내가 승리한 것이지 인간이 승리한 것이 아니야",
   },
   mutations: {
     changeCurrentPose(state, payload) {
       // 현재 포즈를 바꿔줌
       state.currentPose = this.state.poses[payload];
+    },
+    changebar(state, payload) {
+      console.log("payload " + payload);
+      state.bar = payload;
     },
   },
   actions: {
@@ -110,6 +115,9 @@ export default new Vuex.Store({
   getters: {
     getCurrentPose(state) {
       return state.currentPose;
+    },
+    getBar(state) {
+      return state.bar;
     },
   },
   modules: {},

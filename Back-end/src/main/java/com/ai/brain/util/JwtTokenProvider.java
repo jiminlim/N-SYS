@@ -21,13 +21,9 @@ public class JwtTokenProvider {
     private long tokenValidTime;
 
     public String createToken(Userinfo userinfo) {
-
         Claims claims = Jwts.claims().setSubject(userinfo.getUiId());
-
         Date now = new Date();
         Date validity = new Date(now.getTime() + tokenValidTime);
-
-
         return Jwts.builder().setClaims(claims).claim("u_name", userinfo.getUiName())
                 .setIssuedAt(now)
                 .setExpiration(validity)
@@ -63,8 +59,6 @@ public class JwtTokenProvider {
         String token = resolveToken(request);
         if (validateToken(token)) {
             Claims cl = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
-
-
             userinfo.setUiId(Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject());
             userinfo.setUiName(cl.get("u_name").toString());
         } else {
