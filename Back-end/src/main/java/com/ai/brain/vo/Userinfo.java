@@ -33,5 +33,4 @@ public class Userinfo {
     @Column(name="u_imgtype")
     private String uiImgtype;
 
-
 }

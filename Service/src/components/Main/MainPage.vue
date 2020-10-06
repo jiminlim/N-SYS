@@ -1,44 +1,56 @@
 <template>
   <v-container fill-height fluid>
-    <v-row align="center" justify="center" >
+    <v-row align="center" justify="center">
       <v-col cols="12">
-        <v-container class="fill-height" :class=sheet1 @click="toggleSheet">
-          <v-hover v-slot:default="{ hover }" >
+        <v-container class="fill-height" :class="sheet1" @click="toggleSheet">
+          <v-hover v-slot:default="{ hover }">
             <v-card
-                :elevation="hover ? 24 : 2"
-                class="mx-auto"
+              :elevation="hover ? 24 : 2"
+              class="mx-auto"
+              height="400"
+              max-width="350"
+            >
+              <v-img
+                src="@/assets/images/insertcoin.png"
                 height="400"
-                max-width="350" >
-              <v-img src="@/assets/images/insertcoin.png"
-                     height="400"
-                     max width="350"></v-img>
+                max
+                width="350"
+              ></v-img>
             </v-card>
           </v-hover>
         </v-container>
-        <v-container class="fill-height" :class= sheet2 >
-          <v-hover   v-slot:default="{ hover }"  >
+        <v-container class="fill-height" :class="sheet2">
+          <v-hover v-slot:default="{ hover }">
             <v-card
-                :elevation="hover ? 24 : 2"
-                class="mx-auto"
+              :elevation="hover ? 24 : 2"
+              class="mx-auto"
+              height="400"
+              max-width="350"
+            >
+              <v-img
+                src="@/assets/images/block.png"
                 height="400"
-                max-width="350"  >
-              <v-img src="@/assets/images/block.png"
-                     height="400"
-                     max width="350">
+                max
+                width="350"
+              >
                 <v-container fluid class="pa-10">
-                  <v-row >
-                    <v-hover  v-slot:default="{ hover }">
+                  <v-row>
+                    <v-hover v-slot:default="{ hover }">
                       <v-card :elevation="hover ? 24 : 2" class="mb-8">
-                        <v-img src="@/assets/images/brainStart.png"
-                               @click="$router.push('/users')"/>
+                        <v-img
+                          src="@/assets/images/brainStart.png"
+                          @click="$router.push('/users')"
+                        />
                       </v-card>
                     </v-hover>
                   </v-row>
-                  <v-row >
+                  <v-row>
                     <v-hover v-slot:default="{ hover }">
-                      <v-card :elevation="hover ? 24 : 2" >
-                        <v-img src="@/assets/images/snakeStart.png"
-                               @click="$router.push('/games')"/>
+                      <v-card :elevation="hover ? 24 : 2">
+                        <v-img
+                          src="@/assets/images/snakeStart.png"
+                          @click="$router.push('/games')"
+                        />
                       </v-card>
                     </v-hover>
                   </v-row>
@@ -56,19 +68,19 @@ export default {
   name: "MainPage",
   data: () => ({
     sheet1: "d-flex",
-    sheet2 : "d-none"
+    sheet2: "d-none",
   }),
   created() {
-    this.$store.commit("changebar","내가 승리한 것이지 인간이 승리한 것이 아니야");
+    this.$store.commit(
+      "changebar",
+      "내가 승리한 것이지 인간이 승리한 것이 아니야"
+    );
   },
-  methods:{
-    toggleSheet(){
-      this.sheet1 = "d-none"
-      this.sheet2 = "d-flex"
-    }
-  }
-}
+  methods: {
+    toggleSheet() {
+      this.sheet1 = "d-none";
+      this.sheet2 = "d-flex";
+    },
+  },
+};
 </script>
-
-
-

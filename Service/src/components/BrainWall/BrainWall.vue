@@ -1,24 +1,27 @@
 <template>
   <div>
     <h1>두뇌의 벽</h1>
-    <v-container >
-
-    </v-container>
+    <v-container> </v-container>
     <div v-if="gameStartFlag">
-      <div>카운트 다운 : <h1>{{countDown}}</h1></div>
+      <div>
+        카운트 다운 :
+        <h1>{{ countDown }}</h1>
+      </div>
       <div v-if="!roundFinishFlag">
-        round - {{round}}/5
-        <div>score - {{score}}</div>
-        <button :disabled="countFlag" @click="generateRandomNumber()">포즈 바꾸기 버튼</button>
-        <div>현재 포즈 이름 - {{getCurrentPose}}</div>
+        round - {{ round }}/5
+        <div>score - {{ score }}</div>
+        <button :disabled="countFlag" @click="generateRandomNumber()">
+          포즈 바꾸기 버튼
+        </button>
+        <div>현재 포즈 이름 - {{ getCurrentPose }}</div>
         <random-pose></random-pose>
       </div>
     </div>
-    <button @click="clickStart()" >START</button>
+    <button @click="clickStart()">START</button>
     <v-btn color="green darken-3" @click="clickStart">Login</v-btn>
 
     <div style="border-style:solid"><canvas id="canvas"></canvas></div>
-    <div style="border-style:solid" id="label-container" >
+    <div style="border-style:solid" id="label-container">
       <h2>good</h2>
       <h2>bad</h2>
     </div>
@@ -26,85 +29,83 @@
 </template>
 
 <script>
-import '@tensorflow/tfjs'
+import "@tensorflow/tfjs";
 import RandomPose from "@/components/BrainWall/RandomPose";
-import * as tmPose from "@teachablemachine/pose"
-import {mapGetters} from "vuex";
+import * as tmPose from "@teachablemachine/pose";
+import { mapGetters } from "vuex";
 
 let model, webcam, ctx, labelContainer, maxPredictions;
 
 export default {
-  name : 'BrainWall',
-  data(){
+  name: "BrainWall",
+  data() {
     return {
-      startBtn:true,
+      startBtn: true,
       requestId: undefined,
-      score:0,
-      round:0,
+      score: 0,
+      round: 0,
       roundFinishFlag: false,
-      scoreFlag:false,
-      gameStartFlag:false,
-      countDown:5,
-      countFlag:false, //카운트 다운 버튼 비활성화
-
-    }
+      scoreFlag: false,
+      gameStartFlag: false,
+      countDown: 5,
+      countFlag: false, //카운트 다운 버튼 비활성화
+    };
   },
-  components:{
+  components: {
     RandomPose,
   },
-  computed:{
-    ...mapGetters(['getCurrentPose'])
-  }
-,
-  methods:{clickStart() {
+  computed: {
+    ...mapGetters(["getCurrentPose"]),
+  },
+  methods: {
+    clickStart() {
       // this.startDateTime = new Date();
       // this.$cookies.set('startDateTime', this.startDateTime)
-      this.init()
-      this.roundFinishFlag=false
-      this.gameStartFlag=true
+      this.init();
+      this.roundFinishFlag = false;
+      this.gameStartFlag = true;
     },
     countDownTimer() {
-      if(this.countDown > 0) {
+      if (this.countDown > 0) {
         setTimeout(() => {
-          this.countDown -= 1
-          this.countDownTimer()
-        }, 1000)
-      } else if(this.countDown==0){
-        this.countFlag=false
-        if(this.round==5){
-          alert('게임이 종료되었습니다.')
-          this.roundFinishFlag = true
-          this.round = 0
-          this.score=0
+          this.countDown -= 1;
+          this.countDownTimer();
+        }, 1000);
+      } else if (this.countDown == 0) {
+        this.countFlag = false;
+        if (this.round == 5) {
+          alert("게임이 종료되었습니다.");
+          this.roundFinishFlag = true;
+          this.round = 0;
+          this.score = 0;
         }
       }
     },
-    generateRandomNumber(){
-    let tempRandomNumber = Math.floor(Math.random()*3+1) // 숫자 바꾸면 됨
-      this.changeCurrentPoseM(tempRandomNumber)
-      this.round++
-      this.countDown=5
-      this.countFlag=true
-      this.countDownTimer()
+    generateRandomNumber() {
+      let tempRandomNumber = Math.floor(Math.random() * 3 + 1); // 숫자 바꾸면 됨
+      this.changeCurrentPoseM(tempRandomNumber);
+      this.round++;
+      this.countDown = 5;
+      this.countFlag = true;
+      this.countDownTimer();
       // if(this.round==5){
       //   this.roundFinishFlag = true
       //   this.round = 0
       //   this.score=0
       // }
-      this.scoreFlag = false
+      this.scoreFlag = false;
 
-      console.log(tempRandomNumber)
+      console.log(tempRandomNumber);
     },
-    changeCurrentPoseM: function(x){
-      this.$store.commit("changeCurrentPose",x)
+    changeCurrentPoseM: function(x) {
+      this.$store.commit("changeCurrentPose", x);
     },
     async init() {
       this.startBtn = false;
 
-      const URL ="https://teachablemachine.withgoogle.com/models/sV2phcmJ-/";
+      const URL = "https://teachablemachine.withgoogle.com/models/sV2phcmJ-/";
       const modelURL = URL + "model.json";
       const metadataURL = URL + "metadata.json";
-
 
       // load the model and metadata
       // Refer to tmImage.loadFromFiles() in the API to support files from a file picker
@@ -128,19 +129,19 @@ export default {
 
       ctx = canvas.getContext("2d");
       labelContainer = document.getElementById("label-container");
-      for (let i = 0; i < maxPredictions; i++) { // and class labels
+      for (let i = 0; i < maxPredictions; i++) {
+        // and class labels
         labelContainer.appendChild(document.createElement("div"));
       }
     },
     async loop() {
-    //timestamp
+      //timestamp
       webcam.update(); // update the webcam frame
       await this.predict(); //this.predict();
-      if(this.requestId){
+      if (this.requestId) {
         // console.log(this.requestId);
         window.requestAnimationFrame(this.loop);
       }
-
     },
     async predict() {
       // Prediction #1: run input through posenet
@@ -163,23 +164,26 @@ export default {
       //   status = "bent"
       // }
 
-
-
-
       for (let i = 0; i < maxPredictions; i++) {
-        console.log(this.$store.state.currentPose)
+        console.log(this.$store.state.currentPose);
         // console.log(prediction[i].className)
 
-        if(this.$store.state.currentPose == prediction[i].className){
-          labelContainer.childNodes[0].innerHTML = prediction[i].className + ": " + prediction[i].probability.toFixed(2);
+        if (this.$store.state.currentPose == prediction[i].className) {
+          labelContainer.childNodes[0].innerHTML =
+            prediction[i].className +
+            ": " +
+            prediction[i].probability.toFixed(2);
         }
 
-        if(this.$store.state.currentPose == prediction[i].className && !this.scoreFlag && prediction[i].probability.toFixed(2)>=0.9){
-          if(this.countDown>0){
-          this.score++
-          this.scoreFlag = true
-        }
-
+        if (
+          this.$store.state.currentPose == prediction[i].className &&
+          !this.scoreFlag &&
+          prediction[i].probability.toFixed(2) >= 0.9
+        ) {
+          if (this.countDown > 0) {
+            this.score++;
+            this.scoreFlag = true;
+          }
         }
 
         // const classPrediction =
@@ -191,18 +195,17 @@ export default {
       this.drawPose(pose);
     },
     drawPose(pose) {
-  if (webcam.canvas) {
-    // console.log("drawPose method");
-    ctx.drawImage(webcam.canvas, 0, 0);
-    // draw the keypoints and skeleton
-    if (pose) {
-      const minPartConfidence = 0.5;
-      tmPose.drawKeypoints(pose.keypoints, minPartConfidence, ctx);
-      tmPose.drawSkeleton(pose.keypoints, minPartConfidence, ctx);
-    }
-  }
-},
-
-  }
-}
+      if (webcam.canvas) {
+        // console.log("drawPose method");
+        ctx.drawImage(webcam.canvas, 0, 0);
+        // draw the keypoints and skeleton
+        if (pose) {
+          const minPartConfidence = 0.5;
+          tmPose.drawKeypoints(pose.keypoints, minPartConfidence, ctx);
+          tmPose.drawSkeleton(pose.keypoints, minPartConfidence, ctx);
+        }
+      }
+    },
+  },
+};
 </script>

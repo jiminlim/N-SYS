@@ -36,8 +36,6 @@ public class UserinfoService {
             userinfo.setUiName((userIdPw.getUName()));
             userinfo.setUiImage((userIdPw.getUImage()));
             userinfo.setUiImgtype((userIdPw.getUImgtype()));
-
-
             return userinfoRepository.save(userinfo);
         }
     }
@@ -49,27 +47,31 @@ public class UserinfoService {
     }
 
     // 닉네임 변경하기
-    public Userinfo updateId(Userinfo userinfo, String newName) {
+    public Userinfo updateId(Userinfo userinfo) {
         System.out.println("updateId Service");
         UserIdPw userIdPw = new UserIdPw();
-        userIdPw.setUName(newName);
 
+        userIdPw.setUName(userinfo.getUiName());
+        Userinfo change_userinfo_name = new Userinfo();
+        change_userinfo_name = getUserinfo(userinfo.getUiId());
         // 닉네임 중복 체크
         boolean flag = checked(userIdPw);
 
         if (flag) {
             return null;
         } else {
-            userinfo.setUiName(newName);
-            return userinfoRepository.save(userinfo);
+            change_userinfo_name.setUiName(userinfo.getUiName());
+            return userinfoRepository.save(change_userinfo_name);
         }
     }
 
     // pw 변경하기
-    public Userinfo updatePw(Userinfo userinfo, String newPw) {
+    public Userinfo updatePw(Userinfo userinfo) {
         System.out.println("updatePw Service");
-        userinfo.setUiPw(newPw);
-        return userinfoRepository.save(userinfo);
+        Userinfo change_userinfo_pw = new Userinfo();
+        change_userinfo_pw = getUserinfo(userinfo.getUiId());
+        change_userinfo_pw.setUiPw(userinfo.getUiPw());
+        return userinfoRepository.save(change_userinfo_pw);
     }
 
     // 회원 탈퇴
@@ -137,7 +139,6 @@ public class UserinfoService {
                     userinfo.setUiPw(list.get(i).getUiPw());
                     userinfo.setUiImage(list.get(i).getUiImage());
                     userinfo.setUiImgtype(list.get(i).getUiImgtype());
-
                     break;
                 }
             }
@@ -218,5 +219,15 @@ public class UserinfoService {
         }else {
             return null;
         }
+    }
+
+    public int updateProfile(Userinfo userinfo){
+        System.out.println("프로필을 업데이트 합니다.");
+        Userinfo userinfo_update = new Userinfo();
+        userinfo_update = getUserinfo(userinfo.getUiId());
+        userinfo_update.setUiImage(userinfo.getUiImage());
+        userinfo_update.setUiImgtype(userinfo.getUiImgtype());
+        userinfoRepository.save(userinfo_update);
+        return 1;
     }
 }

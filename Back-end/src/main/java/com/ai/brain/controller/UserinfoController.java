@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.catalina.User;
 
 import org.apache.commons.io.IOUtils;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -25,6 +26,7 @@ import java.util.*;
 import java.util.Base64.Encoder;
 import java.util.Base64;
 import java.util.HashMap;
+
 
 @RestController
 @CrossOrigin(origins = {"*"}, maxAge = 6000)
@@ -80,13 +82,14 @@ public class UserinfoController {
 
     }
 
-    @PutMapping(value = "/updateid/{Userinfo}/{newName}")
+    @PostMapping(value = "/updateName")
     @ApiOperation(value = "닉네임 변경하기")
-    public ResponseEntity<HashMap<String, Object>> updateId(@PathVariable("Userinfo") Userinfo userinfo, @PathVariable("newName") String newName) {
+    public ResponseEntity<HashMap<String, Object>> updateId(@RequestBody Userinfo userinfo) {
         System.out.println("updateId Controller");
         try {
             HashMap<String, Object> map = new HashMap<>();
-            Userinfo user = userinfoService.updateId(userinfo, newName);
+
+            Userinfo user = userinfoService.updateId(userinfo);
 
             // 닉네임 중복 체크
             if (user == null) {
@@ -95,6 +98,12 @@ public class UserinfoController {
                 map.put("Userinfo", userinfo);
             }
 
+            // 닉네임 중복 체크
+            if (user == null) {
+                map.put("Userinfo", "fail");
+            } else {
+                map.put("Userinfo", userinfo);
+            }
             return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
@@ -102,13 +111,13 @@ public class UserinfoController {
 
     }
 
-    @PutMapping(value = "/updatepw/{Userinfo}/{newPw}")
+    @PostMapping(value = "/updatepw")
     @ApiOperation(value = "pw 변경하기")
-    public ResponseEntity<HashMap<String, Object>> updatePw(@PathVariable("Userinfo") Userinfo userinfo, @PathVariable("newPw") String newPw) {
+    public ResponseEntity<HashMap<String, Object>> updatePw(@RequestBody Userinfo userinfo) {
         System.out.println("updatePw Controller");
         try {
             HashMap<String, Object> map = new HashMap<>();
-            userinfoService.updatePw(userinfo, newPw);
+            userinfoService.updatePw(userinfo);
             map.put("Userinfo", userinfo);
 
             return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
@@ -151,8 +160,31 @@ public class UserinfoController {
                 map.put("Userinfo", token); // 토큰 저장 및 리턴
                 map.put("Uname", userinfo.getUiName()); // 닉네임 저장 및 리턴
                 map.put("Uid", userinfo.getUiId()); // 이메일아이디 저장 및 리턴
-                map.put("srcImage", userinfo.getUiImage()); // 프로필이미지저장경로 저장 및 리턴
-                map.put("srcImagetype", userinfo.getUiImgtype()); // 프로필이미지저장경로 저장 및 리턴
+
+                if(userinfo.getUiImage().equals("/img/person.9f2af2d1.png")) {
+                    map.put("srcImage", userinfo.getUiImage()); // 프로필이미지저장경로 저장 및 리턴
+                } else {
+                    // avatarImage 작업코드
+                    map.put("NOTSameDefaultImageSrc", userinfo.getUiImage());
+                    // 이미지를 지정한 경로에서 불러와서(이미지가 저장되어있어야함) FileInputStream으로 읽은 후 InputStream으로 저장.
+                    InputStream imageStream = new FileInputStream(userinfo.getUiImage());
+                    // InputStream으로 읽어들인 이미지를 ByteArray형태로 변환.
+                    byte[] imageByteArray = IOUtils.toByteArray(imageStream);
+                    imageStream.close();
+                    System.out.println(imageByteArray);
+                    // Base64형태로 인코딩해주는 encoder 객체를 생성.
+                    Encoder encoder = Base64.getEncoder();
+                    // 위에서  ByteArray형태로 변환된 이미지를 Base64형태로 인코딩.
+                    byte[] baseIncodingBytes = encoder.encode(imageByteArray);
+                    // Base64형태로 인코딩된 이미지 파일을 String으로 바꿈.
+                    String base64 = new String(baseIncodingBytes);
+//                    System.out.println(base64); // 잘 인코딩 됐는지 확인.
+                    //imgsrc라는 String 변수에 이미지의 총 src를 전부 작성. 이를 response.data를 읽어들인다면 그 자체로 이미지파일이다.
+                    String imgsrc = "data:" + userinfo.getUiImgtype() + ";base64," + base64;
+                    // 이미지 파일의 src를 반환하면 끝.
+//				System.out.println(imgsrc);
+                    map.put("srcImage", imgsrc);
+                }
             } else {
                 map.put("Userinfo", "fail");
             }
@@ -229,12 +261,13 @@ public class UserinfoController {
         SimpleDateFormat format1 = new SimpleDateFormat("yyyyMMddHHmmss");
         Date time = new Date();
         String time1 = format1.format(time);
-//      System.out.println(time1);
+
+//		System.out.println(time1);
         if (image != null && !image.isEmpty()) {
 //            File dest1 = new File("/home/ubuntu/vue/dist/img/fileupload/");
-            File dest1 = new File("/SSAFY/workspace_vue/seunghwan_axios/Service/src/assets/images/profile/");
+			File dest1 = new File("/SSAFY/profile/");
 //            File dest2 = new File("/home/ubuntu/vue/dist/img/fileupload/" + time1 + "_" + image.getOriginalFilename());
-            File dest2 = new File("/SSAFY/workspace_vue/seunghwan_axios/Service/src/assets/images/profile/" + time1 + "_" + image.getOriginalFilename());
+			File dest2 = new File("/SSAFY/profile/" + time1 + "_" + image.getOriginalFilename());
             if (dest1.mkdirs()) {
                 System.out.println("디렉토리 생성 성공");
             } else {
@@ -261,7 +294,7 @@ public class UserinfoController {
 
         // 이미지를 지정한 경로에서 불러와서(이미지가 저장되어있어야함) FileInputStream으로 읽은 후 InputStream으로 저장.
 //        InputStream imageStream = new FileInputStream("/home/ubuntu/vue/dist/img/fileupload/" + time1 + "_" + image.getOriginalFilename());
-        InputStream imageStream = new FileInputStream("/SSAFY/workspace_vue/seunghwan_axios/Service/src/assets/images/profile/" + time1 + "_" + image.getOriginalFilename());
+        InputStream imageStream = new FileInputStream("/SSAFY/profile/" + time1 + "_" + image.getOriginalFilename());
         // InputStream으로 읽어들인 이미지를 ByteArray형태로 변환.
         byte[] imageByteArray = IOUtils.toByteArray(imageStream);
         imageStream.close();
@@ -270,13 +303,15 @@ public class UserinfoController {
         Base64.Encoder encoder = Base64.getEncoder();
         // 위에서  ByteArray형태로 변환된 이미지를 Base64형태로 인코딩.
         byte[] baseIncodingBytes = encoder.encode(imageByteArray);
-//      System.out.println(new String(baseIncodingBytes)); // 잘 인코딩 됐는지 확인.
+
+//		System.out.println(new String(baseIncodingBytes)); // 잘 인코딩 됐는지 확인.
         // Base64형태로 인코딩된 이미지 파일을 String으로 바꿈.
         String base64 = new String(baseIncodingBytes);
         // imgsrc라는 String 변수에 이미지의 총 src를 전부 작성. 이를 response.data를 읽어들인다면 그 자체로 이미지파일이다.
         String imgsrc = "data:" + image.getContentType() + ";base64," + base64;
         // 이미지 파일의 src를 반환하면 끝.
-//      System.out.println(imgsrc);
+//		System.out.println(imgsrc);
+
 
         //그러나 이 단계에선 img파일의 전체src는 상당히 길다. DB저장 axios를 보내기 위해 지금은 이미지 저장 경로만 보낸다.
         return (dest3);
@@ -301,19 +336,18 @@ public class UserinfoController {
         String base64 = new String(baseIncodingBytes);
         System.out.println(base64); // 잘 인코딩 됐는지 확인.
         // imgsrc라는 String 변수에 이미지의 총 src를 전부 작성. 이를 response.data를 읽어들인다면 그 자체로 이미지파일이다.
-//      String imgsrc = "data:" + image.getContentType() + ";base64," + base64;
+//		String imgsrc = "data:" + image.getContentType() + ";base64," + base64;
         // 이미지 파일의 src를 반환하면 끝.
-//      System.out.println(imgsrc);
+//		System.out.println(imgsrc);
 
-//        int isokupdateProfile = userinfoService.updateProfile(userinfo);
-//        if(isokupdateProfile == 1) {
-//            System.out.println("Profile 업데이트 성공");
-//        }
-//        if (isokupdateProfile != 1) {
-//            System.out.println("Profile 업데이트 실패");
-//        }
+        int isokupdateProfile = userinfoService.updateProfile(userinfo);
+        if(isokupdateProfile == 1) {
+            System.out.println("Profile 업데이트 성공");
+        }
+        if (isokupdateProfile != 1) {
+            System.out.println("Profile 업데이트 실패");
+        }
 
         return base64;
     }
-
 }
