@@ -75,14 +75,16 @@ export default {
   name: 'BrainWall',
   data() {
     return {
-      startBtn: true,
+      startBtn:true,
       requestId: undefined,
-      score: 0,
-      round: 0,
+      score:0,
+      round:0,
       roundFinishFlag: false,
-      scoreFlag: false,
-      gameStartFlag: false,
-      countDown: 10,
+      scoreFlag:false,
+      gameStartFlag:false,
+      countDown:5,
+      countFlag:false, //카운트 다운 버튼 비활성화
+
       startbtnvalue:'START',
       room: '',
       isInitiator: false,

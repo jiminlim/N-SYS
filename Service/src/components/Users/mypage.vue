@@ -35,15 +35,15 @@
           <v-icon>mdi-view-dashboard</v-icon>
         </v-list-item-action>
         <v-list-item-content>
-          <v-list-item-title>전적 1 </v-list-item-title>
+          <v-list-item-title>뱀 게임</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
-      <v-list-item router :to="{name: 'step5'}">
+      <v-list-item router :to="{name: 'game2'}">
         <v-list-item-action>
           <v-icon>mdi-view-dashboard</v-icon>
         </v-list-item-action>
         <v-list-item-content>
-          <v-list-item-title >step5</v-list-item-title>
+          <v-list-item-title >두외의 벽</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
     </v-list>

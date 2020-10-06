@@ -1,5 +1,5 @@
 <template>
-  <v-container fill-height fluid>
+  <v-container fill-height fluid style="margin-top: 5%">
     <v-row align="center" justify="center" >
       <v-col cols="12">
         <v-container class="fill-height" :class=sheet1 @click="toggleSheet">
@@ -30,7 +30,7 @@
                     <v-hover  v-slot:default="{ hover }">
                       <v-card :elevation="hover ? 24 : 2" class="mb-8">
                         <v-img src="@/assets/images/brainStart.png"
-                               @click="$router.push('/users')"/>
+                               @click="$router.push('/games')"/>
                       </v-card>
                     </v-hover>
                   </v-row>

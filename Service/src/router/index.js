@@ -18,7 +18,13 @@ const routes = [
   {
     path: '/games',
     name: 'games',
-    component: () => import(/* webpackChunkName: "games" */ '../components/BrainWall/webRTC.vue')
+    component: () => import(/* webpackChunkName: "games" */ '../components/BrainWall/BrainWall.vue')
+    // component: () => import(/* webpackChunkName: "games" */ '../views/Games.vue')
+  },
+  {
+    path: '/game2',
+    name: 'game2',
+    component : ()=>import('@/components/BrainWall/webRTC.vue')
     // component: () => import(/* webpackChunkName: "games" */ '../views/Games.vue')
   },
   {
@@ -29,7 +35,7 @@ const routes = [
   {
     path:'/step5',
     name:'step5',
-    component : ()=>import('@/components/Main/step5.vue')
+    component : ()=>import('@/components/BrainWall/webRTC.vue')
   }
 ]
 

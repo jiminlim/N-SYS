@@ -1,9 +1,8 @@
 <template>
   <div >
-
-<!--    <v-img :src="require(`@/assets/images/pose/${getCurrentPose}.jpg`)" contain></v-img>-->
-    <v-img :src="require(`@/assets/images/pose/img1.png`)" contain></v-img>
-
+    <v-card >
+    <v-img :src="require(`@/assets/images/pose/${getCurrentPose}.jpg`)" style="height: 300px" contain></v-img>
+    </v-card>
   </div>
 
 </template>

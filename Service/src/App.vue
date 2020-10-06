@@ -40,10 +40,13 @@
     </v-app-bar>
 
     <v-main>
-      <div style="background-color: #a52a2a">
-<!--      <chatting></chatting>-->
+      <div>
+        <router-view></router-view>
       </div>
-      <router-view></router-view>
+<!--      <div style="background-color: #a52a2a">-->
+<!--&lt;!&ndash;      <chatting></chatting>&ndash;&gt;-->
+<!--      </div>-->
+
     </v-main>
 
     <v-footer app>
