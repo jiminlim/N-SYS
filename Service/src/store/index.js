@@ -25,9 +25,10 @@ export default new Vuex.Store({
   actions: {
     login: (state, loginData) => {
       console.log("store login " + loginData.uid + " " + loginData.upw);
-      console.log(this.$store.state.SERVER_URL)
+      // console.log(this.getServer(state));
+      console.log(state.SERVER_URL);
       axios
-        .post(this.$store.state.SERVER_URL+"/Userinfo/login", loginData)
+        .post("https://j3b201.p.ssafy.io:8443/Userinfo/login", loginData)
         .then(({ data }) => {
           console.log(data);
           if (data.Userinfo != null) {
@@ -48,7 +49,7 @@ export default new Vuex.Store({
     join: (state, joinData) => {
       console.log("store join : " + joinData.uid);
       axios
-        .post(state.SERVER_URL+"/Userinfo/join", joinData)
+        .post("https://j3b201.p.ssafy.io:8443/Userinfo/join", joinData)
         .then(({ data }) => {
           console.log(data);
           console.log(data.Userinfo);
@@ -70,7 +71,7 @@ export default new Vuex.Store({
 
       axios
         // .post("http://localhost:8080/Userinfo/findpw", {
-        .post(state.SERVER_URL+"/Userinfo/findpw", {
+        .post("https://j3b201.p.ssafy.io:8443/Userinfo/findpw", {
           uid: findpwData.target_email,
         })
         .then(({ data }) => {
@@ -122,6 +123,9 @@ export default new Vuex.Store({
     getBar(state) {
       return state.bar;
     },
+    getServer(state){
+      return state.SERVER_URL;
+    }
   },
   modules: {},
 });
