@@ -16,11 +16,15 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "SnakeGame",
   data() {
     return {
+      life: 5,
       speed: 35,
+      rank: -1,
 
       board_border: "black",
       board_background: "black",
@@ -49,6 +53,13 @@ export default {
   },
   methods: {
     Main() {
+      if (this.life == 0) {
+        this.SubmitGameData();
+        // console.log(this.life);
+
+        return;
+      }
+
       if (this.Has_game_ended()) {
         this.snake = [
           { x: 150, y: 260 },
@@ -131,6 +142,7 @@ export default {
       const hitBottomWall = this.snake[0].y > this.snakeboard.height - 10;
       if (hitLeftWall || hitRightWall || hitToptWall || hitBottomWall == true) {
         this.combo = 0;
+        this.life -= 1;
       }
       return hitLeftWall || hitRightWall || hitToptWall || hitBottomWall;
     },
@@ -216,6 +228,23 @@ export default {
       this.Main();
 
       this.Gen_Food();
+    },
+    SubmitGameData() {
+      axios
+        .post("http://localhost:8080/Play/snake/", {
+          gaId: 1,
+          plLevel: 5,
+          plscore: this.score,
+          uiPk: 27,
+        })
+        .then((res) => {
+          this.rank = res.data.rank;
+          alert(`${this.rank}위에 랭크인 하셨습니다. 축하드립니다.`);
+          console.log(res);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
     },
   },
   mounted() {

@@ -1,33 +1,26 @@
 <template>
   <v-container>
     <brain-wall v-if="tempvar == true"></brain-wall>
-    <snake-game v-if="tempvar == false"></snake-game>
+    <snake v-if="tempvar == false"></snake>
+
     <h1>Games</h1>
 
     <!-- 게임 모든 리스트  v-for 돌려서 출력 && axios-->
     <!--    <game-container v-for="game in gameList" :key="game.gid">-->
-    <button
-      @click="
-        () => {
-          tempvar = !tempvar;
-        }
-      "
-    >
-      !!!!게임 바꾸기(임시버튼)!!!!
-    </button>
+
     <br />
     <div v-for="game in gameList" :key="game.gid">
       <game-container :game="game" />
       <!--    {{game.gtitle}}-->
     </div>
-    <button @click="getGames">hhhhhhhhhhhhhh</button>
   </v-container>
 </template>
 
 <script>
 import GameContainer from "@/components/Game/GameContainer";
 import BrainWall from "@/components/BrainWall/BrainWall";
-import SnakeGame from "@/components/SnakeGame/SnakeGame";
+import Snake from "@/components/SnakeGame/Snake";
+
 import axios from "axios";
 
 export default {
@@ -55,7 +48,7 @@ export default {
   components: {
     GameContainer,
     BrainWall,
-    SnakeGame,
+    Snake,
   },
   actions: {},
 };
