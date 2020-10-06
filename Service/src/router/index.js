@@ -26,6 +26,15 @@ const routes = [
     // component: () => import(/* webpackChunkName: "games" */ '../views/Games.vue')
   },
   {
+    path: "/wall1",
+    name: "wall1",
+    component: () =>
+        import(
+             "../components/BrainWall/BrainWall.vue"
+            ),
+    // component: () => import(/* webpackChunkName: "games" */ '../views/Games.vue')
+  },
+  {
     path: "/webcam",
     name: "webcam",
     component: () => import("../views/WebCam.vue"),
