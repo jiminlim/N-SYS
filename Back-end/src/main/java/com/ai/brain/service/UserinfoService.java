@@ -34,6 +34,9 @@ public class UserinfoService {
             userinfo.setUiId(userIdPw.getUId());
             userinfo.setUiPw(userIdPw.getUPw());
             userinfo.setUiName((userIdPw.getUName()));
+            userinfo.setUiImage((userIdPw.getUImage()));
+            userinfo.setUiImgtype((userIdPw.getUImgtype()));
+
 
             return userinfoRepository.save(userinfo);
         }
@@ -72,7 +75,7 @@ public class UserinfoService {
     // 회원 탈퇴
     public void deleteAccount(Userinfo userinfo) {
         System.out.println("deleteAccount Service");
-
+        userinfo = getUserinfo(userinfo.getUiId());
         userinfoRepository.deleteById(userinfo.getUPk());
     }
 
@@ -132,6 +135,9 @@ public class UserinfoService {
                     userinfo.setUiName(list.get(i).getUiName());
                     userinfo.setUiId(list.get(i).getUiId());
                     userinfo.setUiPw(list.get(i).getUiPw());
+                    userinfo.setUiImage(list.get(i).getUiImage());
+                    userinfo.setUiImgtype(list.get(i).getUiImgtype());
+
                     break;
                 }
             }
@@ -188,4 +194,29 @@ public class UserinfoService {
 //        List<Userinfo> list = userinfoRepository.findAll();
 //        return list;
 //    }
+
+    // 아이디(이메일)로 회원정보 가져오기
+    public Userinfo getUserinfo(String loginId){
+        List<Userinfo> list = userinfoRepository.findAll();
+        Userinfo userinfo = new Userinfo();
+        boolean flag = false;
+        for (int i = 0; i < list.size(); i++) {
+            // id db 검사
+            if (list.get(i).getUiId().equals(loginId)) {
+                flag = true;
+                userinfo.setUPk(list.get(i).getUPk());
+                userinfo.setUiName(list.get(i).getUiName());
+                userinfo.setUiId(list.get(i).getUiId());
+                userinfo.setUiPw(list.get(i).getUiPw());
+                userinfo.setUiImage(list.get(i).getUiImage());
+                userinfo.setUiImgtype(list.get(i).getUiImgtype());
+                break;
+            }
+        }
+        if (flag){
+            return userinfo;
+        }else {
+            return null;
+        }
+    }
 }

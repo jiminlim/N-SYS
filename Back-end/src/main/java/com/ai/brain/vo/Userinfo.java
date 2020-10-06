@@ -8,16 +8,30 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+
+@Table(name = "userinfo")
+
 public class Userinfo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int uPk;
 
-    private String uId;
+
+    @Column(name="u_id")
+    private String uiId;
     
-    private String uPw;
+    @Column(name="u_pw")
+    private String uiPw;
     
-    private String uName;
+    @Column(name="u_name")
+    private String uiName;
+
+    @Column(name="u_image")
+    private String uiImage;
+
+    @Column(name="u_imgtype")
+    private String uiImgtype;
+
 
 }

@@ -21,14 +21,14 @@ class BrainApplicationTests {
     @Test
     public void create(){
     	String str = "email";
-    	Optional<Userinfo> user = userRepository.findByUId(str);
+//    	Optional<Userinfo> user = userRepository.findByUId(str);
 //        Userinfo user = new Userinfo();
 //        user.setUId("email");
 //        user.setUName("jimin");
 //        user.setUPw("password");
 //
 //        Userinfo newUser = userRepository.save(user);
-        System.out.println("newUser : " + user);
+//        System.out.println("newUser : " + user);
     }
 
 }
