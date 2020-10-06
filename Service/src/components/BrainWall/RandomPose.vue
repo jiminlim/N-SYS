@@ -1,7 +1,7 @@
 <template>
   <div >
     <v-card >
-    <v-img :src="require(`@/assets/images/pose/${getCurrentPose}.jpg`)" style="height: 300px" contain></v-img>
+    <v-img :src="require(`@/assets/images/pose/${getCurrentPose}.png`)" style="height: 300px" contain></v-img>
     </v-card>
   </div>
 

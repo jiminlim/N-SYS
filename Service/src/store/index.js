@@ -7,7 +7,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     SERVER_URL: "http://localhost:8080", // 차후 aws로 바꿔야함
-    poses: ["ready", "left", "stand", "right"], // poseList - 디비에 넣을지 고민중
+    poses: ["1", "2"], // poseList - 디비에 넣을지 고민중
     currentPose: "ready", // default pose,
     bar: "내가 승리한 것이지 인간이 승리한 것이 아니야",
   },
