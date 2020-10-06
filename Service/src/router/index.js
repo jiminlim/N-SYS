@@ -19,24 +19,12 @@ const routes = [
     path: '/games',
     name: 'games',
     component: () => import(/* webpackChunkName: "games" */ '../components/BrainWall/BrainWall.vue')
-    // component: () => import(/* webpackChunkName: "games" */ '../views/Games.vue')
   },
   {
     path: '/game2',
     name: 'game2',
-    component : ()=>import('@/components/BrainWall/webRTC.vue')
-    // component: () => import(/* webpackChunkName: "games" */ '../views/Games.vue')
+    component : ()=>import('@/components/SnakeGame/Snake.vue')
   },
-  {
-    path: '/webcam',
-    name:'webcam',
-    component : ()=>import('../views/WebCam.vue')
-  },
-  {
-    path:'/step5',
-    name:'step5',
-    component : ()=>import('@/components/BrainWall/webRTC.vue')
-  }
 ]
 
 export default new VueRouter({
