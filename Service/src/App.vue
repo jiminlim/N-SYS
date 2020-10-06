@@ -36,7 +36,8 @@
         </template>
         <mypageCard></mypageCard>
       </v-menu>
-      <v-toolbar-title @click="$router.push('/')">{{getBar}} </v-toolbar-title>
+<!--      <v-toolbar-title @click="$router.push('/')">{{getBar}} </v-toolbar-title>-->
+      <v-toolbar-title @click="$router.push('/')"> NSYS </v-toolbar-title>
     </v-app-bar>
 
     <v-main>
@@ -50,7 +51,7 @@
     </v-main>
 
     <v-footer app>
-      <span>&copy; {{ new Date().getFullYear() }}</span>
+      <span>&copy; Copyright©2020 'Insert Coin' All rights reserved.</span>
 
     </v-footer>
   </v-app>
