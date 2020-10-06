@@ -1,8 +1,12 @@
 <template>
-  <div >
-    <v-card >
-    <v-img :src="require(`@/assets/images/pose/${getCurrentPose}.png`)" style="height: 300px" contain></v-img>
-    </v-card>
+  <div id="container">
+
+    <v-img :src="require(`@/assets/images/pose/${getCurrentPose}.png`)"
+           id="cenimg"
+           contain
+    max-height="400px"
+    max-width="400px"></v-img>
+
   </div>
 
 </template>
@@ -23,3 +27,12 @@ export default {
 
 }
 </script>
+
+<style>
+/*#container{*/
+/*  text-align : center;*/
+/*}*/
+#cenimg {
+  display: block; margin: 0px auto;
+}
+</style>

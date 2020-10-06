@@ -26,7 +26,9 @@ const routes = [
     path: '/game2',
     name: 'game2',
     component : ()=>import('@/components/BrainWall/BrainWall2.vue')
+
   },
+
   {
     path: '/game3',
     name: 'game3',
