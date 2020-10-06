@@ -1,13 +1,17 @@
 <template>
 <div>
-  <div>image</div>
-  <div>title:</div>
+  <div>image:{{this.game.gid}}</div>
+  <div>title:{{this.game.gtitle}}</div>
+  game
 </div>
 </template>
 
 <script>
 export default {
-  name: "Game.vue"
+  name: "Game.vue",
+  props: {
+    game:Object,
+  }
 }
 </script>
 

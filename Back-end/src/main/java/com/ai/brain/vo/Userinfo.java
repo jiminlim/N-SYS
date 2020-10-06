@@ -4,20 +4,30 @@ import lombok.*;
 
 import javax.persistence.*;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
-@Entity(name = "Userinfo")
+@Entity
+@Table(name = "userinfo")
 public class Userinfo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int uPk;
 
-    private String uId;
-    private String uPw;
-    private String uName;
+    @Column(name="u_id")
+    private String uiId;
+
+    @Column(name="u_pw")
+    private String uiPw;
+
+    @Column(name="u_name")
+    private String uiName;
+
+    @Column(name="u_image")
+    private String uiImage;
+
+    @Column(name="u_imgtype")
+    private String uiImgtype;
 
 }

@@ -59,6 +59,17 @@
           <v-card-text>
             <v-form>
               <v-text-field
+                label="Nickname"
+                v-model="nickname"
+                name="nickname"
+                prepend-icon="mdi-account"
+                type="text"
+                :error-messages="nicknameErrors"
+                @input="$v.nickname.$touch()"
+                @blur="$v.nickname.$touch()"
+                required
+              ></v-text-field>
+              <v-text-field
                 label="Email"
                 v-model="email"
                 name="email"
@@ -140,14 +151,16 @@ export default {
       loginview: "d-flex",
       joinview: "d-none",
       findview: "d-none",
+      nickname: "",
       email: "",
       password: "",
       repeatPassword: "",
+      avatarImage: require("../../assets/images/person.png"),
       templateParams: {
         from_name: "SSAFY_B201_InsertCoin",
-        to_name: "clients",
-        message_html: "http://localhost:8080/changepw" + "▶▶▶ Code : ",
-        company_email: "http://localhost:8080/",
+        to_name: localStorage.getItem("Now_Uname"),
+        message_html: "http://localhost:8081/changepwbyemailjs" + "▶▶▶ Code : ",
+        company_email: "http://localhost:8081/",
         target_email: "",
       },
     };
@@ -193,6 +206,8 @@ export default {
         let joinData = {
           uid: this.email,
           upw: this.password,
+          uname: this.nickname,
+          uimage: this.avatarImage,
         };
         this.$store.dispatch("join", joinData);
       }
@@ -221,6 +236,12 @@ export default {
     },
   },
   computed: {
+    nicknameErrors() {
+      const errors = [];
+      if (!this.$v.email.$dirty) return errors;
+      !this.$v.nickname.required && errors.push("닉네임을 입력해주세요.");
+      return errors;
+    },
     emailErrors() {
       const errors = [];
       if (!this.$v.email.$dirty) return errors;
