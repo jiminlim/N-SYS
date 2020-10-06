@@ -1,6 +1,8 @@
 <template>
-  <v-container fill-height fluid style="margin-top: 5%">
-    <v-row align="center" justify="center" >
+  <v-container fill-height fluid >
+      <v-img src="@/assets/images/backimgg.png"
+             height="550px" width="100vw">
+    <v-row align="center" style="margin-top: 5%;">
       <v-col cols="12">
         <v-container class="fill-height" :class=sheet1 @click="toggleSheet">
           <v-hover v-slot:default="{ hover }" >
@@ -49,6 +51,7 @@
         </v-container>
       </v-col>
     </v-row>
+      </v-img>
   </v-container>
 </template>
 <script>
@@ -69,6 +72,5 @@ export default {
   }
 }
 </script>
-
 
 
