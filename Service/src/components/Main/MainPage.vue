@@ -40,7 +40,7 @@
                     <v-hover v-slot:default="{ hover }">
                       <v-card :elevation="hover ? 24 : 2" >
                         <v-img src="@/assets/images/snakeStart.png"
-                               @click="$router.push('/game2)"/>
+                               @click="$router.push('/game2')"/>
                       </v-card>
                     </v-hover>
                   </v-row>
