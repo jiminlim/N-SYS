@@ -1,29 +1,51 @@
 <template>
   <div>
-    <h1>두뇌의 벽</h1>
-    <v-container> </v-container>
+    <h1 align="center">두뇌의 벽</h1>
+<!--    <button @click="clickStart()">START</button>-->
+    <v-card-actions class="justify-center">
+      <v-btn
+          :disabled="gameStartFlag"
+          @click="clickStart()"
+          color="light-green lighten-1"
+          elevation="2"
+          tile
+          x-large
+      >START</v-btn>
+    </v-card-actions>
+
+
     <div v-if="gameStartFlag">
-      <div>
-        카운트 다운 :
-        <h1>{{ countDown }}</h1>
-      </div>
       <div v-if="!roundFinishFlag">
-        round - {{ round }}/5
-        <div>score - {{ score }}</div>
-        <button :disabled="countFlag" @click="generateRandomNumber()">
-          포즈 바꾸기 버튼
-        </button>
-        <div>현재 포즈 이름 - {{ getCurrentPose }}</div>
-        <random-pose></random-pose>
+        <h1 align="center">카운트 다운</h1>
+        <h1 align="center" color="red" >{{ countDown }}</h1>
+        <h2 align="center">round - {{ round }}/5</h2>
+        <h2 align="center">score - {{ score }}</h2>
+        <h1 align="center" id="label-container"></h1>
+
+        <v-card-actions class="justify-center">
+          <v-btn
+              :disabled="countFlag" @click="generateRandomNumber()"
+              color="light-green lighten-1"
+              elevation="2"
+              tile
+              x-large
+          >포즈 바꾸기 버튼</v-btn>
+        </v-card-actions>
+<!--        <button :disabled="countFlag" @click="generateRandomNumber()">-->
+<!--          포즈 바꾸기 버튼-->
+<!--        </button>-->
+<!--        <div>현재 포즈 이름 - {{ getCurrentPose }}</div>-->
+        <div>
+          <random-pose class="temp"></random-pose>
+          <div class="temp"><canvas id="canvas"></canvas></div>
       </div>
     </div>
-    <button @click="clickStart()">START</button>
-    <v-btn color="green darken-3" @click="clickStart">Login</v-btn>
 
-    <div style="border-style:solid"><canvas id="canvas"></canvas></div>
-    <div style="border-style:solid" id="label-container">
-      <h2>good</h2>
-      <h2>bad</h2>
+<!--    <v-btn color="green darken-3" @click="clickStart">Login</v-btn>-->
+
+
+<!--      <h2>good</h2>-->
+<!--      <h2>bad</h2>-->
     </div>
   </div>
 </template>
@@ -62,27 +84,28 @@ export default {
       // this.startDateTime = new Date();
       // this.$cookies.set('startDateTime', this.startDateTime)
       this.init();
-      this.roundFinishFlag = false;
-      this.gameStartFlag = true;
+      this.roundFinishFlag = false
+      this.gameStartFlag = true
     },
     countDownTimer() {
       if (this.countDown > 0) {
         setTimeout(() => {
-          this.countDown -= 1;
-          this.countDownTimer();
-        }, 1000);
+          this.countDown -= 1
+          this.countDownTimer()
+        }, 1000)
       } else if (this.countDown == 0) {
-        this.countFlag = false;
+        this.countFlag = false
         if (this.round == 5) {
           alert("게임이 종료되었습니다.");
-          this.roundFinishFlag = true;
-          this.round = 0;
-          this.score = 0;
+          this.gameStartFlag=false
+          this.roundFinishFlag = true
+          this.round = 0
+          this.score = 0
         }
       }
     },
     generateRandomNumber() {
-      let tempRandomNumber = Math.floor(Math.random() * 3 + 1); // 숫자 바꾸면 됨
+      let tempRandomNumber = Math.floor(Math.random() * 9 + 1); // 숫자 바꾸면 됨
       this.changeCurrentPoseM(tempRandomNumber);
       this.round++;
       this.countDown = 5;
@@ -103,7 +126,8 @@ export default {
     async init() {
       this.startBtn = false;
 
-      const URL = "https://teachablemachine.withgoogle.com/models/sV2phcmJ-/";
+      // const URL = "https://teachablemachine.withgoogle.com/models/sV2phcmJ-/";
+      const URL = "https://teachablemachine.withgoogle.com/models/1tX6vs5hQ/";
       const modelURL = URL + "model.json";
       const metadataURL = URL + "metadata.json";
 
@@ -169,10 +193,8 @@ export default {
         // console.log(prediction[i].className)
 
         if (this.$store.state.currentPose == prediction[i].className) {
-          labelContainer.childNodes[0].innerHTML =
-            prediction[i].className +
-            ": " +
-            prediction[i].probability.toFixed(2);
+          // labelContainer.childNodes[0].innerHTML = prediction[i].className + ": " + prediction[i].probability.toFixed(2);
+          labelContainer.childNodes[0].innerHTML = "정확도: " + prediction[i].probability.toFixed(2);
         }
 
         if (
@@ -209,3 +231,11 @@ export default {
   },
 };
 </script>
+<style>
+
+.temp{
+  float: left;
+  width:50%;
+}
+
+</style>
