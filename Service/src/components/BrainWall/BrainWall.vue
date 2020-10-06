@@ -4,7 +4,7 @@
      margin-left: 5%;  width: 40%; ">
       <div>
         <v-card style="height: 250px; margin-top: 20px; margin-left:10%; margin-right: 10% ">
-<!--          <v-img src="@/assets/images/insertcoin.png" >-->
+          <!--          <v-img src="@/assets/images/insertcoin.png" >-->
           <div v-if="gameStartFlag" style="text-align: center; margin: 5%">
             <div v-if="!roundFinishFlag">
               <div><h1>{{ countDown }}</h1></div>
@@ -19,7 +19,7 @@
           <div v-if="!gameStartFlag" style=" text-align: center; align-content: center">
             <v-btn color="green darken-3" @click="clickStart" style="margin-top: 20%">START</v-btn>
           </div>
-<!--          </v-img>-->
+          <!--          </v-img>-->
         </v-card>
         <div style="height: 370px;  margin: 10px">
           <div class="container">
@@ -42,7 +42,6 @@
     <div class="item" style="float: left ; width: 5% ;background-color: transparent">
       <img>
     </div>
-
     <v-card class="item" style="float: left ;background-color: black; margin-right:5% ;width: 35%; height: 650px">
       <div style="margin-top: 15% ;margin-bottom: 15%; ">
         <video style="width: 100%; height: auto" id='localVideo' ref="localVideo" autoplay
@@ -61,16 +60,12 @@
   align-content: center;
 }
 
-/*.item:nth-child(2) {*/
-/*  z-index: 1;*/
-/*  !*transform: scale(2);*!*/
-/*}*/
 </style>
 
 <script>
-import '@tensorflow/tfjs'
+import "@tensorflow/tfjs";
 import RandomPose from "@/components/BrainWall/RandomPose";
-import * as tmPose from "@teachablemachine/pose"
+import * as tmPose from "@teachablemachine/pose";
 import {mapGetters} from "vuex";
 
 let model, labelContainer, maxPredictions;
@@ -92,6 +87,7 @@ const mediaOption = {
 
 export default {
   name: 'BrainWall',
+
   data() {
     return {
       startBtn: true,
@@ -102,6 +98,7 @@ export default {
       scoreFlag: false,
       gameStartFlag: false,
       countDown: 5,
+
       countFlag: false, //카운트 다운 버튼
 
       ///////////////////////webRTC////////////////////////////////
@@ -380,10 +377,12 @@ export default {
       this.init()
       this.roundFinishFlag = false
       this.gameStartFlag = true
+
     },
     countDownTimer() {
       if (this.countDown > 0) {
         setTimeout(() => {
+
           this.countDown -= 1
           this.countDownTimer()
         }, 1000)
@@ -395,6 +394,7 @@ export default {
           this.gameStartFlag = false;
           this.round = 0
           this.score = 0
+
         }
       }
     },
@@ -417,8 +417,7 @@ export default {
       this.$socket.emit('changepose',
           {tempRandomNumber: tempRandomNumber, round: this.round});
 
-
-      console.log(tempRandomNumber)
+      console.log(tempRandomNumber);
     },
     changeCurrentPoseM: function (x) {
       this.$store.commit("changeCurrentPose", x)
@@ -429,7 +428,6 @@ export default {
       const URL = "https://teachablemachine.withgoogle.com/models/sV2phcmJ-/";
       const modelURL = URL + "model.json";
       const metadataURL = URL + "metadata.json";
-
 
       // load the model and metadata
       // Refer to tmImage.loadFromFiles() in the API to support files from a file picker
@@ -453,7 +451,8 @@ export default {
       // ctx = canvas.getContext("2d");
 
       labelContainer = document.getElementById("label-container");
-      for (let i = 0; i < maxPredictions; i++) { // and class labels
+      for (let i = 0; i < maxPredictions; i++) {
+        // and class labels
         labelContainer.appendChild(document.createElement("div"));
       }
     },
@@ -462,9 +461,9 @@ export default {
       //   webcam.update(); // update the webcam frame
       await this.predict(); //this.predict();
       if (this.requestId) {
+
         window.requestAnimationFrame(this.loop);
       }
-
     },
     async predict() {
       // Prediction #1: run input through posenet
@@ -488,9 +487,8 @@ export default {
       //   status = "bent"
       // }
 
-
       for (let i = 0; i < maxPredictions; i++) {
-        console.log(this.$store.state.currentPose)
+        console.log(this.$store.state.currentPose);
         // console.log(prediction[i].className)
 
         if (this.$store.state.currentPose == prediction[i].className) {
@@ -504,30 +502,39 @@ export default {
             this.scoreFlag = true
           }
 
+          if (
+              this.$store.state.currentPose == prediction[i].className &&
+              !this.scoreFlag &&
+              prediction[i].probability.toFixed(2) >= 0.9
+          ) {
+            if (this.countDown > 0) {
+              this.score++;
+              this.scoreFlag = true;
+            }
+          }
+
+          // const classPrediction =
+          //     prediction[i].className + ": " + prediction[i].probability.toFixed(2);
+          // labelContainer.childNodes[i].innerHTML = classPrediction;
         }
 
-        // const classPrediction =
-        //     prediction[i].className + ": " + prediction[i].probability.toFixed(2);
-        // labelContainer.childNodes[i].innerHTML = classPrediction;
+        // finally draw the poses
+        // this.drawPose(pose);
       }
 
-      // finally draw the poses
-      // this.drawPose(pose);
-    },
-    // drawPose(pose) {
-    // if (webcam.canvas) {
-    //   // console.log("drawPose method");
-    //   ctx.drawImage(webcam.canvas, 0, 0);
-    //   // draw the keypoints and skeleton
-    //   if (pose) {
-    //     const minPartConfidence = 0.5;
-    //     tmPose.drawKeypoints(pose.keypoints, minPartConfidence, ctx);
-    //     tmPose.drawSkeleton(pose.keypoints, minPartConfidence, ctx);
-    //   }
-    // }
-  },
+      // drawPose(pose) {
+      // if (webcam.canvas) {
+      //   // console.log("drawPose method");
+      //   ctx.drawImage(webcam.canvas, 0, 0);
+      //   // draw the keypoints and skeleton
+      //   if (pose) {
+      //     const minPartConfidence = 0.5;
+      //     tmPose.drawKeypoints(pose.keypoints, minPartConfidence, ctx);
+      //     tmPose.drawSkeleton(pose.keypoints, minPartConfidence, ctx);
+      //   }
+      // }
 
-
+    }
+  }
 }
 </script>
-
