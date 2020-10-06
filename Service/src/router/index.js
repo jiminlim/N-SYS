@@ -17,32 +17,22 @@ const routes = [
       import(/* webpackChunkName: "users" */ "../views/Users.vue"),
   },
   {
-    path: "/games",
-    name: "games",
-    component: () =>
-      import(
-        /* webpackChunkName: "games" */ "../components/BrainWall/webRTC.vue"
-      ),
-    // component: () => import(/* webpackChunkName: "games" */ '../views/Games.vue')
+
+    path: '/game1',
+    name: 'game1',
+    component: () => import(/* webpackChunkName: "games" */ '../components/BrainWall/BrainWall.vue')
   },
   {
-    path: "/wall1",
-    name: "wall1",
-    component: () =>
-        import(
-             "../components/BrainWall/BrainWall.vue"
-            ),
-    // component: () => import(/* webpackChunkName: "games" */ '../views/Games.vue')
+    path: '/game2',
+    name: 'game2',
+    component : ()=>import('@/components/BrainWall/BrainWall2.vue')
+
   },
+
   {
-    path: "/webcam",
-    name: "webcam",
-    component: () => import("../views/WebCam.vue"),
-  },
-  {
-    path: "/step5",
-    name: "step5",
-    component: () => import("@/components/Main/step5.vue"),
+    path: '/game3',
+    name: 'game3',
+    component : ()=>import('@/components/SnakeGame/Snake.vue')
   },
   {
     path: "/myprofile",
@@ -73,6 +63,7 @@ const routes = [
       ),
   },
 ];
+
 
 export default new VueRouter({
   mode: "history",

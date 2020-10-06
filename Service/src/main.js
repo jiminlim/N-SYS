@@ -7,7 +7,8 @@ import Vuelidate from 'vuelidate'
 
 //socket 설정
 import io from 'socket.io-client';
-const socket = io('https://j3b201.p.ssafy.io:3001');
+const socket = io('https://j3b201.p.ssafy.io:3001' ,
+    { secure: true, reconnect: true, rejectUnauthorized : false });
 Vue.prototype.$socket= socket;
 console.log('socket'+socket);
 

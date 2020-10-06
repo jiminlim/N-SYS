@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1 align="center">두뇌의 벽</h1>
-<!--    <button @click="clickStart()">START</button>-->
+    <!--    <button @click="clickStart()">START</button>-->
     <v-card-actions class="justify-center">
       <v-btn
           :disabled="gameStartFlag"
@@ -31,21 +31,21 @@
               x-large
           >포즈 바꾸기 버튼</v-btn>
         </v-card-actions>
-<!--        <button :disabled="countFlag" @click="generateRandomNumber()">-->
-<!--          포즈 바꾸기 버튼-->
-<!--        </button>-->
-<!--        <div>현재 포즈 이름 - {{ getCurrentPose }}</div>-->
+        <!--        <button :disabled="countFlag" @click="generateRandomNumber()">-->
+        <!--          포즈 바꾸기 버튼-->
+        <!--        </button>-->
+        <!--        <div>현재 포즈 이름 - {{ getCurrentPose }}</div>-->
         <div>
           <random-pose class="temp"></random-pose>
           <div class="temp"><canvas id="canvas"></canvas></div>
+        </div>
       </div>
-    </div>
 
-<!--    <v-btn color="green darken-3" @click="clickStart">Login</v-btn>-->
+      <!--    <v-btn color="green darken-3" @click="clickStart">Login</v-btn>-->
 
 
-<!--      <h2>good</h2>-->
-<!--      <h2>bad</h2>-->
+      <!--      <h2>good</h2>-->
+      <!--      <h2>bad</h2>-->
     </div>
   </div>
 </template>
@@ -198,9 +198,9 @@ export default {
         }
 
         if (
-          this.$store.state.currentPose == prediction[i].className &&
-          !this.scoreFlag &&
-          prediction[i].probability.toFixed(2) >= 0.9
+            this.$store.state.currentPose == prediction[i].className &&
+            !this.scoreFlag &&
+            prediction[i].probability.toFixed(2) >= 0.9
         ) {
           if (this.countDown > 0) {
             this.score++;

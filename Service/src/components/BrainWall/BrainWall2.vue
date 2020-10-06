@@ -1,48 +1,70 @@
 <template>
-  <div>
-    <div>
-      <div v-if="gameStartFlag">
-        <div>{{ countDown }}</div>
-        <div v-if="!roundFinishFlag">
-          round - {{ round }}/5
-          <div>score - {{ score }}</div>
-          <button @click="generateRandomNumber()">포즈 바꾸기 버튼</button>
-          <div>현재 포즈 이름 - {{ getCurrentPose }}</div>
-          <random-pose></random-pose>
+  <div style="display: block; position: relative; margin: 10px; margin-top: 2%">
+    <v-card class="item" style="float: left ;
+     margin-left: 5%;  width: 40%; ">
+      <div>
+        <v-card style="height: 250px; margin-top: 20px; margin-left:10%; margin-right: 10% ">
+          <div v-if="gameStartFlag" style="text-align: center; margin: 5%">
+            <div v-if="!roundFinishFlag">
+              <div><h1>{{ countDown }}</h1></div>
+              <div><h2> round : {{ round }}/5</h2></div>
+              <div><h2> score : {{ score }} </h2></div>
+              <div style="font-size: 30px" id="label-container"></div>
+              <v-btn :disabled="countFlag" color="green darken-3" @click="generateRandomNumber">
+                포즈 바꾸기
+              </v-btn>
+            </div>
+          </div>
+          <div v-if="!gameStartFlag" style=" text-align: center; align-content: center">
+            <v-btn color="green darken-3" @click="clickStart" style="margin-top: 20%">START</v-btn>
+          </div>
+        </v-card>
+        <div style="height: 370px;  margin: 10px">
+          <div class="container">
+            <v-card class="item" style="width: 47%; height: auto; margin: 5px;">
+              <random-pose></random-pose>
+            </v-card>
+            <div class="item" style="float: left ; width: 3% ;background-color: transparent">
+              <img>
+            </div>
+            <v-card class="item" style="width: 47%; height: auto; text-align: center">
+              <video style="width: 100%; height: 100%; background-color: black " id='remoteVideo' ref="remoteVideo"
+                     autoplay muted></video>
+            </v-card>
+          </div>
         </div>
-        <div v-else-if="roundFinishFlag">
-        </div>
       </div>
-      <button @click="clickStart()" class="btn2 m-3">START</button>
-
-      <div style="border-style:solid">
-        <canvas id="canvas"></canvas>
-      </div>
-
-      <div style="border-style:solid" id="label-container">
-        <h2>good</h2>
-        <h2>bad</h2>
-      </div>
-
-      <div class="container">
-        <h1>local webRTC </h1>
-        <div id='videos'>
-          <video id='localVideo' ref="localVideo" autoplay muted></video>
-          <video id='remoteVideo' ref="remoteVideo" autoplay></video>
-        </div>
-      </div>
+    </v-card>
+    <div class="item" style="float: left ; width: 5% ;background-color: transparent">
+      <img>
     </div>
+    <v-card class="item" style="float: left ;background-color: black; margin-right:5% ;width: 35%; height: 650px">
+      <div style="margin-top: 15% ;margin-bottom: 15%; ">
+        <video style="width: 100%; height: auto" id='localVideo' ref="localVideo" autoplay
+               muted></video>
+      </div>
+    </v-card>
   </div>
+
 </template>
 
+<style scoped>
+.container {
+  display: flex;
+  justify-content: space-around;
+  align-content: center;
+}
+
+</style>
+
 <script>
-import '@tensorflow/tfjs'
+import "@tensorflow/tfjs";
 import RandomPose from "@/components/BrainWall/RandomPose";
-import * as tmPose from "@teachablemachine/pose"
+import * as tmPose from "@teachablemachine/pose";
 import {mapGetters} from "vuex";
 
 let model, labelContainer, maxPredictions;
-// let model, ctx, labelContainer, maxPredictions;
+
 const mediaOption = {
   // audio: true,
   video: {
@@ -57,8 +79,10 @@ const mediaOption = {
     ],
   },
 };
+
 export default {
   name: 'BrainWall',
+
   data() {
     return {
       startBtn: true,
@@ -68,8 +92,12 @@ export default {
       roundFinishFlag: false,
       scoreFlag: false,
       gameStartFlag: false,
-      countDown: 10,
+      countDown: 5,
 
+      countFlag: false, //카운트 다운 버튼
+
+      ///////////////////////webRTC////////////////////////////////
+      startbtnvalue: 'START',
       room: 'foo',
       isInitiator: false,
       isStarted: false,
@@ -93,24 +121,39 @@ export default {
         video: true
       },
       makeroom: false
+
     }
   },
   components: {
     RandomPose,
   },
   computed: {
-    ...mapGetters(['getCurrentPose']),
-  }
-  ,
+    ...mapGetters(['getCurrentPose'])
+  },
   created() {
-    let _this = this;
-    this.$store.commit("changebar","두뇌의벽");
+
+    this.$store.commit("changebar", "두뇌의벽");
+    //
+    // if (this.room !== '') {
+    //   console.log('Create or join room', this.room);
+    //   this.$socket.emit('create or join', this.room);
+    // }
+    // this.$socket.on('roommk', function(room){
+    //   console.log('room',room);
+    //   this.room=room;
+    // }.bind(this));
+
 
     if (this.room !== '') {
-
-      console.log('Create or join room', this.room);
+      console.log('Message from client: Asking to join room ' + this.room);
       this.$socket.emit('create or join', this.room);
     }
+    // else{
+    //   window.room = prompt("방이름을 적어주세용:");
+    //   this.room = window.room;
+    //   this.$socket.emit('roommk', this.room);
+    //   console.log('roomname',this.room);
+
     this.$socket.on('created', function (room) {
       console.log('Created room ' + room);
       this.isInitiator = true;
@@ -119,7 +162,7 @@ export default {
     this.$socket.on('full', function (room) {
       console.log('Room ' + room + ' is full');
     });
-
+    let _this = this;
     this.$socket.on('join', function (room) {
       console.log('Another peer made a request to join room ' + room);
       console.log('This peer is the initiator of room ' + room + '!');
@@ -161,11 +204,20 @@ export default {
       }
     }.bind(this));
 
+
     navigator.mediaDevices.getUserMedia(mediaOption)
         .then(this.gotStream)
         .catch(function (e) {
           alert('getUserMedia() error: ' + e.name);
         });
+
+
+    this.$socket.on('changepose', (data) => {
+      console.log(data.tempRandomNumber, data.round);
+      this.changeCurrentPoseM(data.tempRandomNumber);
+      this.round = data.round;
+      console.log(data.tempRandomNumber, this.round);
+    }).bind(this);
 
     if (location.hostname !== "localhost") {
       this.requestTurn('https://computeengineondemand.appspot.com/turn?username=41784574&key=4080218913');
@@ -173,8 +225,6 @@ export default {
     window.onbeforeunload = function () {
       this.sendMessage('bye');
     }
-
-
   },
 
   methods: {
@@ -316,35 +366,53 @@ export default {
       this.pc.close();
       this.pc = null;
     },
-
+    ///////////////////////webRTC////////////////////////////////
 
     clickStart() {
       this.init()
       this.roundFinishFlag = false
       this.gameStartFlag = true
+
     },
     countDownTimer() {
       if (this.countDown > 0) {
         setTimeout(() => {
+
           this.countDown -= 1
           this.countDownTimer()
         }, 1000)
+      } else if (this.countDown == 0) {
+        this.countFlag = false
+        if (this.round == 5) {
+          alert('게임이 종료되었습니다.')
+          this.roundFinishFlag = true;
+          this.gameStartFlag = false;
+          this.round = 0
+          this.score = 0
+
+        }
       }
     },
     generateRandomNumber() {
-      let tempRandomNumber = Math.floor(Math.random() * 3 + 1) // 숫자 바꾸면 됨
+      let tempRandomNumber = Math.floor(Math.random() * 9 +1) // 숫자 바꾸면 됨
       this.changeCurrentPoseM(tempRandomNumber)
       this.round++
-      this.countDown = 10
-      this.countDownTimer()
-      if (this.round == 5) {
-        this.roundFinishFlag = true
-        this.round = 0
-        this.score = 0
-      }
-      this.scoreFlag = false
 
-      console.log(tempRandomNumber)
+
+      this.countDown = 5
+      this.countFlag = true
+      this.countDownTimer()
+
+      // if(this.round==5){
+      //   this.roundFinishFlag = true
+      //   this.round = 0
+      //   this.score=0
+      // }
+      this.scoreFlag = false
+      this.$socket.emit('changepose',
+          {tempRandomNumber: tempRandomNumber, round: this.round});
+
+      console.log(tempRandomNumber);
     },
     changeCurrentPoseM: function (x) {
       this.$store.commit("changeCurrentPose", x)
@@ -352,73 +420,118 @@ export default {
     async init() {
       this.startBtn = false;
 
-      const URL = "https://teachablemachine.withgoogle.com/models/sV2phcmJ-/";
+      // const URL = "https://teachablemachine.withgoogle.com/models/sV2phcmJ-/";
+      const URL = "https://teachablemachine.withgoogle.com/models/1tX6vs5hQ/";
       const modelURL = URL + "model.json";
       const metadataURL = URL + "metadata.json";
 
-
+      // load the model and metadata
+      // Refer to tmImage.loadFromFiles() in the API to support files from a file picker
+      // Note: the pose library adds a tmPose object to your window (window.tmPose)
       model = await tmPose.load(modelURL, metadataURL);
       maxPredictions = model.getTotalClasses();
 
-      const size = 400;
+      // Convenience function to setup a webcam
+      // const size = 400;
+      // const flip = true; // whether to flip the webcam
+      // webcam = new tmPose.Webcam(size, size, flip); // width, height, flip
+      // await webcam.setup(); // request access to the webcam
+      // await webcam.play();
       this.requestId = window.requestAnimationFrame(this.loop);
 
       // append/get elements to the DOM
-      const canvas = document.getElementById("canvas");
-
-      canvas.width = size;
-      canvas.height = size;
-
-
+      // const canvas = document.getElementById("canvas");
+      //
+      // canvas.width = size;
+      // canvas.height = size;
       // ctx = canvas.getContext("2d");
+
       labelContainer = document.getElementById("label-container");
-      for (let i = 0; i < maxPredictions; i++) { // and class labels
+      for (let i = 0; i < maxPredictions; i++) {
+        // and class labels
         labelContainer.appendChild(document.createElement("div"));
       }
     },
     async loop() {
+      //timestamp
+      //   webcam.update(); // update the webcam frame
       await this.predict(); //this.predict();
       if (this.requestId) {
+
         window.requestAnimationFrame(this.loop);
       }
-
     },
     async predict() {
-      // const {pose, posenetOutput} = await model.estimatePose(this.$refs.localVideo);
+      // Prediction #1: run input through posenet
+      // estimatePose can take in an image, video or canvas html element
+      // const { pose, posenetOutput } = await model.estimatePose(webcam.canvas);
+      // Prediction 2: run input through teachable machine classification model
       const {posenetOutput} = await model.estimatePose(this.$refs.localVideo);
       const prediction = await model.predict(posenetOutput);
-      if (prediction[0].probability.toFixed(1) == 1) {
-        console.log(prediction[0].probability.toFixed(1));
-      }
+      // if(prediction[0].probability.toFixed(2)>0.90){
+      //   if(status=="squat"){
+      //     count++
+      //     cnt(count)
+      //   }
+      //   status = "stand"
+      // } else if(prediction[1].probability.toFixed(2)==1.00){
+      //   status = "squat"
+      // } else if(prediction[2].probability.toFixed(2)>=0.9){
+      //   if(status =="squat"|| status=="stand "){
+      //     fail()
+      //   }
+      //   status = "bent"
+      // }
 
-      let i = 0;
-      for (i = 0; i < maxPredictions; i++) {
-        console.log(this.$store.state.currentPose)
+      for (let i = 0; i < maxPredictions; i++) {
+        console.log(this.$store.state.currentPose);
         // console.log(prediction[i].className)
-        if (this.$store.state.currentPose == prediction[i].className && !this.scoreFlag && prediction[i].probability.toFixed(2) >= 0.9) {
+
+        if (this.$store.state.currentPose == prediction[i].className) {
+          // labelContainer.childNodes[0].innerHTML = prediction[i].className + ": " + prediction[i].probability.toFixed(2);
+          labelContainer.childNodes[0].innerHTML = " 정확도 : " + prediction[i].probability.toFixed(2);
+        }
+
+        if (this.$store.state.currentPose == prediction[i].className &&
+            !this.scoreFlag && prediction[i].probability.toFixed(2) >= 0.1) {
           if (this.countDown > 0) {
             this.score++
             this.scoreFlag = true
           }
 
-        }
-        const classPrediction =
-            prediction[i].className + ": " + prediction[i].probability.toFixed(2);
-        labelContainer.childNodes[i].innerHTML = classPrediction;
-      }
-      // this.drawPose(pose);
-    },
-    // drawPose(pose) {
-    //   if (this.$refs.localVideo) {
-    //     ctx.drawImage(this.$refs.localVideo, 0, 0);
-    //     if (pose) {
-    //       const minPartConfidence = 0.5;
-    //       tmPose.drawKeypoints(pose.keypoints, minPartConfidence, ctx);
-    //       tmPose.drawSkeleton(pose.keypoints, minPartConfidence, ctx);
-    //     }
-    //   }
-    // },
+          if (
+              this.$store.state.currentPose == prediction[i].className &&
+              !this.scoreFlag &&
+              prediction[i].probability.toFixed(2) >= 0.9
+          ) {
+            if (this.countDown > 0) {
+              this.score++;
+              this.scoreFlag = true;
+            }
+          }
 
+          // const classPrediction =
+          //     prediction[i].className + ": " + prediction[i].probability.toFixed(2);
+          // labelContainer.childNodes[i].innerHTML = classPrediction;
+        }
+
+        // finally draw the poses
+        // this.drawPose(pose);
+      }
+
+      // drawPose(pose) {
+      // if (webcam.canvas) {
+      //   // console.log("drawPose method");
+      //   ctx.drawImage(webcam.canvas, 0, 0);
+      //   // draw the keypoints and skeleton
+      //   if (pose) {
+      //     const minPartConfidence = 0.5;
+      //     tmPose.drawKeypoints(pose.keypoints, minPartConfidence, ctx);
+      //     tmPose.drawSkeleton(pose.keypoints, minPartConfidence, ctx);
+      //   }
+      // }
+
+    }
   }
 }
 </script>
