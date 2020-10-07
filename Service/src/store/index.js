@@ -6,9 +6,19 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-
     SERVER_URL: "http://localhost:8080", // 차후 aws로 바꿔야함
-    poses: ["ready", "body", "bowling", "boxing","hurryup","kick","kungfu","leesin","shoot","ski"], // poseList - 디비에 넣을지 고민중
+    poses: [
+      "ready",
+      "body",
+      "bowling",
+      "boxing",
+      "hurryup",
+      "kick",
+      "kungfu",
+      "leesin",
+      "shoot",
+      "ski",
+    ], // poseList - 디비에 넣을지 고민중
     currentPose: "ready", // default pose,
     bar: "내가 승리한 것이지 인간이 승리한 것이 아니야",
   },
@@ -43,7 +53,7 @@ export default new Vuex.Store({
         })
         .catch(() => {
           alert("로그인 시 에러가 발생했습니다.");
-          window.location.href = "/";
+          // window.location.href = "/";
         });
     },
     join: (state, joinData) => {
@@ -57,8 +67,8 @@ export default new Vuex.Store({
           window.location.href = "/";
         })
         .catch(() => {
-          alert("로그인 시 에러가 발생했습니다.");
-          window.location.href = "/";
+          alert("회원가입 시 에러가 발생했습니다.");
+          // window.location.href = "/";
         });
     },
     findpw: (state, findpwData) => {
@@ -123,9 +133,9 @@ export default new Vuex.Store({
     getBar(state) {
       return state.bar;
     },
-    getServer(state){
+    getServer(state) {
       return state.SERVER_URL;
-    }
+    },
   },
   modules: {},
 });
