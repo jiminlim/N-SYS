@@ -13,10 +13,12 @@
               <v-btn :disabled="countFlag" color="green darken-3" @click="generateRandomNumber">
                 포즈 바꾸기
               </v-btn>
+              <v-btn color="green darken-4" @click="clickExit" >나가기</v-btn>
             </div>
           </div>
           <div v-if="!gameStartFlag" style=" text-align: center; align-content: center">
             <v-btn color="green darken-3" @click="clickStart" style="margin-top: 20%">START</v-btn>
+            <v-btn color="green darken-4" @click="clickExit" style="margin-top: 20%;margin-left: 10px">나가기</v-btn>
           </div>
         </v-card>
         <div style="height: 370px;  margin: 10px">
@@ -63,7 +65,7 @@ import RandomPose from "@/components/BrainWall/RandomPose";
 import * as tmPose from "@teachablemachine/pose";
 import {mapGetters} from "vuex";
 import io from 'socket.io-client';
-const socket = io('https://j3b201.p.ssafy.io:3001' ,
+const socket = io('https://j3b201.p.ssafy.io:3000' ,
     { secure: true, reconnect: true, rejectUnauthorized : false });
 // Vue.prototype.$socket= socket;
 let model, labelContainer, maxPredictions;
@@ -167,6 +169,7 @@ export default {
     });
 
     socket.on('message', function (message) {
+      // console.log('message '+message);
       if (message === 'got user media') {
         this.maybeStart2();
       } else if (message.type === 'offer') {
@@ -184,7 +187,19 @@ export default {
         });
         this.pc.addIceCandidate(candidate);
       } else if (message === 'bye' && this.isStarted) {
-        this.handleRemoteHangup();
+        // console.log('res bye');
+        // console.log('he')
+        // this.$refs.remoteVideo.classList.remove("remoteVideoInChatting");
+        // this.$refs.localVideo.classList.remove("localVideoInChatting");
+        this.isStarted = false;
+        this.pc.close();
+        this.pc = null;
+        // stop();
+        this.isInitiator = false;
+        // console.log('handle')
+        this.$router.push('/');
+        // console.log('after bye ')
+        // socket.emit('bye');
       }
     }.bind(this));
 
@@ -199,6 +214,7 @@ export default {
     socket.on('changepose', (data) => {
       this.changeCurrentPoseM(data.tempRandomNumber);
       this.round = data.round;
+      this.countDown=10;
     }).bind(this);
 
     if (location.hostname !== "localhost") {
@@ -210,7 +226,12 @@ export default {
   },
 
   methods: {
+    clickExit(){
+      this.sendMessage('bye');
+      this.$router.push("/");
+    },
     sendMessage(message) {
+      // console.log(message);
       socket.emit('message', message);
     },
     maybeStart2() {
@@ -225,8 +246,11 @@ export default {
       }
     },
     gotStream(stream) {
+      // console.log('logger - gotStream '+ stream)
+
       this.localStream = stream;
       // this.$refs.localVideo.src = window.URL.createObjectURL(stream);
+      // console.log('event.stream--local ' +JSON.stringify(stream));
       this.$refs.localVideo.srcObject = stream;
       this.sendMessage('got user media');
       if (this.isInitiator) {
@@ -298,8 +322,13 @@ export default {
       }
     },
     handleRemoteStreamAdded(event) {
+      // console.log('logger - handleRemoteStreamAdded[event] '+ event)
+      // console.log('logger - handleRemoteStreamAdded[event.stream] '+ event.stream)
       this.remoteStream = event.stream;
       this.$refs.remoteVideo.srcObject = event.stream;
+      // console.log('event.stream1 ' +JSON.stringify(event));
+      // console.log('event.stream2 ' +JSON.stringify(event.stream));
+
       this.$refs.remoteVideo.classList.add("remoteVideoInChatting");
       this.$refs.localVideo.classList.add("localVideoInChatting");
 
@@ -308,11 +337,14 @@ export default {
     handleRemoteStreamRemoved() {
     },
     handleRemoteHangup() {
+      // console.log('he')
       this.$refs.remoteVideo.classList.remove("remoteVideoInChatting");
       this.$refs.localVideo.classList.remove("localVideoInChatting");
 
       stop();
       this.isInitiator = false;
+      // console.log('handle')
+      this.$router.push('/');
     },
     stop() {
       this.isStarted = false;
@@ -352,7 +384,7 @@ export default {
       this.round++
 
 
-      this.countDown = 5
+      this.countDown = 10
       this.countFlag = true
       this.countDownTimer()
 
