@@ -35,14 +35,8 @@
         <v-list-item-title class="headline mb-1"
           >User@email.com</v-list-item-title
         >
-        <!--        <v-list-item-subtitle>Greyhound divisely hello coldly fonwderfully</v-list-item-subtitle>-->
       </v-list-item-content>
 
-      <!--      <v-list-item-avatar-->
-      <!--          tile-->
-      <!--          size="80"-->
-      <!--          color="grey"-->
-      <!--      ></v-list-item-avatar>-->
     </v-list-item>
     <v-list dense>
       <v-list-item router :to="{ name: 'game1' }">

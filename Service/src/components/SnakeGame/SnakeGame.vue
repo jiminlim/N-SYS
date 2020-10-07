@@ -55,7 +55,6 @@ export default {
     Main() {
       if (this.life == 0) {
         this.SubmitGameData();
-        // console.log(this.life);
 
         return;
       }
@@ -240,10 +239,8 @@ export default {
         .then((res) => {
           this.rank = res.data.rank;
           alert(`${this.rank}위에 랭크인 하셨습니다. 축하드립니다.`);
-          console.log(res);
         })
-        .catch((err) => {
-          console.error(err);
+        .catch(() => {
         });
     },
   },

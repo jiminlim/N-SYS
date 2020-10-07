@@ -18,19 +18,14 @@ export default new Vuex.Store({
       state.currentPose = this.state.poses[payload];
     },
     changebar(state, payload) {
-      console.log("payload " + payload);
       state.bar = payload;
     },
   },
   actions: {
     login: (state, loginData) => {
-      console.log("store login " + loginData.uid + " " + loginData.upw);
-      // console.log(this.getServer(state));
-      console.log(state.SERVER_URL);
       axios
         .post("https://j3b201.p.ssafy.io:8443/Userinfo/login", loginData)
         .then(({ data }) => {
-          console.log(data);
           if (data.Userinfo != null) {
             localStorage.setItem("Now_Uname", data.Uname);
             localStorage.setItem("Now_Uid", data.Uid);
@@ -47,13 +42,9 @@ export default new Vuex.Store({
         });
     },
     join: (state, joinData) => {
-      console.log("store join : " + joinData.uid);
       axios
         .post("https://j3b201.p.ssafy.io:8443/Userinfo/join", joinData)
-        .then(({ data }) => {
-          console.log(data);
-          console.log(data.Userinfo);
-          console.log(data.Userinfo.uiId);
+        .then(() => {
           window.location.href = "/";
         })
         .catch(() => {
@@ -62,7 +53,6 @@ export default new Vuex.Store({
         });
     },
     findpw: (state, findpwData) => {
-      console.log("store findpw [email] : " + findpwData.target_email);
       // axios를 통해서 백엔드와 통신. [사용자가 입력한 이메일을 인자로 넘기고, 그걸 받은 백엔드에서 DB와 비교. 가입된 이메일인지 체크.]
       // 가입된 이메일이라면 true, 아니라면 false 값 반환. 숫자 0 또는 1로 반환해도 가능.
 

@@ -133,19 +133,8 @@ export default {
   created() {
 
     this.$store.commit("changebar", "두뇌의벽");
-    //
-    // if (this.room !== '') {
-    //   console.log('Create or join room', this.room);
-    //   this.$socket.emit('create or join', this.room);
-    // }
-    // this.$socket.on('roommk', function(room){
-    //   console.log('room',room);
-    //   this.room=room;
-    // }.bind(this));
-
 
     if (this.room !== '') {
-      console.log('Message from client: Asking to join room ' + this.room);
       this.$socket.emit('create or join', this.room);
     }
     // else{
@@ -154,35 +143,26 @@ export default {
     //   this.$socket.emit('roommk', this.room);
     //   console.log('roomname',this.room);
 
-    this.$socket.on('created', function (room) {
-      console.log('Created room ' + room);
+    this.$socket.on('created', function () {
       this.isInitiator = true;
     }.bind(this));
 
-    this.$socket.on('full', function (room) {
-      console.log('Room ' + room + ' is full');
+    this.$socket.on('full', function () {
     });
     let _this = this;
-    this.$socket.on('join', function (room) {
-      console.log('Another peer made a request to join room ' + room);
-      console.log('This peer is the initiator of room ' + room + '!');
+    this.$socket.on('join', function () {
       _this.isChannelReady = true;
-      console.log('ischannel - join  체크 ' + _this.isChannelReady);
 
     });
 
-    this.$socket.on('joined', function (room) {
-      console.log('This peer has joined room ' + room);
+    this.$socket.on('joined', function () {
       _this.isChannelReady = true;
-      console.log('ischannel - joined 체크 ' + _this.isChannelReady);
     });
 
-    this.$socket.on('log', function (array) {
-      console.log.apply(console, array);
+    this.$socket.on('log', function () {
     });
 
     this.$socket.on('message', function (message) {
-      console.log('Client received message:', message);
       if (message === 'got user media') {
         this.maybeStart2();
       } else if (message.type === 'offer') {
@@ -213,10 +193,8 @@ export default {
 
 
     this.$socket.on('changepose', (data) => {
-      console.log(data.tempRandomNumber, data.round);
       this.changeCurrentPoseM(data.tempRandomNumber);
       this.round = data.round;
-      console.log(data.tempRandomNumber, this.round);
     }).bind(this);
 
     if (location.hostname !== "localhost") {
@@ -229,27 +207,20 @@ export default {
 
   methods: {
     sendMessage(message) {
-      console.log('Client sending message: ', message);
       this.$socket.emit('message', message);
     },
     maybeStart2() {
-      console.log('>>>>>>> maybeStart() ', this.isStarted,
-          this.localStream, this.isChannelReady);
-      console.log('ddddddd ' + this.isChannelReady);
       if (!this.isStarted && this.localStream.active === true
           && this.isChannelReady) {
-        console.log('crestepeerconnection')
         this.createPeerConnection();
         this.pc.addStream(this.localStream);
         this.isStarted = true;
-        console.log('isInitiator' + this.isInitiator);
         if (this.isInitiator) {
           this.doCall();
         }
       }
     },
     gotStream(stream) {
-      console.log('Adding local stream.');
       this.localStream = stream;
       // this.$refs.localVideo.src = window.URL.createObjectURL(stream);
       this.$refs.localVideo.srcObject = stream;
@@ -264,15 +235,12 @@ export default {
         this.pc.onicecandidate = this.handleIceCandidate;
         this.pc.onaddstream = this.handleRemoteStreamAdded;
         this.pc.onremovestream = this.handleRemoteStreamRemoved;
-        console.log('Created RTCPeerConnnection');
       } catch (e) {
-        console.log('Failed to create PeerConnection, exception: ' + e.message);
         alert('Cannot create RTCPeerConnection object.');
         // return;
       }
     },
     handleIceCandidate(event) {
-      console.log('handleIceCandidate event: ', event);
       if (event.candidate) {
         this.sendMessage({
           type: 'candidate',
@@ -280,20 +248,15 @@ export default {
           id: event.candidate.sdpMid,
           candidate: event.candidate.candidate
         });
-      } else {
-        console.log('End of candidates.');
       }
     },
-    handleCreateOfferError(event) {
-      console.log('createOffer() error: ', event);
+    handleCreateOfferError() {
     },
     doCall() {
-      console.log('Sending offer to peer');
       this.pc.createOffer(this.setLocalAndSendMessage,
           this.handleCreateOfferError);
     },
     doAnswer() {
-      console.log('Sending answer to peer.');
       this.pc.createAnswer().then(
           this.setLocalAndSendMessage,
           this.onCreateSessionDescriptionError
@@ -301,15 +264,12 @@ export default {
     },
     setLocalAndSendMessage(sessionDescription) {
       this.pc.setLocalDescription(sessionDescription);
-      console.log('setLocalAndSendMessage sending message', sessionDescription);
       this.sendMessage(sessionDescription);
     },
-    onCreateSessionDescriptionError(error) {
-      console.log('Failed to create session description: ' + error.toString());
+    onCreateSessionDescriptionError() {
     },
     requestTurn(turn_url) {
       let turnExists = false;
-      console.log(turn_url);
       for (let i in this.pc_config.iceServers) {
         if (this.pc_config.iceServers[i].url.substr(0, 5) === 'turn:') {
           turnExists = true;
@@ -318,13 +278,10 @@ export default {
         }
       }
       if (!turnExists) {
-        console.log('Getting TURN server from ', turn_url);
-        // No TURN server. Get one from computeengineondemand.appspot.com:
         let xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function () {
           if (xhr.readyState === 4 && xhr.status === 200) {
             let turnServer = JSON.parse(xhr.responseText);
-            console.log('Got TURN server: ', turnServer);
             this.pc_config.iceServers.push({
               'urls': 'turn:' + turnServer.username + '@' + turnServer.turn,
               'credential': turnServer.password
@@ -337,7 +294,6 @@ export default {
       }
     },
     handleRemoteStreamAdded(event) {
-      console.log('Remote stream added.');
       this.remoteStream = event.stream;
       this.$refs.remoteVideo.srcObject = event.stream;
       this.$refs.remoteVideo.classList.add("remoteVideoInChatting");
@@ -345,19 +301,12 @@ export default {
 
 
     },
-    handleRemoteStreamRemoved(event) {
-      console.log('Remote stream removed. Event: ', event);
-    },
-    hangup() {
-      console.log('Hanging up.');
-      this.stop();
-      this.sendMessage('bye');
+    handleRemoteStreamRemoved() {
     },
     handleRemoteHangup() {
       this.$refs.remoteVideo.classList.remove("remoteVideoInChatting");
       this.$refs.localVideo.classList.remove("localVideoInChatting");
 
-      console.log('Session terminated.');
       stop();
       this.isInitiator = false;
     },
@@ -412,7 +361,6 @@ export default {
       this.$socket.emit('changepose',
           {tempRandomNumber: tempRandomNumber, round: this.round});
 
-      console.log(tempRandomNumber);
     },
     changeCurrentPoseM: function (x) {
       this.$store.commit("changeCurrentPose", x)
@@ -420,31 +368,15 @@ export default {
     async init() {
       this.startBtn = false;
 
-      // const URL = "https://teachablemachine.withgoogle.com/models/sV2phcmJ-/";
       const URL = "https://teachablemachine.withgoogle.com/models/1tX6vs5hQ/";
       const modelURL = URL + "model.json";
       const metadataURL = URL + "metadata.json";
 
-      // load the model and metadata
-      // Refer to tmImage.loadFromFiles() in the API to support files from a file picker
-      // Note: the pose library adds a tmPose object to your window (window.tmPose)
       model = await tmPose.load(modelURL, metadataURL);
       maxPredictions = model.getTotalClasses();
 
-      // Convenience function to setup a webcam
-      // const size = 400;
-      // const flip = true; // whether to flip the webcam
-      // webcam = new tmPose.Webcam(size, size, flip); // width, height, flip
-      // await webcam.setup(); // request access to the webcam
-      // await webcam.play();
       this.requestId = window.requestAnimationFrame(this.loop);
 
-      // append/get elements to the DOM
-      // const canvas = document.getElementById("canvas");
-      //
-      // canvas.width = size;
-      // canvas.height = size;
-      // ctx = canvas.getContext("2d");
 
       labelContainer = document.getElementById("label-container");
       for (let i = 0; i < maxPredictions; i++) {
@@ -453,8 +385,6 @@ export default {
       }
     },
     async loop() {
-      //timestamp
-      //   webcam.update(); // update the webcam frame
       await this.predict(); //this.predict();
       if (this.requestId) {
 
@@ -462,30 +392,10 @@ export default {
       }
     },
     async predict() {
-      // Prediction #1: run input through posenet
-      // estimatePose can take in an image, video or canvas html element
-      // const { pose, posenetOutput } = await model.estimatePose(webcam.canvas);
-      // Prediction 2: run input through teachable machine classification model
       const {posenetOutput} = await model.estimatePose(this.$refs.localVideo);
       const prediction = await model.predict(posenetOutput);
-      // if(prediction[0].probability.toFixed(2)>0.90){
-      //   if(status=="squat"){
-      //     count++
-      //     cnt(count)
-      //   }
-      //   status = "stand"
-      // } else if(prediction[1].probability.toFixed(2)==1.00){
-      //   status = "squat"
-      // } else if(prediction[2].probability.toFixed(2)>=0.9){
-      //   if(status =="squat"|| status=="stand "){
-      //     fail()
-      //   }
-      //   status = "bent"
-      // }
 
       for (let i = 0; i < maxPredictions; i++) {
-        console.log(this.$store.state.currentPose);
-        // console.log(prediction[i].className)
 
         if (this.$store.state.currentPose == prediction[i].className) {
           // labelContainer.childNodes[0].innerHTML = prediction[i].className + ": " + prediction[i].probability.toFixed(2);
@@ -493,7 +403,7 @@ export default {
         }
 
         if (this.$store.state.currentPose == prediction[i].className &&
-            !this.scoreFlag && prediction[i].probability.toFixed(2) >= 0.1) {
+            !this.scoreFlag && prediction[i].probability.toFixed(2) >= 0.5) {
           if (this.countDown > 0) {
             this.score++
             this.scoreFlag = true
@@ -509,28 +419,8 @@ export default {
               this.scoreFlag = true;
             }
           }
-
-          // const classPrediction =
-          //     prediction[i].className + ": " + prediction[i].probability.toFixed(2);
-          // labelContainer.childNodes[i].innerHTML = classPrediction;
         }
-
-        // finally draw the poses
-        // this.drawPose(pose);
       }
-
-      // drawPose(pose) {
-      // if (webcam.canvas) {
-      //   // console.log("drawPose method");
-      //   ctx.drawImage(webcam.canvas, 0, 0);
-      //   // draw the keypoints and skeleton
-      //   if (pose) {
-      //     const minPartConfidence = 0.5;
-      //     tmPose.drawKeypoints(pose.keypoints, minPartConfidence, ctx);
-      //     tmPose.drawSkeleton(pose.keypoints, minPartConfidence, ctx);
-      //   }
-      // }
-
     }
   }
 }
