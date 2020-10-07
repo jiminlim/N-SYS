@@ -42,7 +42,7 @@
               color="purple accent-1"
               router
               :to="{ name: 'changenickname' }"
-              >닉네임'변경</v-btn
+              >닉네임변경</v-btn
             >
             <v-btn color="purple accent-2" router :to="{ name: 'changepw' }"
               >비밀번호변경</v-btn
