@@ -1,28 +1,13 @@
 <template>
-  <div>
-    <div class="left">
+  <div v-bind:style="{ width: `100%`, height: `300px` }">
+    <div class="left" v-bind:style="{ width: `50%`, float: `left` }">
       <SnakeGame />
     </div>
-    <div class="right">
+    <div class="right" v-bind:style="{ width: `50%`, float: `right` }">
       <SnakeGameAI />
     </div>
   </div>
 </template>
-
-<style>
-div {
-  width: 100%;
-  height: 300px;
-}
-div.left {
-  width: 50%;
-  float: left;
-}
-div.right {
-  width: 50%;
-  float: right;
-}
-</style>
 
 <script>
 import SnakeGame from "./SnakeGame";
@@ -60,5 +45,3 @@ export default {
   },
 };
 </script>
-
-

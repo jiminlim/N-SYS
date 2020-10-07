@@ -91,6 +91,7 @@ export default {
       U_password2: "",
       U_image: "",
       item: {},
+      // vediosrc: require("../../assets/images/2048_2분시연영상.mp4"),
       image: "",
       message: "",
       profileImage: {},
