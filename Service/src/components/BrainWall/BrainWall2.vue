@@ -62,7 +62,10 @@ import "@tensorflow/tfjs";
 import RandomPose from "@/components/BrainWall/RandomPose";
 import * as tmPose from "@teachablemachine/pose";
 import {mapGetters} from "vuex";
-
+import io from 'socket.io-client';
+const socket = io('https://j3b201.p.ssafy.io:3001' ,
+    { secure: true, reconnect: true, rejectUnauthorized : false });
+// Vue.prototype.$socket= socket;
 let model, labelContainer, maxPredictions;
 
 const mediaOption = {
@@ -92,7 +95,7 @@ export default {
       roundFinishFlag: false,
       scoreFlag: false,
       gameStartFlag: false,
-      countDown: 5,
+      countDown: 10,
 
       countFlag: false, //카운트 다운 버튼
 
@@ -135,7 +138,8 @@ export default {
     this.$store.commit("changebar", "두뇌의벽");
 
     if (this.room !== '') {
-      this.$socket.emit('create or join', this.room);
+      socket.emit('create or join', this.room);
+      socket.emit
     }
     // else{
     //   window.room = prompt("방이름을 적어주세용:");
@@ -143,26 +147,26 @@ export default {
     //   this.$socket.emit('roommk', this.room);
     //   console.log('roomname',this.room);
 
-    this.$socket.on('created', function () {
+    socket.on('created', function () {
       this.isInitiator = true;
     }.bind(this));
 
-    this.$socket.on('full', function () {
+    socket.on('full', function () {
     });
     let _this = this;
-    this.$socket.on('join', function () {
+    socket.on('join', function () {
       _this.isChannelReady = true;
 
     });
 
-    this.$socket.on('joined', function () {
+    socket.on('joined', function () {
       _this.isChannelReady = true;
     });
 
-    this.$socket.on('log', function () {
+    socket.on('log', function () {
     });
 
-    this.$socket.on('message', function (message) {
+    socket.on('message', function (message) {
       if (message === 'got user media') {
         this.maybeStart2();
       } else if (message.type === 'offer') {
@@ -192,7 +196,7 @@ export default {
         });
 
 
-    this.$socket.on('changepose', (data) => {
+    socket.on('changepose', (data) => {
       this.changeCurrentPoseM(data.tempRandomNumber);
       this.round = data.round;
     }).bind(this);
@@ -207,7 +211,7 @@ export default {
 
   methods: {
     sendMessage(message) {
-      this.$socket.emit('message', message);
+      socket.emit('message', message);
     },
     maybeStart2() {
       if (!this.isStarted && this.localStream.active === true
@@ -358,7 +362,7 @@ export default {
       //   this.score=0
       // }
       this.scoreFlag = false
-      this.$socket.emit('changepose',
+      socket.emit('changepose',
           {tempRandomNumber: tempRandomNumber, round: this.round});
 
     },
