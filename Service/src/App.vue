@@ -2,11 +2,7 @@
   <v-app id="inspire">
 
     <v-app-bar app clipped-left>
-      <v-menu
-          bottom
-          right
-          offset-y
-      >
+      <v-menu bottom  right offset-y >
         <template v-slot:activator="{ on, attrs }">
           <v-btn dark icon v-bind="attrs" v-on="on">
             <v-icon>mdi-dots-vertical</v-icon>

@@ -4,7 +4,6 @@
      margin-left: 5%;  width: 40%; ">
       <div>
         <v-card style="height: 250px; margin-top: 20px; margin-left:10%; margin-right: 10% ">
-          <!--          <v-img src="@/assets/images/insertcoin.png" >-->
           <div v-if="gameStartFlag" style="text-align: center; margin: 5%">
             <div v-if="!roundFinishFlag">
               <div><h1>{{ countDown }}</h1></div>
@@ -19,7 +18,6 @@
           <div v-if="!gameStartFlag" style=" text-align: center; align-content: center">
             <v-btn color="green darken-3" @click="clickStart" style="margin-top: 20%">START</v-btn>
           </div>
-          <!--          </v-img>-->
         </v-card>
         <div style="height: 370px;  margin: 10px">
           <div class="container">
@@ -35,8 +33,6 @@
             </v-card>
           </div>
         </div>
-
-
       </div>
     </v-card>
     <div class="item" style="float: left ; width: 5% ;background-color: transparent">
@@ -48,7 +44,6 @@
                muted></video>
       </div>
     </v-card>
-
   </div>
 
 </template>
@@ -399,7 +394,7 @@ export default {
       }
     },
     generateRandomNumber() {
-      let tempRandomNumber = Math.floor(Math.random() * 2) // 숫자 바꾸면 됨
+      let tempRandomNumber = Math.floor(Math.random() * 9 +1) // 숫자 바꾸면 됨
       this.changeCurrentPoseM(tempRandomNumber)
       this.round++
 
@@ -425,7 +420,8 @@ export default {
     async init() {
       this.startBtn = false;
 
-      const URL = "https://teachablemachine.withgoogle.com/models/sV2phcmJ-/";
+      // const URL = "https://teachablemachine.withgoogle.com/models/sV2phcmJ-/";
+      const URL = "https://teachablemachine.withgoogle.com/models/1tX6vs5hQ/";
       const modelURL = URL + "model.json";
       const metadataURL = URL + "metadata.json";
 
@@ -496,7 +492,8 @@ export default {
           labelContainer.childNodes[0].innerHTML = " 정확도 : " + prediction[i].probability.toFixed(2);
         }
 
-        if (this.$store.state.currentPose == prediction[i].className && !this.scoreFlag && prediction[i].probability.toFixed(2) >= 0.9) {
+        if (this.$store.state.currentPose == prediction[i].className &&
+            !this.scoreFlag && prediction[i].probability.toFixed(2) >= 0.1) {
           if (this.countDown > 0) {
             this.score++
             this.scoreFlag = true

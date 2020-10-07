@@ -6,9 +6,19 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    SERVER_URL: "https://j3b201.p.ssafy.io:8443", // 차후 aws로 바꿔야함
-    // SERVER_URL: "https://localhost:8443/", // 차후 aws로 바꿔야함
-    poses: ["1", "2"], // poseList - 디비에 넣을지 고민중
+    SERVER_URL: "http://localhost:8080", // 차후 aws로 바꿔야함
+    poses: [
+      "ready",
+      "body",
+      "bowling",
+      "boxing",
+      "hurryup",
+      "kick",
+      "kungfu",
+      "leesin",
+      "shoot",
+      "ski",
+    ], // poseList - 디비에 넣을지 고민중
     currentPose: "ready", // default pose,
     bar: "내가 승리한 것이지 인간이 승리한 것이 아니야",
   },
@@ -25,6 +35,8 @@ export default new Vuex.Store({
   actions: {
     login: (state, loginData) => {
       console.log("store login " + loginData.uid + " " + loginData.upw);
+      // console.log(this.getServer(state));
+      console.log(state.SERVER_URL);
       axios
         .post("https://j3b201.p.ssafy.io:8443/Userinfo/login", loginData)
         .then(({ data }) => {
@@ -68,8 +80,8 @@ export default new Vuex.Store({
       // 가입된 이메일이 아니라면 가입한 이메일을 입력하라는 경고창 팝업.
 
       axios
+        // .post("http://localhost:8080/Userinfo/findpw", {
         .post("https://j3b201.p.ssafy.io:8443/Userinfo/findpw", {
-          // .post(state.SERVER_URL + "/Userinfo/findpw", {
           uid: findpwData.target_email,
         })
         .then(({ data }) => {
@@ -120,6 +132,9 @@ export default new Vuex.Store({
     },
     getBar(state) {
       return state.bar;
+    },
+    getServer(state) {
+      return state.SERVER_URL;
     },
   },
   modules: {},

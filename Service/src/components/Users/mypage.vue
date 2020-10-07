@@ -45,12 +45,12 @@
       <!--      ></v-list-item-avatar>-->
     </v-list-item>
     <v-list dense>
-      <v-list-item router :to="{ name: 'games' }">
+      <v-list-item router :to="{ name: 'game1' }">
         <v-list-item-action>
           <v-icon>mdi-view-dashboard</v-icon>
         </v-list-item-action>
         <v-list-item-content>
-          <v-list-item-title>뱀 게임</v-list-item-title>
+          <v-list-item-title>두뇌의벽</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
       <v-list-item router :to="{name: 'game2'}">
@@ -59,7 +59,7 @@
           <v-icon>mdi-view-dashboard</v-icon>
         </v-list-item-action>
         <v-list-item-content>
-          <v-list-item-title >두외의 벽</v-list-item-title>
+          <v-list-item-title >뱀게임 </v-list-item-title>
 
         </v-list-item-content>
       </v-list-item>

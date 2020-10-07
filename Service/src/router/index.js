@@ -18,13 +18,20 @@ const routes = [
   },
   {
 
-    path: '/games',
-    name: 'games',
+    path: '/game1',
+    name: 'game1',
     component: () => import(/* webpackChunkName: "games" */ '../components/BrainWall/BrainWall.vue')
   },
   {
     path: '/game2',
     name: 'game2',
+    component : ()=>import('@/components/BrainWall/BrainWall2.vue')
+
+  },
+
+  {
+    path: '/game3',
+    name: 'game3',
     component : ()=>import('@/components/SnakeGame/Snake.vue')
   },
   {
