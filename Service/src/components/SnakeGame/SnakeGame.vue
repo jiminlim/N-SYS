@@ -36,7 +36,7 @@ export default {
         { x: 150, y: 280 },
         { x: 150, y: 290 },
       ],
-      score: 100,
+      score: 11000,
       combo: 0,
       // True if changing direction
       changing_direction: false,
