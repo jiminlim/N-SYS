@@ -40,7 +40,7 @@ public class UserinfoService {
         }
     }
 
-    
+
     // pk 로 회원 정보 가져오기
     public Optional<Userinfo> getUserinfo(int uPk) {
         System.out.println("getUserinfo Service");

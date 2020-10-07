@@ -158,9 +158,9 @@ public class UserinfoController {
             if (userinfo != null) { // 로그인 성공시
                 String token = userinfoService.createToken(userinfo); // 토큰을 생성해서
                 map.put("Userinfo", token); // 토큰 저장 및 리턴
+                map.put("Upk", userinfo.getUPk()); // 유저번호 저장 및 리턴
                 map.put("Uname", userinfo.getUiName()); // 닉네임 저장 및 리턴
                 map.put("Uid", userinfo.getUiId()); // 이메일아이디 저장 및 리턴
-
                 if(userinfo.getUiImage().equals("/img/person.9f2af2d1.png")) {
                     map.put("srcImage", userinfo.getUiImage()); // 프로필이미지저장경로 저장 및 리턴
                 } else {
