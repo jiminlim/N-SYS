@@ -39,31 +39,31 @@
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn
-              color="yellow accent-4"
+              color="purple accent-1"
               router
               :to="{ name: 'changenickname' }"
-              >Nickname_변경</v-btn
+              >닉네임'변경</v-btn
             >
-            <v-btn color="yellow accent-4" router :to="{ name: 'changepw' }"
-              >PW_변경</v-btn
+            <v-btn color="purple accent-2" router :to="{ name: 'changepw' }"
+              >비밀번호변경</v-btn
             >
 
             <v-btn
               id="changeImage"
-              color="yellow accent-4"
+              color="purple accent-3"
               @click="$refs.userProfileImgChange.click()"
-              >Image_변경</v-btn
+              >이미지변경</v-btn
             >
 
             <v-btn
-              color="green accent-4"
+              color="purple accent-3"
               @click="saveImage"
               v-if="Ischangeimage"
             >
-              Image_저장
+              이미지저장
             </v-btn>
 
-            <v-btn color="red accent-4" @click="deleteuser">회원탈퇴</v-btn>
+            <v-btn color="purple accent-4" @click="deleteuser">회원탈퇴</v-btn>
             <input
               style="display: none"
               ref="userProfileImgChange"
@@ -91,6 +91,7 @@ export default {
       U_password2: "",
       U_image: "",
       item: {},
+      // vediosrc: require("../../assets/images/2048_2분시연영상.mp4"),
       image: "",
       message: "",
       profileImage: {},
@@ -158,7 +159,7 @@ export default {
         console.log(`${key}`);
       }
       axios
-        .post("http://localhost:8080/Userinfo/fileUpload", formData)
+        .post("https://j3b201.p.ssafy.io:8443/Userinfo/fileUpload", formData)
         .then((res) => {
           console.log("fileupload 결과 res : " + res.data);
           console.log("fileupload 결과 res : " + JSON.stringify(res));
@@ -183,7 +184,10 @@ export default {
       }
       //Image 지정된 경로에 저장, 저장경로 반환.
       axios
-        .post("http://localhost:8080/Userinfo/profileimgsave", formData)
+        .post(
+          "https://j3b201.p.ssafy.io:8443/Userinfo/profileimgsave",
+          formData
+        )
         .then((res) => {
           // console.log("profileimgsave 결과 res : " + res.data);
           // console.log("profileimgsave 결과 res : " + JSON.stringify(res));
@@ -191,7 +195,7 @@ export default {
           console.log("경로 저장 후 res.data : " + this.responseimage);
           if (res != null) {
             axios
-              .post("http://localhost:8080/Userinfo/updateProfile", {
+              .post("https://j3b201.p.ssafy.io:8443/Userinfo/updateProfile", {
                 uiId: localStorage.getItem("Now_Uid"),
                 uiImage: this.responseimage,
                 uiImgtype: this.profileImage.type,
@@ -224,7 +228,7 @@ export default {
     //여기까지는 지우지 말아주세요.
     deleteuser() {
       axios
-        .post("http://localhost:8080/Userinfo/deleteaccount", {
+        .post("https://j3b201.p.ssafy.io:8443/Userinfo/deleteaccount", {
           uiId: localStorage.getItem("Now_Uid"),
         })
         .then(({ data }) => {

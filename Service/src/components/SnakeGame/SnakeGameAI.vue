@@ -2,11 +2,11 @@
 <template>
   <div>
     <body>
-      <p>score: {{ score }}</p>
-      <p>combo: {{ combo }}</p>
+      <h3>AI</h3>
+      <p>Score: {{ score }}</p>
+      <p>Combo: {{ combo }}</p>
       <canvas id="snakeboardAI" width="300" height="300"></canvas>
     </body>
-    <button v-on:click="SnakeStart()">시작</button>
   </div>
 </template>
 
@@ -14,21 +14,27 @@
 <script>
 import axios from "axios";
 import { AI } from "./AI.js";
+import EventBus from "./EventBus";
 
 export default {
   name: "SnakeGameAI",
   data() {
     return {
+      speed: 30,
       testbool: null,
+      testforfood: false,
+
+      timer: 0,
+
       inputs: [],
       outputs: [],
       outputs2: [],
-
+      bool1: false,
       tempdir1: -2,
       tempdir2: -2,
 
-      life: 3,
-      speed: 50,
+      life: 10,
+
       rank: -1,
 
       DIRECTIONS: [
@@ -54,7 +60,7 @@ export default {
       score: 0,
       combo: 0,
       // True if changing direction
-      changing_direction: false,
+      changing_direction: true,
       // Horizontal velocity
       food_x: -100,
       food_y: -100,
@@ -84,47 +90,29 @@ export default {
 
       // console.log(this.dx, this.dy);
 
-      this.changing_direction = false;
+      this.changing_direction = true;
       setTimeout(() => {
-        if (this.Has_game_ended()) {
-          console.log("has ended");
+        if (this.Has_game_ended() || this.timer >= 500) {
+          // console.log("has ended");
+          this.combo = 0;
+          this.life -= 1;
+          this.timer = 0;
           this.ResetTile();
         }
+        // console.log(this.snake[0], this.snake[1]);
+        this.timer += 5;
+        this.GetGenes();
+        this.Move_Snake();
         this.Clear_board();
         this.DrawFood();
-        this.Move_Snake();
         this.DrawSnake();
-        this.GetGenes();
-        this.direction = this.SetOutPuts(this.outputs2);
+
         // console.log(this.inputs, this.outputs, this.outputs2, this.direction);
-        this.SetWay(this.direction);
+
+        // console.log(this.dx, this.dy);
         // Repeat
         this.Main();
       }, this.speed);
-
-      // this.testbool = setInterval(() => {
-      //   // if (this.life <= 0) {
-      //   //   clearInterval(this.testbool);
-      //   //   return;
-      //   // }
-      //   this.Clear_board();
-      //   this.DrawFood();
-      //   this.Move_Snake();
-      //   this.DrawSnake();
-
-      //   this.GetGenes();
-
-      //   this.direction = this.SetOutPuts(this.outputs2);
-      //   // console.log(this.inputs, this.outputs, this.outputs2, this.direction);
-      //   this.SetWay(this.direction);
-      //   // Repeat
-      //   // this.Main();
-      //   if (this.Has_game_ended()) {
-      //     console.log("has ended");
-      //     this.ResetTile();
-      //     // clearInterval(this.testbool);
-      //   }
-      // }, this.speed);
     },
 
     ResetTile() {
@@ -145,27 +133,25 @@ export default {
     },
 
     GetGenes() {
-      console.log("getinputs");
+      // console.log("getinputs");
       this.inputs = this.GetInputs();
       this.outputs = this.Forward(this.inputs);
-      // console.log(this.outputs);
-      this.outputs2 = this.ArgMax(this.outputs);
+      this.SetOutPuts(this.ArgMax(this.outputs));
+      this.SetWay(this.direction);
     },
 
     SetOutPuts(num) {
       var resnum = num;
-      // console.log(resnum);
+
       if (num == 1) {
         resnum = (this.direction + 3) % 4;
-        // console.log(resnum);
+        this.direction = resnum;
       }
       if (num == 2) {
         resnum = (this.direction + 1) % 4;
-        // console.log(resnum);
+        this.direction = resnum;
       }
       // this.direction = resnum;
-      // console.log(resnum);
-      return resnum;
     },
 
     // draw a border around the canvas
@@ -215,7 +201,6 @@ export default {
     },
 
     Has_game_ended() {
-      console.log("step");
       for (let i = 4; i < this.snake.length; i++) {
         if (
           this.snake[i].x === this.snake[0].x &&
@@ -242,12 +227,16 @@ export default {
 
     Gen_Food() {
       // Generate a random number the food x-coordinate
-
-      this.food_x = this.Random_food(0, this.snakeboard.width - 10);
-      // Generate a random number for the food y-coordinate
-      this.food_y = this.Random_food(0, this.snakeboard.height - 10);
-      // if the new food location is where the snake currently is, generate a new food location
-
+      if (this.testforfood) {
+        this.food_x = 120;
+        this.food_y = 120;
+        this.testforfood = false;
+      } else {
+        this.food_x = this.Random_food(0, this.snakeboard.width - 10);
+        // Generate a random number for the food y-coordinate
+        this.food_y = this.Random_food(0, this.snakeboard.height - 10);
+        // if the new food location is where the snake currently is, generate a new food location
+      }
       this.snake.forEach((part) => {
         const has_eaten = part.x == this.food_x && part.y == this.food_y;
         if (has_eaten) this.Gen_Food();
@@ -255,14 +244,12 @@ export default {
     },
 
     Relu(x) {
-      // console.log(x[0].length);
       var res = [];
       var xx = [];
       var xxx = 0;
       for (var i = 0; i < x[0].length; i++) {
         xxx = x[0][i] * (x[0][i] >= 0);
-        // console.log(x[0][i]);
-        // console.log(xxx);
+
         xx.push(xxx);
       }
       res.push(xx);
@@ -270,21 +257,18 @@ export default {
     },
 
     SoftMax(x) {
-      // console.log(x[0]);
       var res = [];
       var xx = [];
       var xxx = 0;
       var exptmp = 0;
       for (var z = 0; z < x[0].length; z++) {
-        // console.log(x[0][z]);
         var expfrag = Math.exp(x[0][z]);
         exptmp += expfrag;
       }
-      // console.log(exptmp);
+
       for (var i = 0; i < x[0].length; i++) {
         xxx = Math.exp(x[0][i]) / exptmp;
         xx.push(xxx);
-        // console.log(xxx);
       }
       res.push(xx);
       return res;
@@ -300,51 +284,38 @@ export default {
       var sol = Array(1);
       sol[0] = arr1;
       // var sol = Array(l);
-      // console.log(sol);
+
       for (var v = 0; v < a.length; v++) {
-        // console.log(a[v]);
         for (var c = 0; c < l; c++) {
-          // console.log(sol);
-          // console.log(a[v][c]);
-          // console.log(a[v][c] + 1);
-          // console.log(c);
           sol[0][c] += a[v][c];
         }
       }
-      // console.log(sol);
+
       return a;
     },
 
     Forward(inputs) {
-      // console.log(inputs);
-      var net1 = this.MatMul(inputs, AI.D3.N3.w1);
-      // console.log(net1);
+      var net1 = this.MatMul(inputs, AI.D3.N1.w1);
+
       var net11 = this.Relu(net1);
-      //here
-      // console.log(net11);
 
-      // here
-      var net2 = this.MatMul(net11, AI.D3.N3.w2);
-      // console.log(net2);
+      var net2 = this.MatMul(net11, AI.D3.N1.w2);
+
       var net22 = this.Relu(net2);
-      // console.log(net22);
 
-      var net3 = this.MatMul(net22, AI.D3.N3.w3);
-      // console.log(net3);
+      var net3 = this.MatMul(net22, AI.D3.N1.w3);
+
       var net33 = this.Relu(net3);
-      // console.log(net33);
 
-      var net4 = this.MatMul(net33, AI.D3.N3.w4);
-      // console.log(net4);
+      var net4 = this.MatMul(net33, AI.D3.N1.w4);
+
       var net44 = this.SoftMax(net4);
-      // console.log(net44);
 
       return net44;
     },
 
     GuessHeadBool(inputarr) {
       for (var jj = 0; jj < this.snake.length; jj++) {
-        // console.log(inputarr, this.snake[jj]);
         if (
           inputarr[0] == this.snake[jj].x &&
           inputarr[1] == this.snake[jj].y
@@ -358,13 +329,13 @@ export default {
     GetInputs() {
       var head = [this.snake[0].x, this.snake[0].y];
       var result = [1, 1, 1, 0, 0, 0];
-      // console.log(this.direction);
+
       var possible_dirs = [
         this.DIRECTIONS[this.direction],
         this.DIRECTIONS[(this.direction + 3) % 4],
         this.DIRECTIONS[(this.direction + 1) % 4],
       ];
-      // console.log(possible_dirs);
+
       for (var i = 0; i < possible_dirs.length; i++) {
         for (var j = 0; j < 5; j++) {
           var guess_head = [
@@ -372,8 +343,6 @@ export default {
             head[1] + possible_dirs[i][1] * (j + 1) * 10,
           ];
 
-          console.log(guess_head);
-          console.log(this.GuessHeadBool(guess_head));
           if (
             guess_head[0] < 0 ||
             guess_head[0] >= 300 ||
@@ -381,45 +350,47 @@ export default {
             guess_head[1] >= 300 ||
             this.GuessHeadBool(guess_head)
           ) {
-            console.log("if checked");
+            // console.log("if checked");
             result[i] = j * 0.2;
             break;
           }
         }
       }
-      var bool1 = false;
+      this.bool1 = false;
       // console.log(result);
       for (var pix = 0; pix < 4; pix++) {
-        console.log(this.snake[pix], this.food_x, this.food_y);
+        // console.log(this.snake[pix], this.food_x, this.food_y);
         if (
-          this.snake[pix].x == this.food_x &&
+          this.snake[pix].x == this.food_x ||
           this.snake[pix].y == this.food_y
         ) {
-          console.log("getfind");
-          bool1 = true;
+          // console.log("getfind");
+          this.bool1 = true;
           break;
         }
       }
       // console.log(head, possible_dirs);
 
+      var test1 = this.NpSum(head, possible_dirs[1]);
+      var test2 = this.NpSum([this.food_x, this.food_y], possible_dirs[1]);
+
       if (
-        bool1 &&
+        this.bool1 &&
         this.NpSum(head, possible_dirs[0]) <=
           this.NpSum([this.food_x, this.food_y], possible_dirs[0])
       ) {
         result[3] = 1;
       }
-      if (
-        this.NpSum(head, possible_dirs[1]) <
-        this.NpSum([this.food_x, this.food_y], possible_dirs[1])
-      ) {
+      if (test1 < test2) {
+        // console.log("left");
         result[4] = 1;
       } else {
+        // console.log("right");
         result[5] = 1;
       }
       var tmp_res = [];
       tmp_res.push(result);
-      console.log(tmp_res);
+      // console.log(tmp_res);
       return tmp_res;
     },
 
@@ -431,31 +402,6 @@ export default {
       return sum;
     },
 
-    Step(direction) {
-      // console.log(direction);
-      var old_head = [this.snake[0].x, this.snake[0].y];
-      var movement = this.DIRECTIONS[direction];
-      this.dx = this.DIRECTIONS[this.direction][0] * 10;
-      this.dy = this.DIRECTIONS[this.direction][1] * 10;
-      // console.log(old_head);
-      // console.log(movement);
-      var new_head = [
-        old_head[0] + movement[0] * 10,
-        old_head[1] + movement[1] * 10,
-      ];
-      // console.log(new_head);
-      if (
-        new_head[0] < 0 ||
-        new_head[0] >= 300 ||
-        new_head[1] < 0 ||
-        new_head[1] >= 300 ||
-        [new_head[0], new_head[1]] in this.snake
-      ) {
-        return false;
-      }
-      return true;
-    },
-
     MatMul(a, b) {
       var mul = [];
       var lena = a[0].length;
@@ -464,13 +410,10 @@ export default {
       for (var i = 0; i < lenb; i++) {
         var x = 0;
         for (var j = 0; j < lena; j++) {
-          // console.log(0, j, j, i);
-          // console.log(a[0][j], b[j][i]);
           x += Math.round(a[0][j] * b[j][i] * 1e8) / 1e8;
         }
-        // console.log(x);
+
         row.push(x);
-        // console.log(row);
       }
 
       mul.push(row);
@@ -492,6 +435,7 @@ export default {
         // Increase score, combo
         this.combo += 1;
         this.score += 1 + this.combo;
+        this.timer = 0;
 
         // Generate new food location
         this.Gen_Food();
@@ -514,12 +458,17 @@ export default {
     },
 
     SnakeStart() {
-      this.life = 3;
+      this.life = 9999;
       this.Main();
 
       this.Gen_Food();
     },
+    SnakeStop() {
+      this.life = 0;
+      EventBus.$emit("ai-completed", [this.score]);
+    },
     SubmitGameData() {
+      // not using now
       axios
         .post("http://localhost:8080/Play/snake/", {
           gaId: 1,

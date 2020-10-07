@@ -97,11 +97,12 @@
                 name="nickname"
                 prepend-icon="mdi-account"
                 type="text"
-                :error-messages="nicknameErrors"
-                @input="$v.nickname.$touch()"
-                @blur="$v.nickname.$touch()"
               ></v-text-field>
+<!--                @input="$v.nickname.$touch()"-->
+<!--                @blur="$v.nickname.$touch()"-->
 <!--                required-->
+<!--                :error-messages="nicknameErrors"-->
+
               <v-text-field
                 label="Email"
                 v-model="email"
@@ -241,12 +242,12 @@ export default {
     },
   },
   computed: {
-    nicknameErrors() {
-      const errors = [];
-      if (!this.$v.email.$dirty) return errors;
-      !this.$v.nickname.required && errors.push("닉네임을 입력해주세요.");
-      return errors;
-    },
+    // nicknameErrors() {
+    //   const errors = [];
+    //   if (!this.$v.email.$dirty) return errors;
+    //   !this.$v.nickname.required && errors.push("닉네임을 입력해주세요.");
+    //   return errors;
+    // },
     emailErrors() {
       const errors = [];
       if (!this.$v.email.$dirty) return errors;

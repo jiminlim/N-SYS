@@ -29,9 +29,6 @@ export default {
 </script>
 
 <style>
-/*#container{*/
-/*  text-align : center;*/
-/*}*/
 #cenimg {
   display: block; margin: 0px auto;
 }

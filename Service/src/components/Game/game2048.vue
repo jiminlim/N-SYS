@@ -4,17 +4,17 @@
            height="550px" width="100vw">
       <v-row align="center" style="margin-top: 5%;">
         <v-col cols="12">
-          <v-container class="fill-height" >
+          <v-main style="margin-left: 25%">
             <video
                 width="640"
-                height="360" style=""
+                height="360"
                 autoplay   >
               <source
                   src="@/assets/video/2048video.mp4"
                   type="video/mp4"
               />
             </video>
-          </v-container>
+          </v-main>
         </v-col>
       </v-row>
     </v-img>

@@ -43,7 +43,7 @@ export default {
   methods: {
     change_PW() {
       axios
-        .post("http://localhost:8080/Userinfo/updatepw", {
+        .post("https://j3b201.p.ssafy.io:8443/Userinfo/updatepw", {
           uiId: localStorage.getItem("Now_Uid"),
           uiPw: this.U_password,
         })

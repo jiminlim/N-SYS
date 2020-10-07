@@ -21,12 +21,9 @@
     </v-footer>
   </v-app>
 </template>
-
 <script>
-
 import mypageCard from '@/components/Users/mypage'
 import {mapGetters} from "vuex";
-
 
 export default {
   props: {
@@ -35,19 +32,15 @@ export default {
   components: {
     mypageCard
   },
-
   data: () => ({
     drawer: null,
   }),
   created() {
     this.$vuetify.theme.dark = true;
-
   }
-  ,
-  computed: {
+  ,computed: {
     ...mapGetters(["getBar"]),
-  }
-  ,
+  },
 }
 ;
 </script>
