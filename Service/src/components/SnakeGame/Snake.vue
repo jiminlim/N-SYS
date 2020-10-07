@@ -198,7 +198,7 @@ export default {
   },
   created() {
     this.uiPk = localStorage.getItem("Now_Upk");
-    console.log(this.uiPk);
+    // console.log(this.uiPk);
     // console.log("pk test");
     EventBus.$on("human-completed", (payload) => {
       this.HumanScore = payload[0];
