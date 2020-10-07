@@ -3,7 +3,8 @@
     <h1 align="center">두뇌의 벽</h1>
     <v-card-actions class="justify-center">
       <v-btn
-          :disabled="gameStartFlag"
+          v-if="!gameStartFlag"
+          :class="`rounded-xl`"
           @click="clickStart()"
           color="light-green lighten-1"
           elevation="2"
@@ -14,29 +15,52 @@
 
 
     <div v-if="gameStartFlag">
-      <div v-if="!roundFinishFlag">
-        <h1 align="center">카운트 다운</h1>
-        <h1 align="center" color="red" >{{ countDown }}</h1>
-        <h2 align="center">round - {{ round }}/5</h2>
-        <h2 align="center">score - {{ score }}</h2>
-        <h1 align="center" id="label-container"></h1>
+
+      <v-container class="dark lighten-5">
+        <v-row>
+          <v-col
+              >
+            <v-card
+                class="pa-2"
+                outlined
+                tile
+
+            >
+              <h3 align="center">카운트 다운</h3>
+              <h1 align="center" class="red--text" id="cd">{{ countDown }}</h1>
+            </v-card>
+          </v-col>
+          <v-col>
+            <v-card
+                class="pa-2"
+                outlined
+                tile
+            >
+              <h2 align="center">round - {{ round }}/5</h2>
+              <h2 align="center">score - {{ score }}</h2>
+              <h1 align="center" id="label-container"></h1>
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-container>
 
         <v-card-actions class="justify-center">
           <v-btn
               :disabled="countFlag" @click="generateRandomNumber()"
+              :class="`rounded-lg`"
               color="light-green lighten-1"
               elevation="2"
               tile
               x-large
           >포즈 바꾸기 버튼</v-btn>
         </v-card-actions>
-        <div>
+
+      <v-container class="dark lighten-5">
           <random-pose class="temp"></random-pose>
           <div class="temp"><canvas id="canvas"></canvas></div>
-        </div>
-      </div>
+      </v-container>
 
-    </div>
+      </div>
   </div>
 </template>
 
@@ -59,7 +83,7 @@ export default {
       roundFinishFlag: false,
       scoreFlag: false,
       gameStartFlag: false,
-      countDown: 5,
+      countDown: 10,
       countFlag: false, //카운트 다운 버튼 비활성화
     };
   },
@@ -84,9 +108,10 @@ export default {
       } else if (this.countDown == 0) {
         this.countFlag = false
         if (this.round == 5) {
-          alert("게임이 종료되었습니다.");
+          alert("게임이 종료되었습니다.\n맞추신 개수는 "+this.score+"입니다.");
           this.gameStartFlag=false
           this.roundFinishFlag = true
+          this.finishRoundSetReadyPoseM()
           this.round = 0
           this.score = 0
         }
@@ -96,7 +121,7 @@ export default {
       let tempRandomNumber = Math.floor(Math.random() * 9 + 1); // 숫자 바꾸면 됨
       this.changeCurrentPoseM(tempRandomNumber);
       this.round++;
-      this.countDown = 5;
+      this.countDown = 10;
       this.countFlag = true;
       this.countDownTimer();
       this.scoreFlag = false;
@@ -104,6 +129,9 @@ export default {
     },
     changeCurrentPoseM: function(x) {
       this.$store.commit("changeCurrentPose", x);
+    },
+    finishRoundSetReadyPoseM: function(){
+      this.$store.commit("finishRoundSetReadyPose","ready0")
     },
     async init() {
       this.startBtn = false;
@@ -159,7 +187,7 @@ export default {
         if (
             this.$store.state.currentPose == prediction[i].className &&
             !this.scoreFlag &&
-            prediction[i].probability.toFixed(2) >= 0.9
+            prediction[i].probability.toFixed(2) >= 0.98
         ) {
           if (this.countDown > 0) {
             this.score++;
@@ -191,6 +219,9 @@ export default {
 .temp{
   float: left;
   width:50%;
+}
+#cd{
+  font-size: 62px;
 }
 
 </style>

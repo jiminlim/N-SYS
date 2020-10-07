@@ -8,7 +8,7 @@ export default new Vuex.Store({
   state: {
     SERVER_URL: "http://localhost:8080", // 차후 aws로 바꿔야함
     poses: [
-      "ready",
+      "ready0",
       "body",
       "bowling",
       "boxing",
@@ -19,13 +19,17 @@ export default new Vuex.Store({
       "shoot",
       "ski",
     ], // poseList - 디비에 넣을지 고민중
-    currentPose: "ready", // default pose,
+    currentPose: "ready0", // default pose,
     bar: "내가 승리한 것이지 인간이 승리한 것이 아니야",
   },
   mutations: {
     changeCurrentPose(state, payload) {
       // 현재 포즈를 바꿔줌
       state.currentPose = this.state.poses[payload];
+    },
+    finishRoundSetReadyPose(state, payload) {
+      // 현재 포즈를 바꿔줌
+      state.currentPose = payload;
     },
     changebar(state, payload) {
       state.bar = payload;
