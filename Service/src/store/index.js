@@ -36,13 +36,19 @@ export default new Vuex.Store({
       axios
         .post("https://j3b201.p.ssafy.io:8443/Userinfo/login", loginData)
         .then(({ data }) => {
-          if (data.Userinfo != null) {
+
+          console.log(data);
+          if (data.Uname != null) {
+            localStorage.setItem("Now_Upk", data.Upk);
             localStorage.setItem("Now_Uname", data.Uname);
             localStorage.setItem("Now_Uid", data.Uid);
             localStorage.setItem("Now_srcImage", data.srcImage);
             localStorage.setItem("Now_Token", data.Userinfo);
             localStorage.setItem("IsLogin", true);
             alert("로그인 성공!!");
+            window.location.href = "/";
+          } else {
+            alert("로그인 실패!!");
             window.location.href = "/";
           }
         })
