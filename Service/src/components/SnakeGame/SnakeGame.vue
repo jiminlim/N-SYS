@@ -1,8 +1,9 @@
 <template>
   <div>
     <body>
-      <p>score: {{ score }}</p>
-      <p>combo: {{ combo }}</p>
+      <h3>Human</h3>
+      <p>Score: {{ score }}</p>
+      <p>Combo: {{ combo }}</p>
       <canvas
         id="snakeboard"
         v-on:keydown="Change_Direction(event)"
@@ -10,19 +11,19 @@
         height="300"
       ></canvas>
     </body>
-    <button v-on:click="SnakeStart()">시작</button>
   </div>
 </template>
 
 <script>
-import axios from "axios";
+// import axios from "axios";
+import EventBus from "./EventBus";
 
 export default {
   name: "SnakeGame",
   data() {
     return {
-      life: 5,
-      speed: 35,
+      life: 9999,
+      speed: 30,
       rank: -1,
 
       board_border: "black",
@@ -53,7 +54,7 @@ export default {
   methods: {
     Main() {
       if (this.life == 0) {
-        this.SubmitGameData();
+        // this.HumanCompleted();
         // console.log(this.life);
 
         return;
@@ -228,22 +229,12 @@ export default {
 
       this.Gen_Food();
     },
-    SubmitGameData() {
-      axios
-        .post("http://localhost:8080/Play/snake/", {
-          gaId: 1,
-          plLevel: 5,
-          plscore: this.score,
-          uiPk: 27,
-        })
-        .then((res) => {
-          this.rank = res.data.rank;
-          alert(`${this.rank}위에 랭크인 하셨습니다. 축하드립니다.`);
-          console.log(res);
-        })
-        .catch((err) => {
-          console.error(err);
-        });
+    SnakeStop() {
+      this.life = 0;
+      EventBus.$emit("human-completed", [this.score]);
+    },
+    HumanCompleted() {
+      EventBus.$emit("human-completed", [this.score]);
     },
   },
   mounted() {
