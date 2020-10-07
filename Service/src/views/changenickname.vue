@@ -56,7 +56,7 @@ export default {
   methods: {
     change_NickName() {
       axios
-        .post("http://localhost:8080/Userinfo/updateName", {
+        .post("https://j3b201.p.ssafy.io:8443/Userinfo/updateName", {
           uiId: localStorage.getItem("Now_Uid"),
           uiName: this.U_changenickname,
         })
