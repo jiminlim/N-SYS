@@ -264,10 +264,10 @@ public class UserinfoController {
 
 //		System.out.println(time1);
         if (image != null && !image.isEmpty()) {
-//            File dest1 = new File("/home/ubuntu/vue/dist/img/fileupload/");
-			File dest1 = new File("/SSAFY/profile/");
-//            File dest2 = new File("/home/ubuntu/vue/dist/img/fileupload/" + time1 + "_" + image.getOriginalFilename());
-			File dest2 = new File("/SSAFY/profile/" + time1 + "_" + image.getOriginalFilename());
+            File dest1 = new File("/home/ubuntu/image/");
+//			File dest1 = new File("/SSAFY/profile/");
+            File dest2 = new File("/home/ubuntu/image/" + time1 + "_" + image.getOriginalFilename());
+//			File dest2 = new File("/SSAFY/profile/" + time1 + "_" + image.getOriginalFilename());
             if (dest1.mkdirs()) {
                 System.out.println("디렉토리 생성 성공");
             } else {
@@ -293,8 +293,8 @@ public class UserinfoController {
         }
 
         // 이미지를 지정한 경로에서 불러와서(이미지가 저장되어있어야함) FileInputStream으로 읽은 후 InputStream으로 저장.
-//        InputStream imageStream = new FileInputStream("/home/ubuntu/vue/dist/img/fileupload/" + time1 + "_" + image.getOriginalFilename());
-        InputStream imageStream = new FileInputStream("/SSAFY/profile/" + time1 + "_" + image.getOriginalFilename());
+        InputStream imageStream = new FileInputStream("/home/ubuntu/image/" + time1 + "_" + image.getOriginalFilename());
+//        InputStream imageStream = new FileInputStream("/SSAFY/profile/" + time1 + "_" + image.getOriginalFilename());
         // InputStream으로 읽어들인 이미지를 ByteArray형태로 변환.
         byte[] imageByteArray = IOUtils.toByteArray(imageStream);
         imageStream.close();

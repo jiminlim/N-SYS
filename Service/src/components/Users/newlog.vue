@@ -101,7 +101,7 @@
                 @input="$v.nickname.$touch()"
                 @blur="$v.nickname.$touch()"
               ></v-text-field>
-<!--                required-->
+              <!--                required-->
               <v-text-field
                 label="Email"
                 v-model="email"
