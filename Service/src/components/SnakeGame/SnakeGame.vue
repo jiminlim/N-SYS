@@ -1,4 +1,3 @@
-
 <template>
   <div>
     <body>
@@ -14,10 +13,8 @@
     <button v-on:click="SnakeStart()">시작</button>
   </div>
 </template>
-
 <script>
 import axios from "axios";
-
 export default {
   name: "SnakeGame",
   data() {

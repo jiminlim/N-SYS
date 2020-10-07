@@ -28,7 +28,11 @@ const routes = [
     component : ()=>import('@/components/BrainWall/BrainWall2.vue')
 
   },
-
+  {
+    path: '/2048',
+    name: '2048',
+    component : ()=>import('@/components/Game/game2048.vue')
+  },
   {
     path: '/game3',
     name: 'game3',
