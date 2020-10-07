@@ -27,6 +27,10 @@ export default new Vuex.Store({
       // 현재 포즈를 바꿔줌
       state.currentPose = this.state.poses[payload];
     },
+    finishRoundSetReadyPose(state, payload) {
+      // 현재 포즈를 바꿔줌
+      state.currentPose = payload;
+    },
     changebar(state, payload) {
       state.bar = payload;
     },
