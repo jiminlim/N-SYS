@@ -59,7 +59,7 @@ export default {
       roundFinishFlag: false,
       scoreFlag: false,
       gameStartFlag: false,
-      countDown: 5,
+      countDown: 10,
       countFlag: false, //카운트 다운 버튼 비활성화
     };
   },
@@ -96,7 +96,7 @@ export default {
       let tempRandomNumber = Math.floor(Math.random() * 9 + 1); // 숫자 바꾸면 됨
       this.changeCurrentPoseM(tempRandomNumber);
       this.round++;
-      this.countDown = 5;
+      this.countDown = 10;
       this.countFlag = true;
       this.countDownTimer();
       this.scoreFlag = false;
@@ -159,7 +159,7 @@ export default {
         if (
             this.$store.state.currentPose == prediction[i].className &&
             !this.scoreFlag &&
-            prediction[i].probability.toFixed(2) >= 0.9
+            prediction[i].probability.toFixed(2) >= 0.98
         ) {
           if (this.countDown > 0) {
             this.score++;
