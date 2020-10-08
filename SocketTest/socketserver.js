@@ -22,7 +22,7 @@ const os = require('os');
 const app = require('express')();
 const https = require('https');
 const fs = require('fs');
-const PORT = 3001;   // HTTPS 는 443 포트를 사용합니다
+const PORT = 3000;   // HTTPS 는 443 포트를 사용합니다
 
 //var privateKey = fs.readFileSync('../ssl/private.key').toString();
 //var certificate = fs.readFileSync('../ssl/private.crt').toString();
