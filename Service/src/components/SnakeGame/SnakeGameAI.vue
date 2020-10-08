@@ -2,13 +2,18 @@
 <template>
   <div>
     <body>
-      <h3>AI</h3>
+      <h3 v-if="this.difficulty == 2">AI-Easy</h3>
+      <h3 v-if="this.difficulty == 3" v-bind:style="{ color: 'red' }">
+        AI-Hard
+      </h3>
       <p>Score: {{ score }}</p>
       <p>Combo: {{ combo }}</p>
       <canvas id="snakeboardAI" width="300" height="300"></canvas>
     </body>
   </div>
 </template>
+
+
 
 
 <script>
@@ -20,10 +25,10 @@ export default {
   name: "SnakeGameAI",
   data() {
     return {
+      difficulty: 2,
       speed: 30,
       testbool: null,
       testforfood: false,
-
       timer: 0,
 
       inputs: [],
@@ -135,7 +140,12 @@ export default {
     GetGenes() {
       // console.log("getinputs");
       this.inputs = this.GetInputs();
-      this.outputs = this.Forward(this.inputs);
+      if (this.difficulty == 3) {
+        this.outputs = this.ForwardHard(this.inputs);
+      } else {
+        this.outputs = this.Forward(this.inputs);
+      }
+
       this.SetOutPuts(this.ArgMax(this.outputs));
       this.SetWay(this.direction);
     },
@@ -294,20 +304,39 @@ export default {
       return a;
     },
 
-    Forward(inputs) {
-      var net1 = this.MatMul(inputs, AI.D3.N1.w1);
+    ForwardHard(inputs) {
+      var net1 = this.MatMul(inputs, AI.D1.N1.w1);
 
       var net11 = this.Relu(net1);
 
-      var net2 = this.MatMul(net11, AI.D3.N1.w2);
+      var net2 = this.MatMul(net11, AI.D1.N1.w2);
 
       var net22 = this.Relu(net2);
 
-      var net3 = this.MatMul(net22, AI.D3.N1.w3);
+      var net3 = this.MatMul(net22, AI.D1.N1.w3);
 
       var net33 = this.Relu(net3);
 
-      var net4 = this.MatMul(net33, AI.D3.N1.w4);
+      var net4 = this.MatMul(net33, AI.D1.N1.w4);
+
+      var net44 = this.SoftMax(net4);
+
+      return net44;
+    },
+    Forward(inputs) {
+      var net1 = this.MatMul(inputs, AI.D3.N2.w1);
+
+      var net11 = this.Relu(net1);
+
+      var net2 = this.MatMul(net11, AI.D3.N2.w2);
+
+      var net22 = this.Relu(net2);
+
+      var net3 = this.MatMul(net22, AI.D3.N2.w3);
+
+      var net33 = this.Relu(net3);
+
+      var net4 = this.MatMul(net33, AI.D3.N2.w4);
 
       var net44 = this.SoftMax(net4);
 
@@ -455,6 +484,13 @@ export default {
         }
       }
       return ans;
+    },
+    ChangeDiff() {
+      if (this.difficulty == 3) {
+        this.difficulty = 2;
+      } else {
+        this.difficulty = 3;
+      }
     },
 
     SnakeStart() {

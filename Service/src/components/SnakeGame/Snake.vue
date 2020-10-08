@@ -3,21 +3,7 @@
     <div class="aaaacenter">
       <div class="robottext">{{ robotstext }}</div>
       <div class="robot">
-        <img
-          src="../../assets/images/robot1.png"
-          class="robotimg"
-          v-if="face == 1"
-        />
-        <img
-          src="../../assets/images/robot2.png"
-          class="robotimg"
-          v-if="face == 2"
-        />
-        <img
-          src="../../assets/images/robot3.png"
-          class="robotimg"
-          v-if="face == 3"
-        />
+        <img :src="this.repos[this.face].src" class="robotimg" />
       </div>
     </div>
     <div class="aaaacenter">
@@ -37,22 +23,34 @@
     </div>
 
     <div class="aaaacenter">
-      <button
-        type="button"
-        class="snakebutton"
-        v-on:click="SnakeStart()"
-        v-if="!this.GameStarted"
-      >
-        시작하기
-      </button>
-      <button
-        v-if="this.GameHasEnded"
-        v-on:click="Refresh()"
-        type="button"
-        class="refreshbutton"
-      >
-        다시하기
-      </button>
+      <div v-bind:style="{ width: `50%`, float: `left`, textalign: `center` }">
+        <button
+          type="button"
+          class="snakebutton"
+          v-on:click="SnakeStart()"
+          v-if="!this.GameStarted"
+        >
+          시작하기
+        </button>
+        <button
+          v-if="this.GameHasEnded"
+          v-on:click="Refresh()"
+          type="button"
+          class="refreshbutton"
+        >
+          다시하기
+        </button>
+      </div>
+      <div v-bind:style="{ width: `50%`, float: `right`, textalign: `center` }">
+        <button
+          type="button"
+          class="diff"
+          v-if="!this.GameStarted"
+          v-on:click="ChangeDifficulty()"
+        >
+          난이도 변경
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -77,11 +75,13 @@ div.robottext {
   margin-bottom: 10px;
   width: 65%;
   height: 100px;
-  line-height: 100px;
+  line-height: 50px;
   float: left;
-  font-size: 20px;
-
-  border: 2px solid white;
+  font-size: 15px;
+  color: white;
+  word-break: break-all;
+  background-color: grey;
+  border: 2px solid black;
 }
 
 .deadline {
@@ -94,13 +94,13 @@ div.robottext {
 
 button.snakebutton {
   background-color: #8edb62;
-  color: white;
+  color: black;
   padding: 15px 32px;
   text-align: center;
   text-decoration: none;
   display: inline-block;
-  font-size: 16px;
-  border-radius: 12px;
+  font-size: 12px;
+  border-radius: 5px;
 }
 button.refreshbutton {
   background-color: rgb(136, 76, 216);
@@ -109,8 +109,19 @@ button.refreshbutton {
   text-align: center;
   text-decoration: none;
   display: inline-block;
-  font-size: 16px;
-  border-radius: 12px;
+  font-size: 12px;
+  border-radius: 5px;
+}
+
+button.diff {
+  background-color: rgb(189, 131, 24);
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 12px;
+  border-radius: 5px;
 }
 </style>
 <script>
@@ -124,9 +135,19 @@ export default {
   name: "Snake",
   data() {
     return {
-      face: 1,
-      robotstext: "30초 내로 더 많은 점수를 얻은 쪽이 승리!",
-      time: 30,
+      repos: [
+        { name: "robot1", src: require("../../assets/images/robot1.png") },
+        { name: "robot2", src: require("../../assets/images/robot2.png") },
+        { name: "robot3", src: require("../../assets/images/robot3.png") },
+        { name: "robot4", src: require("../../assets/images/robot4.png") },
+        { name: "robot5", src: require("../../assets/images/robot5.png") },
+        { name: "robot6", src: require("../../assets/images/robot6.png") },
+      ],
+      hard: false,
+      face: 0,
+      robotstext:
+        "60초 내로 더 많은 점수를 얻은 쪽이 승리! 로그인 후 하드모드 격파시 랭킹 도전 가능",
+      time: 60,
       Uname: null,
       GameStarted: false,
       GameHasEnded: false,
@@ -144,6 +165,15 @@ export default {
       this.$refs.snakeai.SnakeStart();
       this.SetTimer();
     },
+    ChangeDifficulty() {
+      this.hard = !this.hard;
+      if (this.hard) {
+        this.face = 3;
+      } else {
+        this.face = 0;
+      }
+      this.$refs.snakeai.ChangeDiff();
+    },
     SubmitGameData() {
       if (this.uiPk != undefined) {
         axios
@@ -158,11 +188,13 @@ export default {
             //   console.log(res);
           });
       }
+
       // .catch((e) => {
       //   alert("랭킹 진입에 실패하였습니다.");
       //   //   console.error(err);
       // });
     },
+
     SetTimer() {
       setTimeout(() => {
         if (this.time <= 0) {
@@ -180,10 +212,21 @@ export default {
       //   console.log(this.HumanScore, this.AIScore);
       if (this.HumanScore > this.AIScore) {
         this.robotstext = "AI의 패배. 인간의 승리.";
-        this.SubmitGameData();
-        this.face = 3;
+        if (this.hard) {
+          this.SubmitGameData();
+        }
+
+        if (this.hard) {
+          this.face = 5;
+        } else {
+          this.face = 2;
+        }
       } else {
-        this.face = 2;
+        if (this.hard) {
+          this.face = 4;
+        } else {
+          this.face = 1;
+        }
         this.robotstext = "인간의 패배. 다음 기회에..";
       }
       this.GameHasEnded = true;
