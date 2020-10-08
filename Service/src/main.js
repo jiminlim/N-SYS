@@ -5,6 +5,9 @@ import store from './store/index'
 import vuetify from './plugins/vuetify'
 import Vuelidate from 'vuelidate'
 
+//socket 설정
+
+
 Vue.config.productionTip = false
 Vue.use(Vuelidate)
 

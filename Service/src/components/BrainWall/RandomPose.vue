@@ -1,9 +1,11 @@
 <template>
-  <div>
+  <div id="container">
 
-    <v-img :src="require(`@/assets/images/pose/${getCurrentPose}.jpg`)"  contain
-    height="400px"
-    width="400px"></v-img>
+    <v-img :src="require(`@/assets/images/pose/${getCurrentPose}.png`)"
+           id="cenimg"
+           contain
+    max-height="400px"
+    max-width="400px"></v-img>
 
   </div>
 
@@ -25,3 +27,9 @@ export default {
 
 }
 </script>
+
+<style>
+#cenimg {
+  display: block; margin: 0px auto;
+}
+</style>
