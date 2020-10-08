@@ -14,10 +14,6 @@
           <span>Join</span>
           <v-icon>mdi-heart</v-icon>
         </v-btn>
-        <v-btn @click="clickfindpw">
-          <span>FindPassword</span>
-          <v-icon>mdi-heart</v-icon>
-        </v-btn>
       </v-bottom-navigation>
       <v-container :class="loginview">
         <v-row justify="center">
@@ -49,7 +45,44 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="yellow accent-4" @click="submitlogin">Login</v-btn>
+            <v-btn color="green darken-3" @click="submitlogin">Login</v-btn>
+            <!--            <v-btn color="yellow accent-4" @click="clickfindpw">FindPassword</v-btn>-->
+            <v-btn color="lime" dark @click.stop="dialog = true">
+              FindPassword
+            </v-btn>
+            <v-dialog v-model="dialog" max-width="290">
+              <v-card>
+                <v-card-title class="headline"> Find Password</v-card-title>
+                <v-card-text>
+                  If you want to find your password. Insert your email.
+                </v-card-text>
+                <v-card-text>
+                  <v-form>
+                    <v-text-field
+                      label="Email"
+                      v-model="templateParams.target_email"
+                      name="email"
+                      prepend-icon="mdi-account"
+                      type="text"
+                      :error-messages="emailErrors"
+                      @input="$v.email.$touch()"
+                      @blur="$v.email.$touch()"
+                      required
+                    ></v-text-field>
+                  </v-form>
+                </v-card-text>
+
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="green darken-1" text @click="dialog = false">
+                    CANCEL
+                  </v-btn>
+                  <v-btn color="green darken-1" text @click="submitfindpw">
+                    FIND
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
           </v-card-actions>
         </v-row>
       </v-container>
@@ -58,6 +91,18 @@
         <v-row justify="center">
           <v-card-text>
             <v-form>
+              <v-text-field
+                label="Nickname"
+                v-model="nickname"
+                name="nickname"
+                prepend-icon="mdi-account"
+                type="text"
+              ></v-text-field>
+<!--                @input="$v.nickname.$touch()"-->
+<!--                @blur="$v.nickname.$touch()"-->
+<!--                required-->
+<!--                :error-messages="nicknameErrors"-->
+
               <v-text-field
                 label="Email"
                 v-model="email"
@@ -94,30 +139,7 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="yellow accent-4" @click="submitjoin">Join</v-btn>
-          </v-card-actions>
-        </v-row>
-      </v-container>
-      <v-container :class="findview">
-        <v-row justify="center">
-          <v-card-text>
-            <v-form>
-              <v-text-field
-                label="Email"
-                v-model="templateParams.target_email"
-                name="email"
-                prepend-icon="mdi-account"
-                type="text"
-                :error-messages="emailErrors"
-                @input="$v.email.$touch()"
-                @blur="$v.email.$touch()"
-                required
-              ></v-text-field>
-            </v-form>
-          </v-card-text>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="yellow accent-4" @click="submitfindpw">FindPW</v-btn>
+            <v-btn color="lime darken-3" @click="submitjoin">Join</v-btn>
           </v-card-actions>
         </v-row>
       </v-container>
@@ -140,14 +162,17 @@ export default {
       loginview: "d-flex",
       joinview: "d-none",
       findview: "d-none",
+      nickname: "",
       email: "",
       password: "",
+      dialog: false,
       repeatPassword: "",
+      avatarImage: require("../../assets/images/person.png"),
       templateParams: {
         from_name: "SSAFY_B201_InsertCoin",
-        to_name: "clients",
-        message_html: "http://localhost:8080/changepw" + "▶▶▶ Code : ",
-        company_email: "http://localhost:8080/",
+        to_name: localStorage.getItem("Now_Uname"),
+        message_html: "http://localhost:8081/changepwbyemailjs" + "▶▶▶ Code : ",
+        company_email: "http://localhost:8081/",
         target_email: "",
       },
     };
@@ -164,12 +189,6 @@ export default {
       this.loginview = "d-none";
       this.joinview = "d-flex";
       this.findview = "d-none";
-    },
-    clickfindpw() {
-      this.clear();
-      this.loginview = "d-none";
-      this.joinview = "d-none";
-      this.findview = "d-flex";
     },
     ...mapActions(["login", "join", "findpw"]),
     submitlogin() {
@@ -193,6 +212,8 @@ export default {
         let joinData = {
           uid: this.email,
           upw: this.password,
+          uname: this.nickname,
+          uimage: this.avatarImage,
         };
         this.$store.dispatch("join", joinData);
       }
@@ -221,6 +242,12 @@ export default {
     },
   },
   computed: {
+    // nicknameErrors() {
+    //   const errors = [];
+    //   if (!this.$v.email.$dirty) return errors;
+    //   !this.$v.nickname.required && errors.push("닉네임을 입력해주세요.");
+    //   return errors;
+    // },
     emailErrors() {
       const errors = [];
       if (!this.$v.email.$dirty) return errors;
