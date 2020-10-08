@@ -186,7 +186,6 @@ export default {
           })
           .then((res) => {
             alert(`${res.data.rank}위에 랭크인 하셨습니다. 축하드립니다.`);
-            console.log(res);
           });
       }
 
