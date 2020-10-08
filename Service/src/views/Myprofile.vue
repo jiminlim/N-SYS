@@ -39,31 +39,31 @@
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn
-              color="yellow accent-4"
+              color="purple accent-1"
               router
               :to="{ name: 'changenickname' }"
-              >Nickname_변경</v-btn
+              >닉네임변경</v-btn
             >
-            <v-btn color="yellow accent-4" router :to="{ name: 'changepw' }"
-              >PW_변경</v-btn
+            <v-btn color="purple accent-2" router :to="{ name: 'changepw' }"
+              >비밀번호변경</v-btn
             >
 
             <v-btn
               id="changeImage"
-              color="yellow accent-4"
+              color="purple accent-3"
               @click="$refs.userProfileImgChange.click()"
-              >Image_변경</v-btn
+              >이미지변경</v-btn
             >
 
             <v-btn
-              color="green accent-4"
+              color="purple accent-3"
               @click="saveImage"
               v-if="Ischangeimage"
             >
-              Image_저장
+              이미지저장
             </v-btn>
 
-            <v-btn color="red accent-4" @click="deleteuser">회원탈퇴</v-btn>
+            <v-btn color="purple accent-4" @click="deleteuser">회원탈퇴</v-btn>
             <input
               style="display: none"
               ref="userProfileImgChange"

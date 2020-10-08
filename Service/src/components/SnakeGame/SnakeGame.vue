@@ -13,8 +13,8 @@
     </body>
   </div>
 </template>
-
 <script>
+
 // import axios from "axios";
 import EventBus from "./EventBus";
 
@@ -54,9 +54,6 @@ export default {
   methods: {
     Main() {
       if (this.life == 0) {
-        // this.HumanCompleted();
-        // console.log(this.life);
-
         return;
       }
 

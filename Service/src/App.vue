@@ -1,6 +1,5 @@
 <template>
   <v-app id="inspire">
-
     <v-app-bar app clipped-left>
       <v-menu bottom  right offset-y >
         <template v-slot:activator="{ on, attrs }">
@@ -18,18 +17,13 @@
     </v-main>
 
     <v-footer app>
-
       <span>&copy; Copyright©2020 'Insert Coin' All rights reserved.</span>
-
     </v-footer>
   </v-app>
 </template>
-
 <script>
-
 import mypageCard from '@/components/Users/mypage'
 import {mapGetters} from "vuex";
-
 
 export default {
   props: {
@@ -38,19 +32,15 @@ export default {
   components: {
     mypageCard
   },
-
   data: () => ({
     drawer: null,
   }),
   created() {
     this.$vuetify.theme.dark = true;
-
   }
-  ,
-  computed: {
+  ,computed: {
     ...mapGetters(["getBar"]),
-  }
-  ,
+  },
 }
 ;
 </script>
