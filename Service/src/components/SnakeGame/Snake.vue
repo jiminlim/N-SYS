@@ -180,12 +180,12 @@ export default {
           .post("https://j3b201.p.ssafy.io:8443/Play/snake/", {
             gaId: 1,
             plLevel: 5,
-            plscore: this.score,
+            plScore: this.HumanScore,
+            plVictory: 1,
             uiPk: this.uiPk,
           })
           .then((res) => {
             alert(`${res.data.rank}위에 랭크인 하셨습니다. 축하드립니다.`);
-            //   console.log(res);
           });
       }
 
