@@ -16,12 +16,12 @@ B201팀 - _Insert Coin_
 
 ## :bust_in_silhouette: 기능
 
-> - 두뇌의 벽
+> - 두뇌의 벽 (1 player, 2 player)
 > - 뱀게임
 
 ## :information_desk_person: 기술 스택
 
-> Python, Pygame, Numpy, Vue, Vuetify, Springboot, JPA, MariaDB
+> Python, Pygame, Numpy, Vue.js, Vuetify, JPA, MariaDB, webRTC, socketIO, node.js, mybatis, Spring boot
 
 ## 🙉 기술 설명
 
@@ -32,14 +32,16 @@ B201팀 - _Insert Coin_
 >     3. fitness 정리 후 난수를 이용하여 돌연변이 제작
 >     4. 과정 반복
 > - 두뇌의 벽 (Teachable Machine)
-
-    - Teachable Machine을 사용하여 이미지 학습 모델 생성
-    - 영상의 사용자 포즈와 포즈 이미지 비교
+>   - 1 player 
+>    - Teachable Machine을 사용하여 이미지 학습 모델 생성
+>    - 영상의 사용자 포즈와 포즈 이미지 비교
+>   - 2 player
+>    - webRTC 와 socketIO, node.js 사용하여 2인 실시간 스트리밍  
 
 ## 👪 Member
 
-> 임지민 - 팀장 / FE  
-> 이진용 - FE /BE  
-> 김승환 - FE  
-> 장한별 - BE  
-> 박명수 - AI
+> 임지민 - 팀장 / FE  / Server  
+> 이진용 - FE / Server  
+> 김승환 - FE /BE 
+> 장한별 - BE / Server    
+> 박명수 - AI / FE
